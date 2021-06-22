@@ -8,9 +8,10 @@
     <script src="wssclient.js" type="text/javascript"></script>
     <script type="text/javascript">
         var client;
-        function connect(name, email, dept, pid){
-            client = new Client({url: `ws:localhost?name=${name}&email=${email}&dept=${dept}&pid=${pid}`});
+        function connect(name, email, dept, pid, auth){
+            client = new Client({url: `ws:localhost?name=${name}&email=${email}&dept=${dept}&pid=${pid}&auth=${auth}`});
             client.onMessage = function(message){
+                document.querySelector("#display").textContent += message;
                 console.log(message);
             }
         }
@@ -19,7 +20,7 @@
             client.send(message);
         }
 
-        connect('client1', 'test@email.com', 'crane', 'dummy');
+        connect('Agent1', 'test@email.com', 'crane', 'dummy', 'kdklsllkdkdk');
     </script>
 </head>
 <body>

@@ -2,7 +2,7 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 
 // Routes
-routes.use('/token', async (req, res, next) => {
+router.use('/token', async (req, res, next) => {
 
     let Client_Id = req.body.Client_Id || req.body.client_id;
     let Client_Secret = req.body.Client_Secret || req.body.client_secret;
