@@ -4,4 +4,4 @@ require('dotenv').config({
     path: path.resolve(__dirname, `./config/${process.env.ENV || 'prod'}.env`)
 });
 
-module.exports = require('./server');
+module.exports = require('./core/server');
