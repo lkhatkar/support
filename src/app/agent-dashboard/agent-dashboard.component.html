@@ -90,7 +90,7 @@
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Conversations" class="row2">
         <nz-tabset [(nzSelectedIndex)]="index" nzType="editable-card" nzHideAdd (nzClose)="closeTab($event)">
-          <nz-tab *ngFor="let tab of tabs; let i = index" [nzClosable]="i > 1" [nzTitle]="tab">
+          <nz-tab *ngFor="let tab of tabs; let i = index" [nzClosable]="i > -1" [nzTitle]="tab">
             <div>
              <br/>
               <div nz-row>

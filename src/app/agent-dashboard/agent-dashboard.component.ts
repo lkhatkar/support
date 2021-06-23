@@ -14,7 +14,7 @@ export interface Clients {
 export class AgentDashboardComponent implements OnInit {
   nodes: NzTreeNodeOptions[] = [];
   index = 0;
-  tabs = ['Tab 1','Tab 2'];
+  tabs:string[] = [];
   inputValueTab?: string ="Hello there";
   chatMessage = "";
   listOfData: Clients[] = [];
