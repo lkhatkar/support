@@ -36,7 +36,28 @@
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Current Visitors" class="row1">
         <div style="margin-bottom: 16px;">
-          <button nz-button (click)="newTab()">ADD</button>
+          <!-- <button nz-button (click)="newTab()">ADD</button> -->
+          <nz-table #clientTable [nzData]="listOfData" nzSize="small" [nzScroll]="{ x: '1000px', y: '140px' }">
+            <thead>
+              <tr>
+                <th>Client Name</th>
+                <th>Add Client</th>
+                <th>Reject Client</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let client of clientTable.data">
+                <td>{{client.name}}</td>
+                <td><button nz-button (click)="newTab(client.name)">ADD</button></td>
+                <td><button nz-button>Reject</button></td>
+              </tr>
+              <!-- <tr>
+                <td>Naman</td>
+                <td><button nz-button (click)="newTab()">ADD</button></td>
+                <td><button nz-button (click)="newTab()">Reject</button></td>
+              </tr> -->
+            </tbody>
+          </nz-table>
         </div>
 
       </nz-card>
@@ -78,7 +99,7 @@
                 </div>
               </div><br/>
               <div nz-row [nzGutter]="[24, 24]">
-                <div nz-col nzSpan="20"><input nz-input placeholder="default size" nzSize="default" /></div>
+                <div nz-col nzSpan="20"><input nz-input placeholder="default size" nzSize="default" [(ngModel)]="chatMessage"/></div>
                 <div nz-col nzSpan="4"><button nz-button nzType="primary" (click)="onChatSend()">Send</button></div>
               </div>
             </div>

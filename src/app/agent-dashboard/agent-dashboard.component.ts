@@ -3,18 +3,21 @@ import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { WebSocketService } from '../services/web-socket.service';
 
+export interface Clients {
+  name: string;
+}
 @Component({
   selector: 'app-agent-dashboard',
   templateUrl: './agent-dashboard.component.html',
   styleUrls: ['./agent-dashboard.component.scss']
 })
-
 export class AgentDashboardComponent implements OnInit {
   nodes: NzTreeNodeOptions[] = [];
   index = 0;
   tabs = ['Tab 1','Tab 2'];
   inputValueTab?: string ="Hello there";
   chatMessage = "";
+  listOfData: Clients[] = [];
   // Dropdown right click
   contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent): void {
     this.nzContextMenuService.create($event, menu);
@@ -33,6 +36,7 @@ export class AgentDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.listOfData.push({name: "Vishal"}, {name: "Mohit"});
     const dig = (path = '0', level = 3) => {
       const list = [
         {
@@ -41,8 +45,8 @@ export class AgentDashboardComponent implements OnInit {
           expanded: true,
           icon: 'team',
           children: [
-            { title: 'admin1', key: '1001', icon: 'user', isLeaf: true },
-            { title: 'admin2', key: '1002', icon: 'user', isLeaf: true }
+            { title: 'agent1', key: '1001', icon: 'user', isLeaf: true },
+            { title: 'agent2', key: '1002', icon: 'user', isLeaf: true }
           ]
         }
 
@@ -56,12 +60,15 @@ export class AgentDashboardComponent implements OnInit {
     this.tabs.splice(index, 1);
   }
 
-  newTab(): void {
+  newTab(name: string): void {
     this.websocket.connect()
     .subscribe(message=>{
       console.log('message',message);
+    },
+    err=> {
+      console.log(err);
     });
-    this.tabs.push('New Tab');
+    this.tabs.push(name);
       this.index = this.tabs.length - 1;
   }
 
