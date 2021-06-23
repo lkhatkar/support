@@ -20,7 +20,7 @@
 <div class="container">
   <div nz-row>
     <div nz-col nzSpan="6">
-      <nz-card nzTitle="Departments/Agents">
+      <nz-card nzTitle="Departments/Agents" class="row1">
         <nz-tree [nzData]="nodes" nzBlockNode nzVirtualHeight="150px" nzShowIcon (contextmenu)="contextMenu($event, menu)"></nz-tree>
       </nz-card>
       <!-- DropDown on click -->
@@ -34,7 +34,7 @@
       </nz-dropdown-menu>
     </div>
     <div nz-col nzSpan="18">
-      <nz-card nzTitle="Current Visitors">
+      <nz-card nzTitle="Current Visitors" class="row1">
 
       </nz-card>
     </div>
@@ -42,12 +42,12 @@
   <br />
   <div nz-row>
     <div nz-col nzSpan="6">
-      <nz-card nzTitle="Request Queue" >
+      <nz-card nzTitle="Request Queue" class="row2" >
 
       </nz-card>
     </div>
     <div nz-col nzSpan="18">
-      <nz-card nzTitle="Conversations">
+      <nz-card nzTitle="Conversations" class="row2">
 
       </nz-card>
     </div>
