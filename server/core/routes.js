@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
+const { Dbo } = require('../db');
+const middleware = require('../core/middleware');
 
 // Routes
 router.use('/token', async (req, res, next) => {
@@ -45,8 +47,27 @@ router.use('/token', async (req, res, next) => {
 
 });
 
-router.post('/login', (req, res)=>{
-    res.status(200).send({success: true})
+router.post('/login', middleware.checkToken, async (req, res)=>{
+    const UserDbo = new Dbo.User(global.dao);
+    const username = req.body.username;
+    const password = req.body.password;
+    if(username && password) {
+        const user = await UserDbo.getByUserName(username);
+        if(user) {
+            if(user.password === password) {
+                res.status(200).send({success: true});
+            }
+            else {
+                res.status(200).send({success: false, message: 'Wrong Password'});
+            }
+        }
+        else {
+            res.status(200).send({success: false, message: 'User Not Found'});
+        }
+    }
+    else {
+        res.status(200).send({success: false, message: 'invalid call'});
+    }
 });
 
 module.exports = router;
