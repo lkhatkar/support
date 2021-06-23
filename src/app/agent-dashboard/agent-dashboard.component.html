@@ -35,6 +35,9 @@
     </div>
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Current Visitors" class="row1">
+        <div style="margin-bottom: 16px;">
+          <button nz-button (click)="newTab()">ADD</button>
+        </div>
 
       </nz-card>
     </div>
@@ -48,6 +51,11 @@
     </div>
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Conversations" class="row2">
+        <nz-tabset [(nzSelectedIndex)]="index" nzType="editable-card" nzHideAdd (nzClose)="closeTab($event)">
+          <nz-tab *ngFor="let tab of tabs; let i = index" [nzClosable]="i > 1" [nzTitle]="tab">
+            <textarea rows="4" nz-input [(ngModel)]="inputValueTab" disabled></textarea>
+          </nz-tab>
+        </nz-tabset>
 
       </nz-card>
     </div>

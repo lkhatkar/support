@@ -10,6 +10,10 @@ import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dro
 
 export class AgentDashboardComponent implements OnInit {
   nodes: NzTreeNodeOptions[] = [];
+  index = 0;
+  tabs = ['Tab 1'];
+  inputValueTab?: string ="Hello there";
+  // Dropdown right click
   contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent): void {
     this.nzContextMenuService.create($event, menu);
   }
@@ -40,6 +44,14 @@ export class AgentDashboardComponent implements OnInit {
       return list;
     };
     this.nodes = dig();
+  }
+  closeTab({ index }: { index: number }): void {
+    this.tabs.splice(index, 1);
+  }
+
+  newTab(): void {
+    this.tabs.push('New Tab');
+    this.index = this.tabs.length - 1;
   }
 
 
