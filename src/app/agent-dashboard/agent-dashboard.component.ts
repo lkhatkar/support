@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
+import { WebSocketService } from '../services/web-socket.service';
 
 @Component({
   selector: 'app-agent-dashboard',
@@ -13,6 +14,7 @@ export class AgentDashboardComponent implements OnInit {
   index = 0;
   tabs = ['Tab 1','Tab 2'];
   inputValueTab?: string ="Hello there";
+  chatMessage = "";
   // Dropdown right click
   contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent): void {
     this.nzContextMenuService.create($event, menu);
@@ -21,8 +23,13 @@ export class AgentDashboardComponent implements OnInit {
   closeMenu(): void {
     this.nzContextMenuService.close();
   }
-  constructor(private nzContextMenuService: NzContextMenuService) {
-
+  constructor(
+    private nzContextMenuService: NzContextMenuService,
+    private websocket:WebSocketService) {
+    //   this.websocket.connect()
+    // .subscribe(message=>{
+    //   console.log('message',message);
+    // });
   }
 
   ngOnInit(): void {
@@ -50,12 +57,17 @@ export class AgentDashboardComponent implements OnInit {
   }
 
   newTab(): void {
+    this.websocket.connect()
+    .subscribe(message=>{
+      console.log('message',message);
+    });
     this.tabs.push('New Tab');
-    this.index = this.tabs.length - 1;
+      this.index = this.tabs.length - 1;
   }
-  onChatSend(): void {
-    console.log('Chat send clicked');
 
+  onChatSend(): void {
+    this.websocket.send(this.chatMessage);
+    console.log('Chat send clicked');
   }
 
 
