@@ -71,6 +71,13 @@
         <nz-tabset [(nzSelectedIndex)]="index" nzType="editable-card" nzHideAdd (nzClose)="closeTab($event)">
           <nz-tab *ngFor="let tab of tabs; let i = index" [nzClosable]="i > 1" [nzTitle]="tab">
             <textarea rows="4" nz-input [(ngModel)]="inputValueTab" disabled></textarea>
+            <div>
+              <br/>
+              <div nz-row>
+                <div nz-col nzSpan="20"><input nz-input placeholder="default size" nzSize="default" /></div>
+                <div nz-col nzSpan="4"><button nz-button nzType="primary" (click)="onChatSend()">Send</button></div>
+              </div>
+            </div>
           </nz-tab>
         </nz-tabset>
 

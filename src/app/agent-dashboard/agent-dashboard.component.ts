@@ -11,7 +11,7 @@ import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dro
 export class AgentDashboardComponent implements OnInit {
   nodes: NzTreeNodeOptions[] = [];
   index = 0;
-  tabs = ['Tab 1'];
+  tabs = ['Tab 1','Tab 2'];
   inputValueTab?: string ="Hello there";
   // Dropdown right click
   contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent): void {
@@ -52,6 +52,10 @@ export class AgentDashboardComponent implements OnInit {
   newTab(): void {
     this.tabs.push('New Tab');
     this.index = this.tabs.length - 1;
+  }
+  onChatSend(): void {
+    console.log('Chat send clicked');
+
   }
 
 
