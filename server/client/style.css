@@ -1,0 +1,121 @@
+.chatBtn {
+	bottom       : 0;
+	position     : fixed;
+	margin       : 1em;
+	right        : 0;
+	z-index      : 998;
+	display      : block;
+	width        : 4em;
+	height       : 4em;
+	border-radius: 50%;
+	border       : none;
+	text-align   : center;
+	color        : #f0f0f0;
+	z-index      : 998;
+	overflow     : hidden;
+	background   : #42a5f5;
+}
+
+.chatPopup {
+	display : none;
+	width   : 25%;
+	position: fixed;
+	bottom  : 4.2em;
+	right   : 4.2em;
+	border  : 3px solid #f1f1f1;
+	z-index : 9;
+	height: 60%;
+}
+
+#closeChat {
+	display: none;
+}
+
+#openChat {
+	display: block;
+}
+
+body {
+	height: 100%;
+	font  : 16px/1.2 "Roboto", sans-serif;
+	color : #333;
+}
+
+input[type="text"],
+button {
+	padding: 4px 8px;
+	border : 0;
+	outline: 0;
+}
+
+button {
+	background-color: transparent;
+	cursor          : pointer;
+}
+
+button:hover i {
+	color    : #79c7c5;
+	transform: scale(1.2);
+}
+
+
+/* chat_box */
+.chat_box {
+	display       : flex;
+	flex-direction: column;
+	height        : 100%;
+}
+
+.chat_box>* {
+	padding: 16px;
+}
+
+/* body */
+.body {
+	display: none;
+	flex-grow       : 1;
+	background-color: #eee;
+	overflow-y      : scroll;
+}
+
+.body .bubble {
+	display      : inline-block;
+	padding      : 10px;
+	margin-bottom: 5px;
+	border-radius: 15px;
+}
+
+.body .bubble p {
+	color     : #f9fbff;
+	font-size : 14px;
+	text-align: left;
+}
+
+.body .incoming {
+	text-align: left;
+}
+
+.body .incoming .bubble {
+	background-color: #b2b2b2;
+	overflow-wrap   : break-word;
+	max-width       : 40%;
+}
+
+.body .outgoing {
+	text-align: right;
+}
+
+.body .outgoing .bubble {
+	background-color: #42a5f5;
+	overflow-wrap   : break-word;
+	max-width       : 40%;
+}
+
+/* foot */
+.foot {
+	display: none;
+}
+
+.foot .msg {
+	flex-grow: 1;
+}
