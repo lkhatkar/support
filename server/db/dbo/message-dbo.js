@@ -9,7 +9,7 @@ class MessageDbo {
         Sno        BIGSERIAL PRIMARY KEY,
         Subject TEXT,
         Creator_Id BIGINT NOT NULL
-						REFERENCES User (Sno) ON DELETE NO ACTION
+						REFERENCES Userdata (Sno) ON DELETE NO ACTION
                         ON UPDATE NO ACTION,   
 		    Message_Body TEXT NOT NULL,
         Create_Date  DATE  NOT NULL,

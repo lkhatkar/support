@@ -8,7 +8,7 @@ class DepartmentGroupDbo {
       CREATE TABLE IF NOT EXISTS Department_group (
         Sno        BIGSERIAL PRIMARY KEY,
         UserId    BIGINT NOT NULL
-						REFERENCES User (Sno) ON DELETE NO ACTION
+						REFERENCES Userdata (Sno) ON DELETE NO ACTION
                         ON UPDATE NO ACTION,                  
         GroupId   BIGINT NOT NULL
 						REFERENCES Department (Sno) ON DELETE NO ACTION
