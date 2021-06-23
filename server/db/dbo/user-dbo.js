@@ -38,6 +38,10 @@ class UserDbo {
         [name])
     }
 
+    getAgents() {
+      return this.dao.all(`SELECT * FROM userdata WHERE IsAgent = true`);
+    }
+
     create(Id, Name, Email, PageId, Create_Date, IsActive, Group_Id, Password, IsAgent) {
         return this.dao.run(
           'INSERT INTO userdata (Id, Name, Email, PageId, Create_Date, IsActive, Group_Id, Password, IsAgent) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)',

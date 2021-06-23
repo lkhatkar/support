@@ -40,19 +40,26 @@ class Wss{
                         return;
                     } else {
                         const agent = new Agent(nanoid(6), query.name, query.email, query.dept,  query.pid, ws);
-                        agents.push(agent);
+                        global.agents.push(agent);
                     }
                 });   
                 
             }else{
                 
                 const client = new Client(nanoid(6), query.name, query.email, query.dept,  query.pid, ws);
-                clients.push(client);
+                global.clients.push(client);
             }
 
-            if(agents.length > 0 && clients.length > 0){
+            /*if(agents.length > 0 && clients.length > 0){
                 agents[0].onHandleClient(clients[0]);
-            }
+            }*/
+            
+            ws.on('close', () => {
+                var closedIndex = global.clients.findIndex(client => client.ws == ws);
+                if(closedIndex != -1) {
+                    global.clients.splice(closedIndex, 1);
+                }
+            })
             
         });
     }

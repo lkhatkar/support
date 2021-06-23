@@ -70,4 +70,59 @@ router.post('/login', middleware.checkToken, async (req, res)=>{
     }
 });
 
+router.get('/clients', middleware.checkToken, async (req, res, next) => {
+    try {
+        var clients = global.clients;
+        if(clients) {
+            clients = clients.map(({ws,...rest}) => ({...rest}))
+            res.status(200).send({success: true, clients});
+        }
+        else {
+            res.status(200).send({success: false, message: "No Clients Found"});
+        }
+    }
+    catch(e) {
+        next(e);
+    }
+})
+
+router.get('/agents', middleware.checkToken, async (req, res, next) => {
+    try {
+        const UserDbo = new Dbo.User(global.dao);
+        const agents = await UserDbo.getAgents(global.dao)
+        if(agents) {            
+            res.status(200).send({success: true, agents});
+        }
+        else {
+            res.status(200).send({success: false, message: "No Agents Found"});
+        }
+    }
+    catch(e) {
+        next(e);
+    }
+})
+
+router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
+    try {
+        const agentEmail = req.body.email;
+        const clientId = req.body.id;
+        if(clientId && agentEmail) {
+            let agentIndex = global.agents.findIndex(agent => agent.email == agentEmail);
+            let clientIndex = global.clients.findIndex(client => client.id == clientId); 
+            if(agentIndex != -1 && clientIndex != -1) {
+                global.agents[agentIndex].onHandleClient(global.clients[clientIndex]);
+                res.status(200).send({success: true});
+            }
+            else {
+                res.status(200).send({success: false, message: "Agent or Client Not Found"});
+            }
+        }
+        else{
+            res.status(200).send({success: false, message: "Invalid Call"});
+        }
+    } catch (e) {
+        next(e);
+    }
+})
+
 module.exports = router;
