@@ -45,9 +45,26 @@
   <br />
   <div nz-row>
     <div nz-col nzSpan="6">
-      <nz-card nzTitle="Request Queue" class="row2" >
+      <nz-card nzTitle="Request Queue" class="row2" [nzActions]="[actionSetting, actionEdit]">
+        <nz-table #requestQueue nzSize="small" nzBordered>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
 
+          </tbody>
+        </nz-table>
       </nz-card>
+      <ng-template #actionSetting>
+        <button nz-button>Accept First</button>
+      </ng-template>
+      <ng-template #actionEdit>
+        <button nz-button>Auto Accept</button>
+      </ng-template>
     </div>
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Conversations" class="row2">
