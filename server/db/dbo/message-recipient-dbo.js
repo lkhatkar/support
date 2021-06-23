@@ -8,7 +8,7 @@ class MessageRecipientDbo {
       CREATE TABLE IF NOT EXISTS Message_recipients (
         Sno        BIGSERIAL PRIMARY KEY,
         Recipients_Id    BIGINT NOT NULL
-						REFERENCES User (Sno) ON DELETE NO ACTION
+						REFERENCES Userdata (Sno) ON DELETE NO ACTION
                         ON UPDATE NO ACTION,                  
         Recipients_Group_Id   BIGINT NOT NULL
 						REFERENCES Department (Sno) ON DELETE NO ACTION

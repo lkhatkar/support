@@ -1,0 +1,92 @@
+<div>
+  <ul nz-menu nzMode="horizontal" class="navbar">
+    <li nz-menu-item>
+      <i nz-icon nzType="mail"></i>
+      Navigation One
+    </li>
+    <li nz-menu-item>
+      <i nz-icon nzType="appstore"></i>
+      Navigation Two
+    </li>
+
+    <li nz-menu-item>
+      <i nz-icon nzType="appstore"></i>
+      Navigation Three
+    </li>
+  </ul>
+</div>
+<br />
+
+<div class="container">
+  <div nz-row>
+    <div nz-col nzSpan="6">
+      <nz-card nzTitle="Departments/Agents" class="row1">
+        <nz-tree [nzData]="nodes" nzBlockNode nzVirtualHeight="150px" nzShowIcon (contextmenu)="contextMenu($event, menu)"></nz-tree>
+      </nz-card>
+      <!-- DropDown on click -->
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item>Add Agent</li>
+          <li nz-menu-item>Rename this department</li>
+          <li nz-menu-item>Delete this department</li>
+          <li nz-menu-item>More options</li>
+        </ul>
+      </nz-dropdown-menu>
+    </div>
+    <div nz-col nzSpan="18">
+      <nz-card nzTitle="Current Visitors" class="row1">
+        <div style="margin-bottom: 16px;">
+          <button nz-button (click)="newTab()">ADD</button>
+        </div>
+
+      </nz-card>
+    </div>
+  </div>
+  <br />
+  <div nz-row>
+    <div nz-col nzSpan="6">
+      <nz-card nzTitle="Request Queue" class="row2" [nzActions]="[actionSetting, actionEdit]">
+        <nz-table #requestQueue nzSize="small" nzBordered>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+        </nz-table>
+      </nz-card>
+      <ng-template #actionSetting>
+        <button nz-button>Accept First</button>
+      </ng-template>
+      <ng-template #actionEdit>
+        <button nz-button>Auto Accept</button>
+      </ng-template>
+    </div>
+    <div nz-col nzSpan="18">
+      <nz-card nzTitle="Conversations" class="row2">
+        <nz-tabset [(nzSelectedIndex)]="index" nzType="editable-card" nzHideAdd (nzClose)="closeTab($event)">
+          <nz-tab *ngFor="let tab of tabs; let i = index" [nzClosable]="i > 1" [nzTitle]="tab">
+            <div>
+             <br/>
+              <div nz-row>
+                <div nz-col nzSpan="22">
+                  <textarea rows="4" cols="10" nz-input [(ngModel)]="inputValueTab" disabled></textarea>
+                </div>
+              </div><br/>
+              <div nz-row [nzGutter]="[24, 24]">
+                <div nz-col nzSpan="20"><input nz-input placeholder="default size" nzSize="default" /></div>
+                <div nz-col nzSpan="4"><button nz-button nzType="primary" (click)="onChatSend()">Send</button></div>
+              </div>
+            </div>
+          </nz-tab>
+        </nz-tabset>
+
+      </nz-card>
+    </div>
+  </div>
+</div>
+

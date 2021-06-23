@@ -12,13 +12,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgZorroAntdModule} from './ng-zorro-antd.module';
 import { SupportChatAdminComponent } from './support-chat-admin/support-chat-admin.component';
+import { AgentDashboardComponent } from './agent-dashboard/agent-dashboard.component';
 
 registerLocaleData(en);
 
 @NgModule({
   declarations: [
     AppComponent,
-    SupportChatAdminComponent
+    SupportChatAdminComponent,
+    AgentDashboardComponent
   ],
   imports: [
     BrowserModule,
