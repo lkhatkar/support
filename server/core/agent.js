@@ -9,7 +9,7 @@ class Agent extends Client{
     }
 
     onAgentMessage(jsonString) {
-        let {clientId, message} = JSON.parse(JSON.parse(jsonString));
+        let {clientId, message} = JSON.parse(jsonString);
         let client = this.clients.find(c => c.id == clientId);
         if(client){
             client.ws.send(message);
