@@ -13,6 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgZorroAntdModule} from './ng-zorro-antd.module';
 import { SupportChatAdminComponent } from './support-chat-admin/support-chat-admin.component';
 import { AgentDashboardComponent } from './agent-dashboard/agent-dashboard.component';
+import { AgentLoginComponent } from './agent-dashboard/agent-login/agent-login.component';
 
 registerLocaleData(en);
 
@@ -20,7 +21,8 @@ registerLocaleData(en);
   declarations: [
     AppComponent,
     SupportChatAdminComponent,
-    AgentDashboardComponent
+    AgentDashboardComponent,
+    AgentLoginComponent
   ],
   imports: [
     BrowserModule,
