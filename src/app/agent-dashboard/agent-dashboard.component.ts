@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { WebSocketService } from '../services/web-socket.service';
@@ -16,7 +16,7 @@ export interface Clients {
   templateUrl: './agent-dashboard.component.html',
   styleUrls: ['./agent-dashboard.component.scss']
 })
-export class AgentDashboardComponent implements OnInit {
+export class AgentDashboardComponent implements OnInit, OnDestroy {
   nodes: NzTreeNodeOptions[] = [];
   selectedAgent: any ;
   selectedVisitor: any;
@@ -130,7 +130,7 @@ export class AgentDashboardComponent implements OnInit {
   }
   closeTab({ index }: { index: number }): void {
     this.tabs.splice(index, 1);
-    // this.websocket.closeConnection();
+    this.websocket.closeConnection();
   }
 
   newTab(id: string, name: string): void {
@@ -171,6 +171,10 @@ export class AgentDashboardComponent implements OnInit {
 
     this.chatMessage = '';
     console.log('Chat send clicked');
+  }
+
+  ngOnDestroy() {
+    this.websocket.closeConnection();
   }
 
 }
