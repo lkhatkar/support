@@ -28,8 +28,8 @@ class Wss{
                     ws.close();
                     return;
                 };
-            
-            
+
+
             if(query.auth){
                 //validate auth
                 //validate auth
@@ -42,10 +42,10 @@ class Wss{
                         const agent = new Agent(nanoid(6), query.name, query.email, query.dept,  query.pid, ws);
                         global.agents.push(agent);
                     }
-                });   
-                
+                });
+
             }else{
-                
+
                 const client = new Client(nanoid(6), query.name, query.email, query.dept,  query.pid, ws);
                 global.clients.push(client);
             }
@@ -53,14 +53,14 @@ class Wss{
             /*if(agents.length > 0 && clients.length > 0){
                 agents[0].onHandleClient(clients[0]);
             }*/
-            
+
             ws.on('close', () => {
                 var closedIndex = global.clients.findIndex(client => client.ws == ws);
                 if(closedIndex != -1) {
                     global.clients.splice(closedIndex, 1);
                 }
             })
-            
+
         });
     }
 }

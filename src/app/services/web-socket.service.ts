@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { delay, map, retryWhen, switchMap } from 'rxjs/operators'
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +12,14 @@ export class WebSocketService {
   connection$?: WebSocketSubject<any>;
   RETRY_SECONDS = 10;
 
-  constructor() {
+  constructor(private authService: AuthService) {
    }
 
-  connect(): Observable<any> {
-    return of('http://localhost:3000').pipe(
+  connect(selectedAgent: any): Observable<any> {
+    console.log('Selected agent service: ', selectedAgent);
+    return of(`http://localhost:80?name=${selectedAgent.name}&email=${selectedAgent.email}&dept=crane&pid=${selectedAgent.pageid}&auth=${this.authService.acquireToken()}`).pipe(
       // https becomes wws, http becomes ws
-      map(apiUrl => apiUrl.replace(/^http/, 'ws') + '/stream'),
+      map(apiUrl => apiUrl.replace(/^http/, 'ws')),
       switchMap(wsUrl => {
         if (this.connection$) {
           return this.connection$;

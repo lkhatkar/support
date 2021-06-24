@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { WebSocketService } from '../services/web-socket.service';
+import { AuthService } from '../services/auth.service';
 
 export interface Clients {
+  id: string;
   name: string;
+  email: string;
+  dept: string;
+  pid: string;
 }
 @Component({
   selector: 'app-agent-dashboard',
@@ -13,11 +18,14 @@ export interface Clients {
 })
 export class AgentDashboardComponent implements OnInit {
   nodes: NzTreeNodeOptions[] = [];
+  selectedAgent: any ;
+  selectedVisitor: any;
   index = 0;
   tabs:string[] = [];
   inputValueTab?: string ="Hello there";
   chatMessage = "";
   listOfData: Clients[] = [];
+  hidden:boolean = true;
   chatData = [
     {
       message:'there is a issue',
@@ -50,45 +58,100 @@ export class AgentDashboardComponent implements OnInit {
   }
   constructor(
     private nzContextMenuService: NzContextMenuService,
-    private websocket:WebSocketService) {
+    private websocket:WebSocketService, private authService: AuthService, private changeDetector: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    this.listOfData.push({name: "Vishal"}, {name: "Mohit"});
-    const dig = (path = '0', level = 3) => {
-      const list = [
-        {
-          title: 'Default',
-          key: '100',
-          expanded: true,
-          icon: 'team',
-          children: [
-            { title: 'agent1', key: '1001', icon: 'user', isLeaf: true },
-            { title: 'agent2', key: '1002', icon: 'user', isLeaf: true }
-          ]
-        }
+    this.authService.getToken().subscribe(res=> {
+      let names:any = []
+      if(res.success) {
+        sessionStorage.setItem('token', res.access_token);
+        // Get Agents
+        this.authService.getAgents().subscribe(resp=> {
+          if(resp.success) {
 
-      ];
+            resp.agents.forEach((element:any, index:any) => {
+              names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
+            });
+            const dig = (path = '0', level = 3) => {
+              const list = [
+                {
+                  title: 'Default',
+                  key: '100',
+                  expanded: true,
+                  icon: 'team',
+                  children: names
+                }
 
-      return list;
-    };
-    this.nodes = dig();
+              ];
+
+              return list;
+            };
+            this.nodes = dig();
+          }
+          // Selected agent
+          this.selectedAgent = resp.agents[0];
+
+         // console.log(this.selectedAgent);
+          //Client list
+          this.authService.getClients().subscribe((response:any)=> {
+            if(response.success) {
+              console.log(response);
+
+              if(response.clients.length > 0) {
+                this.selectedVisitor = response?.clients[0];
+                console.log(this.selectedVisitor);
+                let jsonData = [];
+                jsonData.push(this.selectedVisitor)
+                this.listOfData = jsonData;
+              }
+
+              // connect auth
+              this.websocket.connect(this.selectedAgent).subscribe(data=> {
+                console.log(data);
+              });
+            }
+          });
+        });
+      }
+
+    })
+
+  }
+  // For table
+  ngAfterContentChecked() : void {
+    this.changeDetector.detectChanges();
   }
   closeTab({ index }: { index: number }): void {
     this.tabs.splice(index, 1);
-    this.websocket.closeConnection();
+    // this.websocket.closeConnection();
   }
 
-  newTab(name: string): void {
-    this.websocket.connect()
-    .subscribe(message=>{
-      console.log('message',message);
-    },
-    err=> {
-      console.log(err);
-    });
-    this.tabs.push(name);
-      this.index = this.tabs.length - 1;
+  newTab(id: string, name: string): void {
+    // this.websocket.connect()
+    // .subscribe(message=>{
+    //   console.log('message',message);
+    // },
+    // err=> {
+    //   console.log(err);
+    // });
+
+    this.authService.assignClient(this.selectedAgent.email, id).subscribe(res=> {
+      if(res.success) {
+         this.tabs.push(name);
+          this.index = this.tabs.length - 1;
+          console.log(res);
+
+      }
+      else {
+        console.log(res);
+        this.hidden = false
+        setTimeout(() => {
+          this.hidden = true;
+        }, 10000);
+      }
+
+    })
   }
 
   onChatSend(): void {

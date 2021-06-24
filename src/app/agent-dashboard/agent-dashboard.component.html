@@ -16,7 +16,7 @@
   </ul>
 </div>
 <br />
-
+<nz-alert nzType="success" nzMessage="Success Text" *ngIf="!hidden"></nz-alert>
 <div class="container">
   <div nz-row>
     <div nz-col nzSpan="6">
@@ -48,7 +48,7 @@
             <tbody>
               <tr *ngFor="let client of clientTable.data">
                 <td>{{client.name}}</td>
-                <td><button nz-button (click)="newTab(client.name)">ADD</button></td>
+                <td><button nz-button (click)="newTab(client.id, client.name)">ADD</button></td>
                 <td><button nz-button>Reject</button></td>
               </tr>
               <!-- <tr>
