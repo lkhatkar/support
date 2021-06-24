@@ -1,38 +1,50 @@
-<nz-card nzTitle="Card title">
-  <form nz-form>
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your username!">
-        <nz-input-group nzPrefixIcon="user">
-          <input nz-input placeholder="Username" />
-        </nz-input-group>
-      </nz-form-control>
-    </nz-form-item>
+<div nz-row>
+  <div nz-col nzSpan="12" class="login">
+    <nz-card nzTitle="Agent Login">
+      <form nz-form [formGroup]="formObject" (ngSubmit)="submitForm()">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4" nzFor="Username">Username</nz-form-label>
+          <nz-form-control nzErrorTip="Please input your username!">
+            <nz-input-group>
+              <input nz-input type="text" placeholder="Username" formControlName="userName" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
 
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Please input your Password!">
-          <nz-input-group nzPrefixIcon="lock">
-            <input nz-input type="text" placeholder="PID" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your Password!">
-        <nz-input-group nzPrefixIcon="email">
-          <input nz-input type="email" placeholder="Email" />
-        </nz-input-group>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your Password!">
-        <nz-input-group nzPrefixIcon="lock">
-          <input nz-input type="password" placeholder="Password" />
-        </nz-input-group>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control>
-        <button nz-button nzType="primary">Log in</button>
-      </nz-form-control>
-    </nz-form-item>
-  </form>
-</nz-card>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4" nzFor="email">E-mail</nz-form-label>
+          <nz-form-control nzErrorTip="Please input your E-mail!">
+            <nz-input-group>
+              <input nz-input type="email" placeholder="Email" formControlName="email" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="4" nzFor="PID">PID</nz-form-label>
+            <nz-form-control nzErrorTip="Please input your PID!">
+              <nz-input-group>
+                <input nz-input type="text" placeholder="PID" formControlName="pid"/>
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4" nzFor="password">Password</nz-form-label>
+          <nz-form-control nzErrorTip="Please input your Password!">
+            <nz-input-group>
+              <input nz-input type="password" placeholder="Password" formControlName="password"/>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control [nzSpan]="10" style="margin: auto;">
+            <button type="submit" nz-button nzType="primary" nzBlock>Log in</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-card>
+  </div>
+</div>
+
