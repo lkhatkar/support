@@ -74,7 +74,7 @@ router.get('/clients', middleware.checkToken, async (req, res, next) => {
     try {
         var clients = global.clients;
         if(clients) {
-            clients = clients.map(({ws,...rest}) => ({...rest}))
+            clients = clients.map(({ws,agent,...rest}) => ({...rest}))
             res.status(200).send({success: true, clients});
         }
         else {
