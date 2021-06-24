@@ -59,6 +59,12 @@ class Wss{
                 if(closedIndex != -1) {
                     global.clients.splice(closedIndex, 1);
                 }
+                else {
+                    closedIndex = global.agents.findIndex(agent => agent.ws == ws);
+                    if(closedIndex != -1) {
+                        global.agents.splice(closedIndex, 1);
+                    }
+                }
             })
 
         });
