@@ -95,7 +95,12 @@
              <br/>
               <div nz-row>
                 <div nz-col nzSpan="22">
-                  <textarea rows="4" cols="10" nz-input [(ngModel)]="inputValueTab" disabled></textarea>
+                  <!-- <textarea rows="4" cols="10" nz-input [(ngModel)]="inputValueTab" disabled></textarea> -->
+                  <nz-card class="chat-box">
+                    <p [class] = "data.user_type === 'agent' ? 'agent' : 'client' " *ngFor="let data of chatData">
+                      {{data.message}}
+                    </p>
+                  </nz-card>
                 </div>
               </div><br/>
               <div nz-row [nzGutter]="[24, 24]">

@@ -18,6 +18,28 @@ export class AgentDashboardComponent implements OnInit {
   inputValueTab?: string ="Hello there";
   chatMessage = "";
   listOfData: Clients[] = [];
+  chatData = [
+    {
+      message:'there is a issue',
+      time:new Date().getTime(),
+      user_type:'client'
+    },
+    {
+      message:'hey agent here',
+      time:new Date().getTime(),
+      user_type:'agent'
+    },
+    {
+      message:'How may i help you',
+      time:new Date().getTime(),
+      user_type:'agent'
+    },
+    {
+      message:'fix the issue',
+      time:new Date().getTime(),
+      user_type:'client'
+    },
+  ]
   // Dropdown right click
   contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent): void {
     this.nzContextMenuService.create($event, menu);
@@ -29,10 +51,6 @@ export class AgentDashboardComponent implements OnInit {
   constructor(
     private nzContextMenuService: NzContextMenuService,
     private websocket:WebSocketService) {
-    //   this.websocket.connect()
-    // .subscribe(message=>{
-    //   console.log('message',message);
-    // });
   }
 
   ngOnInit(): void {
@@ -58,6 +76,7 @@ export class AgentDashboardComponent implements OnInit {
   }
   closeTab({ index }: { index: number }): void {
     this.tabs.splice(index, 1);
+    this.websocket.closeConnection();
   }
 
   newTab(name: string): void {
@@ -74,9 +93,13 @@ export class AgentDashboardComponent implements OnInit {
 
   onChatSend(): void {
     this.websocket.send(this.chatMessage);
+    this.chatData.push({
+      message:this.chatMessage,
+      time:new Date().getTime(),
+      user_type:'agent'
+    });
+    this.chatMessage = '';
     console.log('Chat send clicked');
   }
-
-
 
 }
