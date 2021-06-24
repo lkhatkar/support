@@ -28,7 +28,7 @@ class WssClient {
         }
     }
     send(message) {
-        this.webSocket.send(message);
+        this.webSocket.send(JSON.stringify(message));
     }
 }
 
