@@ -1,5 +1,5 @@
 class Client{
-    constructor( id, name, email, dept, pid, ws){
+    constructor( id, name, email, dept, pid, ws, agent = false){
         this.id = id;
         this.name = name;
         this.email = email;
@@ -8,7 +8,10 @@ class Client{
         this.ws = ws;
 
         // this.ws.on('message', this.onMessage.bind(this))
-        this.ws.send(JSON.stringify({success: true, message: `Welcome ${this.name}`}));
+        if(agent) 
+            this.ws.send(JSON.stringify({success: true, message: `Welcome ${this.name}`}));
+        else
+            this.ws.send(JSON.stringify({success: true, message: `Welcome ${this.name}. Please wait while an agent will be assigned to you.`}));
     }
 
     onMessage(message) {
@@ -17,6 +20,7 @@ class Client{
     }
 
     assignAgent(agent){
+        this.ws.send(JSON.stringify({success: true, message: `Hi ${this.name}. Agent ${agent.name} is assigned to you.`}));
         this.agent = agent;
     }
 }

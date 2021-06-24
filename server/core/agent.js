@@ -4,7 +4,7 @@ class Agent extends Client{
     clients = [];
 
     constructor( id, name, email, dept, pid, ws){
-        super(id, name, email, dept, pid, ws);
+        super(id, name, email, dept, pid, ws, true);
         this.ws.on('message', this.onAgentMessage.bind(this));
     }
 
