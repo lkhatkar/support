@@ -40,11 +40,6 @@ export class WebSocketService {
     }
   }
 
-  receive(){
-    // this.connection$?.subscribe(message=>console.log('message')
-    // )
-  }
-
   closeConnection() {
     if (this.connection$) {
       this.connection$.complete();

@@ -98,7 +98,10 @@
                   <!-- <textarea rows="4" cols="10" nz-input [(ngModel)]="inputValueTab" disabled></textarea> -->
                   <nz-card class="chat-box">
                     <p [class] = "data.user_type === 'agent' ? 'agent' : 'client' " *ngFor="let data of chatData">
-                      {{data.message}}
+                      {{data.message}}<br>
+                      <small class="time">
+                        {{data.time | date: 'shortTime'}}
+                      </small>
                     </p>
                   </nz-card>
                 </div>

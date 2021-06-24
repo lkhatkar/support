@@ -107,8 +107,14 @@ export class AgentDashboardComponent implements OnInit {
               }
 
               // connect auth
-              this.websocket.connect(this.selectedAgent).subscribe(data=> {
-                console.log(data);
+              this.websocket.connect(this.selectedAgent).subscribe(message=> {
+                if(message && typeof(message)==='string')
+                this.chatData.push({
+                  message:message,
+                  time:new Date().getTime(),
+                  user_type:'client'
+                });
+                console.log(message);
               });
             }
           });
@@ -156,11 +162,13 @@ export class AgentDashboardComponent implements OnInit {
 
   onChatSend(): void {
     this.websocket.send(this.chatMessage);
+
     this.chatData.push({
       message:this.chatMessage,
       time:new Date().getTime(),
       user_type:'agent'
     });
+
     this.chatMessage = '';
     console.log('Chat send clicked');
   }
