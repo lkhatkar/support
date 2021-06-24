@@ -161,7 +161,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   onChatSend(): void {
-    this.websocket.send(this.chatMessage);
+    this.websocket.send({clientId: this.selectedVisitor.id, message: this.chatMessage});
 
     this.chatData.push({
       message:this.chatMessage,
