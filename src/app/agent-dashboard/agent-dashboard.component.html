@@ -97,13 +97,27 @@
                 <div nz-col nzSpan="22">
                   <!-- <textarea rows="4" cols="10" nz-input [(ngModel)]="inputValueTab" disabled></textarea> -->
                   <nz-card class="chat-box" [id]="tab.id">
-                    <p [class] = "data.user_type === 'agent' ? 'agent' : 'client' " *ngFor="let data of chatData">
-                      {{data.message}}<br>
-                      <small class="time">
-                        {{data.time | date: 'shortTime'}}
-                      </small>
+                    <div *ngFor="let data of chatData">
+                      <!-- For agent -->
+                      <p *ngIf="data.user_type === 'agent' ">
+                        <span [class] = "data.user_type === 'agent' ? 'agent' : 'client' " *ngIf="data.id === tab.id">
+                          {{data.message}}<br>
+                          <small class="time">
+                            {{data.time | date: 'shortTime'}}
+                          </small>
+                        </span>
+                      </p>
+                      <!-- For client -->
+                      <p *ngIf="data.user_type === 'client'">
+                        <span [class] = "data.user_type === 'agent' ? 'agent' : 'client' "  *ngIf="data.id === tab.id">
+                          {{data.message}}<br>
+                          <small class="time">
+                            {{data.time | date: 'shortTime'}}
+                          </small>
+                        </span>
+                      </p>
 
-                    </p>
+                    </div>
                   </nz-card>
                 </div>
               </div><br/>

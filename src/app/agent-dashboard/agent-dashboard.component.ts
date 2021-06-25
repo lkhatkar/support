@@ -26,27 +26,27 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   chatMessage = "";
   listOfData: Clients[] = [];
   hidden:boolean = true;
-  chatData = [
-    {
-      message:'there is a issue',
-      time:new Date().getTime(),
-      user_type:'client'
-    },
-    {
-      message:'hey agent here',
-      time:new Date().getTime(),
-      user_type:'agent'
-    },
-    {
-      message:'How may i help you',
-      time:new Date().getTime(),
-      user_type:'agent'
-    },
-    {
-      message:'fix the issue',
-      time:new Date().getTime(),
-      user_type:'client'
-    },
+  chatData:any[] = [
+  //   {
+  //     message:'there is a issue',
+  //     time:new Date().getTime(),
+  //     user_type:'client'
+  //   },
+  //   {
+  //     message:'hey agent here',
+  //     time:new Date().getTime(),
+  //     user_type:'agent'
+  //   },
+  //   {
+  //     message:'How may i help you',
+  //     time:new Date().getTime(),
+  //     user_type:'agent'
+  //   },
+  //   {
+  //     message:'fix the issue',
+  //     time:new Date().getTime(),
+  //     user_type:'client'
+  //   },
   ]
   // Dropdown right click
   contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent): void {
@@ -114,7 +114,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                   this.chatData.push({
                     message:data.message,
                     time:new Date().getTime(),
-                    user_type:'client'
+                    user_type:'client',
+                    id: data.id
                   });
                 }
                 console.log(data);
@@ -133,7 +134,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   // }
   closeTab({ index }: { index: number }): void {
     this.tabs.splice(index, 1);
-    this.websocket.closeConnection();
+    // this.websocket.closeConnection();
   }
 
   newTab(id: string, name: string): void {
@@ -170,7 +171,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.chatData.push({
       message:this.chatMessage,
       time:new Date().getTime(),
-      user_type:'agent'
+      user_type:'agent',
+      id: id
     });
 
     this.chatMessage = '';
