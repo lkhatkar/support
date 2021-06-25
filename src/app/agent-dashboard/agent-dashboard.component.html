@@ -41,15 +41,15 @@
             <thead>
               <tr>
                 <th>Client Name</th>
-                <th>Add Client</th>
-                <th>Reject Client</th>
+                <th>Assign Client</th>
+                <!-- <th>Reject Client</th> -->
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let client of clientTable.data">
                 <td>{{client.name}}</td>
-                <td><button nz-button (click)="newTab(client.id, client.name)">ADD</button></td>
-                <td><button nz-button>Reject</button></td>
+                <td><button nz-button (click)="newTab(client.id, client.name)">Assign</button></td>
+                <!-- <td><button nz-button>Reject</button></td> -->
               </tr>
               <!-- <tr>
                 <td>Naman</td>
@@ -90,7 +90,7 @@
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Conversations" class="row2">
         <nz-tabset [(nzSelectedIndex)]="index" nzType="editable-card" nzHideAdd (nzClose)="closeTab($event)">
-          <nz-tab *ngFor="let tab of tabs; let i = index" [nzClosable]="i > -1" [nzTitle]="tab">
+          <nz-tab *ngFor="let tab of tabs; let i = index" [nzClosable]="i > -1" [nzTitle]="tab.name">
             <div>
              <br/>
               <div nz-row>
@@ -108,7 +108,7 @@
               </div><br/>
               <div nz-row [nzGutter]="[24, 24]">
                 <div nz-col nzSpan="20"><input nz-input placeholder="write message" nzSize="default" [(ngModel)]="chatMessage"/></div>
-                <div nz-col nzSpan="4"><button nz-button nzType="primary" (click)="onChatSend()">Send</button></div>
+                <div nz-col nzSpan="4"><button nz-button nzType="primary" (click)="onChatSend(tab.id)" >Send</button></div>
               </div>
             </div>
           </nz-tab>

@@ -21,7 +21,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   selectedAgent: any ;
   selectedVisitor: any;
   index = 0;
-  tabs:string[] = [];
+  tabs : {name: string, id: string}[] = [];
   inputValueTab?: string ="Hello there";
   chatMessage = "";
   listOfData: Clients[] = [];
@@ -92,28 +92,31 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
           // Selected agent
           this.selectedAgent = resp.agents[0];
 
-         // console.log(this.selectedAgent);
           //Client list
           this.authService.getClients().subscribe((response:any)=> {
             if(response.success) {
               console.log(response);
 
               if(response.clients.length > 0) {
-                this.selectedVisitor = response?.clients[0];
-                console.log(this.selectedVisitor);
-                let jsonData = [];
-                jsonData.push(this.selectedVisitor)
+                // this.selectedVisitor = response?.clients[0];
+                // console.log(this.selectedVisitor);
+                let jsonData:any = [];
+                response.clients.forEach((element:any) => {
+                  jsonData.push(element)
+
+                });
                 this.listOfData = jsonData;
               }
 
               // connect auth
               this.websocket.connect(this.selectedAgent).subscribe(message=> {
-                if(message && typeof(message)==='string')
-                this.chatData.push({
-                  message:message,
-                  time:new Date().getTime(),
-                  user_type:'client'
-                });
+                if(message && typeof(message)==='string') {
+                  this.chatData.push({
+                    message:message,
+                    time:new Date().getTime(),
+                    user_type:'client'
+                  });
+                }
                 console.log(message);
               });
             }
@@ -125,9 +128,9 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
   }
   // For table
-  ngAfterContentChecked() : void {
-    this.changeDetector.detectChanges();
-  }
+  // ngAfterContentChecked() : void {
+  //   this.changeDetector.detectChanges();
+  // }
   closeTab({ index }: { index: number }): void {
     this.tabs.splice(index, 1);
     this.websocket.closeConnection();
@@ -144,7 +147,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
     this.authService.assignClient(this.selectedAgent.email, id).subscribe(res=> {
       if(res.success) {
-         this.tabs.push(name);
+         this.tabs.push({name: name, id: id});
           this.index = this.tabs.length - 1;
           console.log(res);
 
@@ -160,8 +163,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     })
   }
 
-  onChatSend(): void {
-    this.websocket.send({clientId: this.selectedVisitor.id, message: this.chatMessage});
+  onChatSend(id: string): void {
+    this.websocket.send({clientId: id, message: this.chatMessage});
 
     this.chatData.push({
       message:this.chatMessage,
