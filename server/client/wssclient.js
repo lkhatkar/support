@@ -1,13 +1,13 @@
 var client, incoming_messages, outgoing_messages;
 
-if (localStorage.getItem('mail').value != null) {
-    connect(localStorage.getItem('name'), localStorage.getItem('mail'), localStorage.getItem('desig'));
-}
+// if (localStorage.getItem('mail').value != null) {
+//     connect(localStorage.getItem('name'), localStorage.getItem('mail'), localStorage.getItem('desig'));
+// }
 
 
 function connect(name, email, dept, pid = "1") {
-    localStorage.setItem('mail', email);
-    localStorage.setItem('name', name);
+    // localStorage.setItem('mail', email);
+    // localStorage.setItem('name', name);
     switchVisible();
     console.log('called', name, email);
     client = new WsClient({ url: `ws:localhost?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
@@ -18,7 +18,7 @@ function connect(name, email, dept, pid = "1") {
             console.log(data);
             if (data.message != '') {
                 incoming_messages += incoming_messages + "&&" + data.message;
-                localStorage.setItem('incoming', incoming_messages);
+                // localStorage.setItem('incoming', incoming_messages);
                 document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
         <div class="bubble">
         <p>${data.message}</p>
@@ -31,7 +31,7 @@ function connect(name, email, dept, pid = "1") {
         else {
             if (data.message != '') {
                 incoming_messages += incoming_messages + "&&" + data.message;
-                localStorage.setItem('incoming', incoming_messages);
+                // localStorage.setItem('incoming', incoming_messages);
                 document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
         <div class="bubble">
         <p>${data.message}</p>
@@ -80,7 +80,7 @@ function addmessage() {
     if (message != '') {
         console.log(message);
         outgoing_messages += outgoing_messages + "&&" + message;
-        localStorage.setItem('outgoing', outgoing_messages);
+        // localStorage.setItem('outgoing', outgoing_messages);
         document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
         <div class="bubble">
         <p>${message}</p>
