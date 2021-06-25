@@ -13,7 +13,7 @@ class Agent extends Client{
             let {clientId, message} = JSON.parse(jsonString);
             let client = this.clients.find(c => c.id == clientId);
             if(client){
-                client.ws.send(jsonString);
+                client.ws.send(JSON.stringify({success: true, message, name: this.name}));
             }
         }
         catch(e) {
@@ -35,6 +35,13 @@ class Agent extends Client{
         client.ws.on('message', this.onClientMessage.bind(client));
         this.clients.push(client);
         client.assignAgent(this);
+    }
+
+    detachClients() {
+        this.clients.forEach(function (client) {                                 
+            client.detachAgent();
+        });
+        this.clients = [];
     }
 }
 
