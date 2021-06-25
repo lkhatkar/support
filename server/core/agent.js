@@ -24,11 +24,12 @@ class Agent extends Client{
     onClientMessage(message){
         try {
         //this will refer to client
-            this.agent.ws.send(message);
+            // this.agent.ws.send(message);
+            this.agent.ws.send(JSON.stringify({id: this.id, message}));
         }
         catch(e) {
             console.error("On Client Message", e);
-        } 
+        }
     }
 
     onHandleClient(client){
@@ -38,7 +39,7 @@ class Agent extends Client{
     }
 
     detachClients() {
-        this.clients.forEach(function (client) {                                 
+        this.clients.forEach(function (client) {
             client.detachAgent();
         });
         this.clients = [];

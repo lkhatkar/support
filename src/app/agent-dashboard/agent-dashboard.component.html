@@ -48,7 +48,7 @@
             <tbody>
               <tr *ngFor="let client of clientTable.data">
                 <td>{{client.name}}</td>
-                <td><button nz-button (click)="newTab(client.id, client.name)">Assign</button></td>
+                <td><button nz-button (click)="newTab(client.id, client.name)" (keydown.enter)="newTab(client.id, client.name)">Assign</button></td>
                 <!-- <td><button nz-button>Reject</button></td> -->
               </tr>
               <!-- <tr>
@@ -89,19 +89,20 @@
     </div>
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Conversations" class="row2">
-        <nz-tabset [(nzSelectedIndex)]="index" nzType="editable-card" nzHideAdd (nzClose)="closeTab($event)">
+        <nz-tabset [(nzSelectedIndex)]="index" nzType="editable-card" nzHideAdd (nzClose)="closeTab($event)" >
           <nz-tab *ngFor="let tab of tabs; let i = index" [nzClosable]="i > -1" [nzTitle]="tab.name">
             <div>
              <br/>
               <div nz-row>
                 <div nz-col nzSpan="22">
                   <!-- <textarea rows="4" cols="10" nz-input [(ngModel)]="inputValueTab" disabled></textarea> -->
-                  <nz-card class="chat-box">
+                  <nz-card class="chat-box" [id]="tab.id">
                     <p [class] = "data.user_type === 'agent' ? 'agent' : 'client' " *ngFor="let data of chatData">
                       {{data.message}}<br>
                       <small class="time">
                         {{data.time | date: 'shortTime'}}
                       </small>
+
                     </p>
                   </nz-card>
                 </div>

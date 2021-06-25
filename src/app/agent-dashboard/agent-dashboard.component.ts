@@ -109,15 +109,15 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
               }
 
               // connect auth
-              this.websocket.connect(this.selectedAgent).subscribe(message=> {
-                if(message && typeof(message)==='string') {
+              this.websocket.connect(this.selectedAgent).subscribe(data=> {
+                if(data.message && typeof(data.message)==='string') {
                   this.chatData.push({
-                    message:message,
+                    message:data.message,
                     time:new Date().getTime(),
                     user_type:'client'
                   });
                 }
-                console.log(message);
+                console.log(data);
               });
             }
           });
@@ -147,11 +147,12 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
     this.authService.assignClient(this.selectedAgent.email, id).subscribe(res=> {
       if(res.success) {
-         this.tabs.push({name: name, id: id});
-          this.index = this.tabs.length - 1;
-          console.log(res);
-
-      }
+        if(this.tabs.filter(e => e.id === id).length == 0) {
+          this.tabs.push({name: name, id: id});
+           this.index = this.tabs.length - 1;
+           console.log(res);
+        }
+       }
       else {
         console.log(res);
         this.hidden = false
