@@ -16,6 +16,8 @@
 	background   : #42a5f5;
 }
 
+@media screen {}
+
 .chatPopup {
 	display : none;
 	width   : 25%;
@@ -24,7 +26,7 @@
 	right   : 4.2em;
 	border  : 3px solid #f1f1f1;
 	z-index : 9;
-	height: 60%;
+	height  : 60%;
 }
 
 #closeChat {
@@ -72,7 +74,7 @@ button:hover i {
 
 /* body */
 .body {
-	display: none;
+	display         : none;
 	flex-grow       : 1;
 	background-color: #eee;
 	overflow-y      : scroll;
@@ -118,4 +120,50 @@ button:hover i {
 
 .foot .msg {
 	flex-grow: 1;
+}
+
+
+input[type=text],
+select,
+textarea {
+	width        : 100%;
+	padding      : 8px;
+	border       : 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing   : border-box;
+	margin-top   : 6px;
+	margin-bottom: 16px;
+	resize       : vertical
+}
+
+input[type=Email],
+select,
+textarea {
+	width        : 100%;
+	padding      : 8px;
+	border       : 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing   : border-box;
+	margin-top   : 6px;
+	margin-bottom: 16px;
+	resize       : vertical
+}
+
+button [type=submit] {
+	display         : block;
+	margin          : 0 auto;
+	width           : 50%;
+	height          : 15%;
+	background-color: #808080;
+	color           : white;
+	border          : none;
+	border-radius   : 8px;
+	cursor          : pointer;
+	text-align      : center;
+	position        : relative;
+	margin-top      : 5%;
+}
+
+button [type=submit]:hover {
+	background-color: #1a1a1b;
 }
