@@ -40,7 +40,8 @@
                 </select>
 
                 <button type="submit"
-                    onclick="connect(document.getElementById('name').value, document.getElementById('mail').value, document.getElementById('desig').value)">StartChat</button>
+                    onclick="connect(document.getElementById('name').value, document.getElementById('mail').value, document.getElementById('desig').value)">Start
+                    Chat</button>
             </div>
 
             <div class="body">
@@ -49,9 +50,9 @@
             <div class="foot">
                 <button id="btn_Attachment" onclick="attach()" style="float: left;"><i class="fa fa-paperclip"
                         style="font-size: 2em;"></i></button>
-                <input type="text" class="msg" placeholder="Type a message..." />
+                <input type="text" class="msg" placeholder="Type a message..." id='chatMsg' />
                 <!-- <img id="blah" src="#" alt="your image" style="width: 5px; height: 5px ; display: none;" /> -->
-                <button  id="btn_sendMessage" onclick="addmessage()" style="float: right;"><i class="fa fa-paper-plane"
+                <button id="btn_sendMessage" onclick="addmessage()" style="float: right;"><i class="fa fa-paper-plane"
                         style="font-size: 2em;"></i></button>
             </div>
 
