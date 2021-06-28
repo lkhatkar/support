@@ -28,5 +28,7 @@ export class AgentLoginComponent implements OnInit {
       this.formObject.controls[key].updateValueAndValidity();
     }
     if(this.formObject.invalid) return;
+    console.log(this.formObject.value);
+
   }
 }
