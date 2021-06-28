@@ -35,5 +35,13 @@ export class AuthService {
 
   }
 
+  agentLogin(agent:any){
+    return this._http.post<any>(`${this.url}/login`,agent);
+  }
+
+  agentLoggedIn(){
+    return !!localStorage.getItem('agent_token');
+  }
+
 
 }

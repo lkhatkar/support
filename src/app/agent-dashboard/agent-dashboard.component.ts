@@ -103,7 +103,6 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                 let jsonData:any = [];
                 response.clients.forEach((element:any) => {
                   jsonData.push(element)
-
                 });
                 this.listOfData = jsonData;
               }
@@ -159,7 +158,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
         this.hidden = false
         setTimeout(() => {
           this.hidden = true;
-        }, 10000);
+        }, 5000);
       }
 
     })
@@ -177,6 +176,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
     this.chatMessage = '';
     console.log('Chat send clicked');
+  }
+
+  private addMessage(message:string,userType:string){
+
   }
 
   ngOnDestroy() {
