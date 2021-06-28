@@ -9,10 +9,27 @@ router.use('/token', async (req, res, next) => {
     let Client_Id = req.body.Client_Id || req.body.client_id;
     let Client_Secret = req.body.Client_Secret || req.body.client_secret;
 
+    const UserDbo = new Dbo.User(global.dao);
+    let validUser = false;
+    let user, id;
+
     try {
 
         if (Client_Id && Client_Secret) {
             if (Client_Id === process.env.API_CLIENT_ID && Client_Secret === process.env.API_CLIENT_SECRET) {
+                validUser = true;
+                user = 'API';
+            }
+            else {
+                let loginCredentials = await UserDbo.getByUserName(Client_Id);
+                if (loginCredentials.username == Client_Id && loginCredentials.password == Client_Secret) {
+                    validUser = true;
+                    user = loginCredentials.username;
+                    organisation_id = loginCredentials.id;
+                }
+            }
+
+            if (validUser) {
                 let token = jwt.sign({ username: Client_Id },
                     process.env.API_SECRET,
                     {
@@ -23,6 +40,8 @@ router.use('/token', async (req, res, next) => {
                 res.json({
                     success: true,
                     message: 'Authentication successful!',
+                    user: { name: user },
+                    id: id,
                     access_token: token,
                     expires_in: 3600,
                     token_type: 'Bearer'
@@ -34,7 +53,8 @@ router.use('/token', async (req, res, next) => {
                     message: 'Incorrect username or password'
                 });
             }
-        } else {
+        } 
+        else {
             res.status(400).sendData({
                 success: false,
                 message: 'Authentication failed! Please check the request'
@@ -47,41 +67,41 @@ router.use('/token', async (req, res, next) => {
 
 });
 
-router.post('/login', middleware.checkToken, async (req, res)=>{
+router.post('/login', middleware.checkToken, async (req, res) => {
     const UserDbo = new Dbo.User(global.dao);
     const username = req.body.username;
     const password = req.body.password;
-    if(username && password) {
+    if (username && password) {
         const user = await UserDbo.getByUserName(username);
-        if(user) {
-            if(user.password === password) {
-                res.status(200).send({success: true});
+        if (user) {
+            if (user.password === password) {
+                res.status(200).send({ success: true });
             }
             else {
-                res.status(200).send({success: false, message: 'Wrong Password'});
+                res.status(200).send({ success: false, message: 'Wrong Password' });
             }
         }
         else {
-            res.status(200).send({success: false, message: 'User Not Found'});
+            res.status(200).send({ success: false, message: 'User Not Found' });
         }
     }
     else {
-        res.status(200).send({success: false, message: 'invalid call'});
+        res.status(200).send({ success: false, message: 'invalid call' });
     }
 });
 
 router.get('/clients', middleware.checkToken, async (req, res, next) => {
     try {
         var clients = global.clients;
-        if(clients) {
-            clients = clients.map(({ws,agent,...rest}) => ({...rest}))
-            res.status(200).send({success: true, clients});
+        if (clients) {
+            clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }))
+            res.status(200).send({ success: true, clients });
         }
         else {
-            res.status(200).send({success: false, message: "No Clients Found"});
+            res.status(200).send({ success: false, message: "No Clients Found" });
         }
     }
-    catch(e) {
+    catch (e) {
         next(e);
     }
 })
@@ -90,14 +110,14 @@ router.get('/agents', middleware.checkToken, async (req, res, next) => {
     try {
         const UserDbo = new Dbo.User(global.dao);
         const agents = await UserDbo.getAgents(global.dao)
-        if(agents) {            
-            res.status(200).send({success: true, agents});
+        if (agents) {
+            res.status(200).send({ success: true, agents });
         }
         else {
-            res.status(200).send({success: false, message: "No Agents Found"});
+            res.status(200).send({ success: false, message: "No Agents Found" });
         }
     }
-    catch(e) {
+    catch (e) {
         next(e);
     }
 })
@@ -106,19 +126,19 @@ router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
     try {
         const agentEmail = req.body.email;
         const clientId = req.body.id;
-        if(clientId && agentEmail) {
+        if (clientId && agentEmail) {
             let agentIndex = global.agents.findIndex(agent => agent.email == agentEmail);
-            let clientIndex = global.clients.findIndex(client => client.id == clientId); 
-            if(agentIndex != -1 && clientIndex != -1) {
+            let clientIndex = global.clients.findIndex(client => client.id == clientId);
+            if (agentIndex != -1 && clientIndex != -1) {
                 global.agents[agentIndex].onHandleClient(global.clients[clientIndex]);
-                res.status(200).send({success: true});
+                res.status(200).send({ success: true });
             }
             else {
-                res.status(200).send({success: false, message: "Agent or Client Not Found"});
+                res.status(200).send({ success: false, message: "Agent or Client Not Found" });
             }
         }
-        else{
-            res.status(200).send({success: false, message: "Invalid Call"});
+        else {
+            res.status(200).send({ success: false, message: "Invalid Call" });
         }
     } catch (e) {
         next(e);
