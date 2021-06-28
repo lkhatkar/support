@@ -62,6 +62,7 @@ class Wss{
                 else {
                     closedIndex = global.agents.findIndex(agent => agent.ws == ws);
                     if(closedIndex != -1) {
+                        global.agents[closedIndex].detachClients();
                         global.agents.splice(closedIndex, 1);
                     }
                 }

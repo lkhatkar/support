@@ -23,6 +23,11 @@ class Client{
         this.ws.send(JSON.stringify({success: true, message: `Hi ${this.name}. Agent ${agent.name} is assigned to you.`, name: agent.name}));
         this.agent = agent;
     }
+
+    detachAgent() {
+        this.ws.send(JSON.stringify({success: true, message: "Agent Disconnected"}));
+        this.agent = null;
+    }
 }
 
 module.exports = Client;

@@ -21,32 +21,32 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   selectedAgent: any ;
   selectedVisitor: any;
   index = 0;
-  tabs:string[] = [];
+  tabs : {name: string, id: string}[] = [];
   inputValueTab?: string ="Hello there";
   chatMessage = "";
   listOfData: Clients[] = [];
   hidden:boolean = true;
-  chatData = [
-    {
-      message:'there is a issue',
-      time:new Date().getTime(),
-      user_type:'client'
-    },
-    {
-      message:'hey agent here',
-      time:new Date().getTime(),
-      user_type:'agent'
-    },
-    {
-      message:'How may i help you',
-      time:new Date().getTime(),
-      user_type:'agent'
-    },
-    {
-      message:'fix the issue',
-      time:new Date().getTime(),
-      user_type:'client'
-    },
+  chatData:any[] = [
+  //   {
+  //     message:'there is a issue',
+  //     time:new Date().getTime(),
+  //     user_type:'client'
+  //   },
+  //   {
+  //     message:'hey agent here',
+  //     time:new Date().getTime(),
+  //     user_type:'agent'
+  //   },
+  //   {
+  //     message:'How may i help you',
+  //     time:new Date().getTime(),
+  //     user_type:'agent'
+  //   },
+  //   {
+  //     message:'fix the issue',
+  //     time:new Date().getTime(),
+  //     user_type:'client'
+  //   },
   ]
   // Dropdown right click
   contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent): void {
@@ -92,29 +92,33 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
           // Selected agent
           this.selectedAgent = resp.agents[0];
 
-         // console.log(this.selectedAgent);
           //Client list
           this.authService.getClients().subscribe((response:any)=> {
             if(response.success) {
               console.log(response);
 
               if(response.clients.length > 0) {
-                this.selectedVisitor = response?.clients[0];
-                console.log(this.selectedVisitor);
-                let jsonData = [];
-                jsonData.push(this.selectedVisitor)
+                // this.selectedVisitor = response?.clients[0];
+                // console.log(this.selectedVisitor);
+                let jsonData:any = [];
+                response.clients.forEach((element:any) => {
+                  jsonData.push(element)
+
+                });
                 this.listOfData = jsonData;
               }
 
               // connect auth
-              this.websocket.connect(this.selectedAgent).subscribe(message=> {
-                if(message && typeof(message)==='string')
-                this.chatData.push({
-                  message:message,
-                  time:new Date().getTime(),
-                  user_type:'client'
-                });
-                console.log(message);
+              this.websocket.connect(this.selectedAgent).subscribe(data=> {
+                if(data.message && typeof(data.message)==='string') {
+                  this.chatData.push({
+                    message:data.message,
+                    time:new Date().getTime(),
+                    user_type:'client',
+                    id: data.id
+                  });
+                }
+                console.log(data);
               });
             }
           });
@@ -125,12 +129,12 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
   }
   // For table
-  ngAfterContentChecked() : void {
-    this.changeDetector.detectChanges();
-  }
+  // ngAfterContentChecked() : void {
+  //   this.changeDetector.detectChanges();
+  // }
   closeTab({ index }: { index: number }): void {
     this.tabs.splice(index, 1);
-    this.websocket.closeConnection();
+    // this.websocket.closeConnection();
   }
 
   newTab(id: string, name: string): void {
@@ -144,11 +148,12 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
     this.authService.assignClient(this.selectedAgent.email, id).subscribe(res=> {
       if(res.success) {
-         this.tabs.push(name);
-          this.index = this.tabs.length - 1;
-          console.log(res);
-
-      }
+        if(this.tabs.filter(e => e.id === id).length == 0) {
+          this.tabs.push({name: name, id: id});
+           this.index = this.tabs.length - 1;
+           console.log(res);
+        }
+       }
       else {
         console.log(res);
         this.hidden = false
@@ -160,13 +165,14 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     })
   }
 
-  onChatSend(): void {
-    this.websocket.send({clientId: this.selectedVisitor.id, message: this.chatMessage});
+  onChatSend(id: string): void {
+    this.websocket.send({clientId: id, message: this.chatMessage});
 
     this.chatData.push({
       message:this.chatMessage,
       time:new Date().getTime(),
-      user_type:'agent'
+      user_type:'agent',
+      id: id
     });
 
     this.chatMessage = '';

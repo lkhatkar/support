@@ -1,121 +1,172 @@
 .chatBtn {
-	bottom       : 0;
-	position     : fixed;
-	margin       : 1em;
-	right        : 0;
-	z-index      : 998;
-	display      : block;
-	width        : 4em;
-	height       : 4em;
-	border-radius: 50%;
-	border       : none;
-	text-align   : center;
-	color        : #f0f0f0;
-	z-index      : 998;
-	overflow     : hidden;
-	background   : #42a5f5;
+  bottom: 0;
+  position: fixed;
+  margin: 1em;
+  right: 0;
+  z-index: 998;
+  display: block;
+  width: 4em;
+  height: 4em;
+  border-radius: 50%;
+  border: none;
+  text-align: center;
+  color: #f0f0f0;
+  z-index: 998;
+  overflow: hidden;
+  background: #42a5f5;
+}
+
+@media screen {
 }
 
 .chatPopup {
-	display : none;
-	width   : 25%;
-	position: fixed;
-	bottom  : 4.2em;
-	right   : 4.2em;
-	border  : 3px solid #f1f1f1;
-	z-index : 9;
-	height: 60%;
+  display: none;
+  width: 25%;
+  position: fixed;
+  bottom: 4.2em;
+  right: 4.2em;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  height: 60%;
 }
 
 #closeChat {
-	display: none;
+  display: none;
 }
 
 #openChat {
-	display: block;
+  display: block;
 }
 
 body {
-	height: 100%;
-	font  : 16px/1.2 "Roboto", sans-serif;
-	color : #333;
+  height: 100%;
+  font: 16px/1.2 "Roboto", sans-serif;
+  color: #333;
 }
 
 input[type="text"],
 button {
-	padding: 4px 8px;
-	border : 0;
-	outline: 0;
+  padding: 4px 8px;
+  border: 0;
+  outline: 0;
 }
 
 button {
-	background-color: transparent;
-	cursor          : pointer;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 button:hover i {
-	color    : #79c7c5;
-	transform: scale(1.2);
+  color: #79c7c5;
+  transform: scale(1.2);
 }
-
 
 /* chat_box */
 .chat_box {
-	display       : flex;
-	flex-direction: column;
-	height        : 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.chat_box>* {
-	padding: 16px;
+.chat_box > * {
+  padding: 16px;
 }
 
 /* body */
 .body {
-	display: none;
-	flex-grow       : 1;
-	background-color: #eee;
-	overflow-y      : scroll;
+  display: none;
+  flex-grow: 1;
+  background-color: #eee;
+  overflow-y: scroll;
 }
 
 .body .bubble {
-	display      : inline-block;
-	padding      : 10px;
-	margin-bottom: 5px;
-	border-radius: 15px;
+  display: inline-block;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 15px;
 }
 
 .body .bubble p {
-	color     : #f9fbff;
-	font-size : 14px;
-	text-align: left;
+  color: #f9fbff;
+  font-size: 14px;
+  text-align: left;
 }
 
 .body .incoming {
-	text-align: left;
+  text-align: left;
 }
 
 .body .incoming .bubble {
-	background-color: #b2b2b2;
-	overflow-wrap   : break-word;
-	max-width       : 40%;
+  background-color: #b2b2b2;
+  overflow-wrap: break-word;
+  max-width: 40%;
 }
 
 .body .outgoing {
-	text-align: right;
+  text-align: right;
 }
 
 .body .outgoing .bubble {
-	background-color: #42a5f5;
-	overflow-wrap   : break-word;
-	max-width       : 40%;
+  background-color: #42a5f5;
+  overflow-wrap: break-word;
+  max-width: 40%;
 }
 
 /* foot */
 .foot {
-	display: none;
+  display: none;
 }
 
 .foot .msg {
-	flex-grow: 1;
+  flex-grow: 1;
+}
+
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+#chatMsg {
+  border: none;
+}
+
+input[type="Email"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+button[type="submit"] {
+  display: block;
+  margin: 0 auto;
+  width: 50%;
+  height: 15%;
+  background-color: #808080;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  margin-top: 5%;
+}
+
+button[type="submit"]:hover {
+  background-color: #1a1a1b;
 }
