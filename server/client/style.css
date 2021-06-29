@@ -1,33 +1,32 @@
 .chatBtn {
-  bottom: 0;
-  position: fixed;
-  margin: 1em;
-  right: 0;
-  z-index: 998;
-  display: block;
-  width: 4em;
-  height: 4em;
+  bottom       : 0;
+  position     : fixed;
+  margin       : 1em;
+  right        : 0;
+  z-index      : 998;
+  display      : block;
+  width        : 4em;
+  height       : 4em;
   border-radius: 50%;
-  border: none;
-  text-align: center;
-  color: #f0f0f0;
-  z-index: 998;
-  overflow: hidden;
-  background: #42a5f5;
+  border       : none;
+  text-align   : center;
+  color        : #f0f0f0;
+  z-index      : 998;
+  overflow     : hidden;
+  background   : #42a5f5;
 }
 
-@media screen {
-}
+@media screen {}
 
 .chatPopup {
-  display: none;
-  width: 25%;
+  display : none;
+  width   : 25%;
   position: fixed;
-  bottom: 4.2em;
-  right: 4.2em;
-  border: 3px solid #f1f1f1;
-  z-index: 9;
-  height: 60%;
+  bottom  : 4.2em;
+  right   : 4.2em;
+  border  : 3px solid #f1f1f1;
+  z-index : 9;
+  height  : 60%;
 }
 
 #closeChat {
@@ -40,56 +39,56 @@
 
 body {
   height: 100%;
-  font: 16px/1.2 "Roboto", sans-serif;
-  color: #333;
+  font  : 16px/1.2 "Roboto", sans-serif;
+  color : #333;
 }
 
 input[type="text"],
 button {
   padding: 4px 8px;
-  border: 0;
+  border : 0;
   outline: 0;
 }
 
 button {
   background-color: transparent;
-  cursor: pointer;
+  cursor          : pointer;
 }
 
 button:hover i {
-  color: #79c7c5;
+  color    : #79c7c5;
   transform: scale(1.2);
 }
 
 /* chat_box */
 .chat_box {
-  display: flex;
+  display       : flex;
   flex-direction: column;
-  height: 100%;
+  height        : 100%;
 }
 
-.chat_box > * {
+.chat_box>* {
   padding: 16px;
 }
 
 /* body */
 .body {
-  display: none;
-  flex-grow: 1;
+  display         : none;
+  flex-grow       : 1;
   background-color: #eee;
-  overflow-y: scroll;
+  overflow-y      : scroll;
 }
 
 .body .bubble {
-  display: inline-block;
-  padding: 10px;
+  display      : inline-block;
+  padding      : 10px;
   margin-bottom: 5px;
   border-radius: 15px;
 }
 
 .body .bubble p {
-  color: #f9fbff;
-  font-size: 14px;
+  color     : #f9fbff;
+  font-size : 14px;
   text-align: left;
 }
 
@@ -99,8 +98,8 @@ button:hover i {
 
 .body .incoming .bubble {
   background-color: #b2b2b2;
-  overflow-wrap: break-word;
-  max-width: 40%;
+  overflow-wrap   : break-word;
+  max-width       : 40%;
 }
 
 .body .outgoing {
@@ -109,8 +108,8 @@ button:hover i {
 
 .body .outgoing .bubble {
   background-color: #42a5f5;
-  overflow-wrap: break-word;
-  max-width: 40%;
+  overflow-wrap   : break-word;
+  max-width       : 40%;
 }
 
 /* foot */
@@ -125,14 +124,14 @@ button:hover i {
 input[type="text"],
 select,
 textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
+  width        : 100%;
+  padding      : 8px;
+  border       : 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box;
-  margin-top: 6px;
+  box-sizing   : border-box;
+  margin-top   : 6px;
   margin-bottom: 16px;
-  resize: vertical;
+  resize       : vertical;
 }
 
 #chatMsg {
@@ -142,31 +141,38 @@ textarea {
 input[type="Email"],
 select,
 textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
+  width        : 100%;
+  padding      : 8px;
+  border       : 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box;
-  margin-top: 6px;
+  box-sizing   : border-box;
+  margin-top   : 6px;
   margin-bottom: 16px;
-  resize: vertical;
+  resize       : vertical;
 }
 
 button[type="submit"] {
-  display: block;
-  margin: 0 auto;
-  width: 50%;
-  height: 15%;
+  display         : block;
+  margin          : 0 auto;
+  width           : 50%;
+  height          : 15%;
   background-color: #808080;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: center;
-  position: relative;
-  margin-top: 5%;
+  color           : white;
+  border          : none;
+  border-radius   : 8px;
+  cursor          : pointer;
+  text-align      : center;
+  position        : relative;
+  margin-top      : 5%;
 }
 
 button[type="submit"]:hover {
   background-color: #1a1a1b;
+}
+
+.time_date {
+  color: #747474;
+  display: block;
+  font-size: 12px;
+  margin: 8px 0 0;
 }
