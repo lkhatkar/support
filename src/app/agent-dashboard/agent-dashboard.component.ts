@@ -3,6 +3,8 @@ import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { WebSocketService } from '../services/web-socket.service';
 import { AuthService } from '../services/auth.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export interface Clients {
   id: string;
@@ -26,6 +28,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   chatMessage = "";
   listOfData: Clients[] = [];
   hidden:boolean = true;
+  private _subscription$: Subject<void>;
   chatData:any[] = [
   //   {
   //     message:'there is a issue',
@@ -58,14 +61,17 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
   constructor(
     private nzContextMenuService: NzContextMenuService,
-    private websocket:WebSocketService, private authService: AuthService, private changeDetector: ChangeDetectorRef) {
+    private websocket:WebSocketService,
+    private authService: AuthService,
+    private changeDetector: ChangeDetectorRef) {
+      this._subscription$ = new Subject();
   }
 
   ngOnInit(): void {
     this.authService.getToken().subscribe(res=> {
       let names:any = []
       if(res.success) {
-        sessionStorage.setItem('token', res.access_token);
+        // sessionStorage.setItem('token', res.access_token);
         // Get Agents
         this.authService.getAgents().subscribe(resp=> {
           if(resp.success) {
@@ -108,7 +114,9 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
               }
 
               // connect auth
-              this.websocket.connect(this.selectedAgent).subscribe(data=> {
+              this.websocket.connect(this.selectedAgent)
+              .pipe(takeUntil(this._subscription$))
+              .subscribe(data=> {
                 if(data.message && typeof(data.message)==='string') {
                   this.chatData.push({
                     message:data.message,
@@ -183,6 +191,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._subscription$.next();
+    this._subscription$.complete();
     this.websocket.closeConnection();
   }
 

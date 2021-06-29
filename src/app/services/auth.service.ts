@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   agentLoggedIn(){
-    return !!localStorage.getItem('agent_token');
+    return !!sessionStorage.getItem('token');
   }
 
 
