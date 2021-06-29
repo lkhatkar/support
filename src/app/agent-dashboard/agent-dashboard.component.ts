@@ -69,11 +69,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const currentAgent = this.authService.getCurrentAgent()
-    // console.log(agent);
 
-    this.authService.getToken().subscribe(res=> {
+    // this.authService.getToken().subscribe(res=> {
       let names:any = []
-      if(res.success) {
+      // if(res.success) {
         // sessionStorage.setItem('token', res.access_token);
         // Get Agents
         this.authService.getAgents().subscribe(resp=> {
@@ -135,9 +134,9 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             }
           });
         });
-      }
+    //   }
 
-    })
+    // })
 
   }
   // For table
