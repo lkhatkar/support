@@ -43,5 +43,9 @@ export class AuthService {
     return !!sessionStorage.getItem('token');
   }
 
+  getCurrentAgent(){
+    const currentAgent = sessionStorage.getItem('currentAgent');
+    return JSON.parse(currentAgent || '{}');
+  }
 
 }

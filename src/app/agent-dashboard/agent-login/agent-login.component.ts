@@ -25,7 +25,6 @@ export class AgentLoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   submitForm() {
@@ -43,10 +42,19 @@ export class AgentLoginComponent implements OnInit {
             .subscribe(response => {
               if (response.success) {
                 sessionStorage.setItem('token', response.access_token);
+                this.setCurrentAgent();
                 this.router.navigate(['/agent'])
               }
             });
         }
       })
+  }
+
+  private setCurrentAgent(){
+    const agent = {
+      username: this.formObject.get('username')?.value,
+      email:this.formObject.get('email')?.value
+    }
+    sessionStorage.setItem('currentAgent',JSON.stringify(agent));
   }
 }
