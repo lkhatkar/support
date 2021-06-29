@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-agent-login',
@@ -8,27 +10,51 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AgentLoginComponent implements OnInit {
 
-  public formObject:FormGroup;
-  constructor(private _formBuilder:FormBuilder) {
+  public formObject: FormGroup;
+  constructor(
+    private _formBuilder: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.formObject = this._formBuilder.group({
-      userName:['',Validators.required],
-      email:['',Validators.required],
-      pid:['',Validators.required],
-      password:['',Validators.required],
+      username: ['', Validators.required],
+      email: ['', Validators.required],
+      pid: ['', Validators.required],
+      password: ['', Validators.required],
     })
   }
 
   ngOnInit(): void {
-
   }
 
-  submitForm(){
+  submitForm() {
     for (const key in this.formObject.controls) {
       this.formObject.controls[key].markAsDirty();
       this.formObject.controls[key].updateValueAndValidity();
     }
-    if(this.formObject.invalid) return;
-    console.log(this.formObject.value);
+    if (this.formObject.invalid) return;
 
+    console.log(this.formObject.value);
+    this.authService.agentLogin(this.formObject.value)
+      .subscribe(res => {
+        if (res.success) {
+          this.authService.getToken()
+            .subscribe(response => {
+              if (response.success) {
+                sessionStorage.setItem('token', response.access_token);
+                this.setCurrentAgent();
+                this.router.navigate(['/agent'])
+              }
+            });
+        }
+      })
+  }
+
+  private setCurrentAgent(){
+    const agent = {
+      username: this.formObject.get('username')?.value,
+      email:this.formObject.get('email')?.value
+    }
+    sessionStorage.setItem('currentAgent',JSON.stringify(agent));
   }
 }

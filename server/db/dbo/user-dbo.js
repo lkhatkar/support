@@ -2,7 +2,7 @@ class UserDbo {
     constructor(dao) {
       this.dao = dao
     }
-  
+
     createTable() {
       const sql = `
       CREATE TABLE IF NOT EXISTS userdata (
@@ -10,21 +10,21 @@ class UserDbo {
         Id         TEXT NOT NULL,
         Name TEXT  NOT NULL,
         Email TEXT  NOT NULL,
-        PageId TEXT  NOT NULL,                  
+        PageId TEXT  NOT NULL,
         Create_Date  DATE  NOT NULL,
         IsActive  BOOLEAN NOT NULL DEFAULT (false),
         Group_Id BIGINT NOT NULL
                         REFERENCES Department (Sno) ON DELETE NO ACTION
                         ON UPDATE NO ACTION,
         Password TEXT,
-        IsAgent BOOLEAN NOT NULL DEFAULT (false)        
+        IsAgent BOOLEAN NOT NULL DEFAULT (false)
     )`
       return this.dao.run(sql)
     }
 
     getAll() {
       return this.dao.all(`SELECT * FROM userdata`)
-    }        
+    }
 
     get(id) {
       return this.dao.get(
@@ -36,6 +36,12 @@ class UserDbo {
       return this.dao.get(
         `SELECT * FROM userdata WHERE Name = $1`,
         [name])
+    }
+
+    getByEmail(email){
+      return this.dao.get(
+        `SELECT * FROM userdata WHERE email = $1`,
+        [email])
     }
 
     getAgents() {
@@ -61,5 +67,5 @@ class UserDbo {
         )
     }
   }
-  
+
   module.exports = UserDbo;

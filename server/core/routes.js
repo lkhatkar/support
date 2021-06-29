@@ -46,14 +46,14 @@ router.use('/token', async (req, res, next) => {
                     expires_in: 3600,
                     token_type: 'Bearer'
                 });
-            } 
+            }
             else {
                 res.status(401).sendData({
                     success: false,
                     message: 'Incorrect username or password'
                 });
             }
-        } 
+        }
         else {
             res.status(400).sendData({
                 success: false,
@@ -67,12 +67,13 @@ router.use('/token', async (req, res, next) => {
 
 });
 
-router.post('/login', middleware.checkToken, async (req, res) => {
+router.post('/login', async (req, res) => {
     const UserDbo = new Dbo.User(global.dao);
     const username = req.body.username;
     const password = req.body.password;
+    const email = req.body.email;
     if (username && password) {
-        const user = await UserDbo.getByUserName(username);
+        const user = await UserDbo.getByEmail(email);
         if (user) {
             if (user.password === password) {
                 res.status(200).send({ success: true });

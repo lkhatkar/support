@@ -9,7 +9,7 @@ import { AuthService } from '../services/auth.service';
 export class AgentGuard implements CanActivate {
   constructor(private router: Router, private service: AuthService) { }
   canActivate() {
-    if(!this.service.agentLoggedIn()){
+    if(this.service.agentLoggedIn()){
       return true;
     }
     else {
