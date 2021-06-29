@@ -68,8 +68,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const agent = this.authService.getCurrentAgent()
-    console.log(agent);
+    const currentAgent = this.authService.getCurrentAgent()
+    // console.log(agent);
 
     this.authService.getToken().subscribe(res=> {
       let names:any = []
@@ -99,7 +99,9 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             this.nodes = dig();
           }
           // Selected agent
-          this.selectedAgent = resp.agents[0];
+          this.selectedAgent = resp.agents.find((agent:any)=>agent.email === currentAgent.email);
+          // this.selectedAgent = resp.agents[0];
+
 
           //Client list
           this.authService.getClients().subscribe((response:any)=> {
