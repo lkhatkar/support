@@ -50,6 +50,7 @@
             <div class="foot">
                 <button id="btn_Attachment" onclick="attach()" style="float: left;"><i class="fa fa-paperclip"
                         style="font-size: 2em;"></i></button>
+                <input type="file" id='attached_file' accept=".jpg,.jpeg,.png" hidden onchange='getImageData(event)'>
                 <input type="text" class="msg" placeholder="Type a message..." id='chatMsg' />
                 <!-- <img id="blah" src="#" alt="your image" style="width: 5px; height: 5px ; display: none;" /> -->
                 <button id="btn_sendMessage" onclick="addmessage()" style="float: right;"><i class="fa fa-paper-plane"

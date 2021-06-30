@@ -1,29 +1,29 @@
 var client, msg_image = false, msg_array = [];
 
-if (localStorage.getItem('mail') != '') {
-    maill = localStorage.getItem('mail');
-    namee = localStorage.getItem('name');
-    deptt = localStorage.getItem('dept');
-    connect(nme, maill, deptt);
-    chat = localStorage.getItem('messages');
-    msg_array = chat;
-    for (i = 0; i < chat.length; i++) {
-        if (chat[i].obj_isclient) {
-            document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
-            <div class="bubble">
-            <p>${chat[i].obj_message}</p>
-            </div>
-            <span class="time_date">${chat[i].obj_date.toLocaleString('en-GB')}</span>`
-        }
-        else {
-            document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
-            <div class="bubble">
-            <p>${chat[i].obj_message}</p>
-            </div>
-            <span class="time_date">${chat[i].obj_date.toLocaleString('en-GB')}</span>`
-        }
-    }
-}
+// if (localStorage.getItem('mail') != '') {
+//     maill = localStorage.getItem('mail');
+//     namee = localStorage.getItem('name');
+//     deptt = localStorage.getItem('dept');
+//     connect(nme, maill, deptt);
+//     chat = localStorage.getItem('messages');
+//     msg_array = chat;
+//     for (i = 0; i < chat.length; i++) {
+//         if (chat[i].obj_isclient) {
+//             document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
+//             <div class="bubble">
+//             <p>${chat[i].obj_message}</p>
+//             </div>
+//             <span class="time_date">${chat[i].obj_date.toLocaleString('en-GB')}</span>`
+//         }
+//         else {
+//             document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
+//             <div class="bubble">
+//             <p>${chat[i].obj_message}</p>
+//             </div>
+//             <span class="time_date">${chat[i].obj_date.toLocaleString('en-GB')}</span>`
+//         }
+//     }
+// }
 
 function connect(name, email, dept, pid = "1") {
 
@@ -132,10 +132,10 @@ function addmessage() {
             msg_array.push(msg_obj);
             localStorage.setItem('messages', msg_array);
             document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
-        <div class="bubble">
-        <p>${message}</p>
-        </div>
-        <span class="time_date">${date.toLocaleString('en-GB')}</span>`
+            <div class="bubble">
+            <p>${message}</p>
+            </div>
+            <span class="time_date">${date.toLocaleString('en-GB')}</span>`
             document.getElementsByClassName("msg")[0].value = '';
         }
         else {
@@ -145,13 +145,34 @@ function addmessage() {
 }
 
 function attach() {
-    var fileSelector = document.createElement('input');
-    fileSelector.setAttribute('id', 'attached_file');
-    fileSelector.setAttribute('type', 'file');
-    fileSelector.setAttribute('accept', '.jpg,.jpeg,.png')
+    var fileSelector = document.getElementById('attached_file');
     fileSelector.click();
 }
 
+function getImageData(event)
+{
+    console.log(event.target.files[0]);//sennd to server
+    let file=event.target.files[0];
+    let formData=new FormData();
+    blobToDataURL(file);
+    formData.append('img',file);
+    console.log(formData);
+}
+
+function blobToDataURL(blob){
+    let reader=new FileReader();
+    reader.onload=()=>{
+        let img=reader.result;
+        let imgTag=document.createElement('img');
+        imgTag.src=img;
+        // imgTag.height=20+'px';
+        // imgTag.width=50+'px';
+        console.log('imgTag',imgTag);
+        document.getElementsByClassName('body')[0].appendChild(imgTag); 
+        // document.getElementsByClassName("msg")[0].value = '';
+    }
+    reader.readAsDataURL(blob);
+}
 
 
 
