@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -8,7 +9,10 @@ import { Injectable } from '@angular/core';
 export class AuthService {
   url:any = "http://localhost:80/api"
 
-  constructor(private _http: HttpClient) { }
+  constructor(
+    private _http: HttpClient,
+    private router:Router
+    ) { }
 
   getToken() {
     let payload = new HttpParams()
@@ -36,7 +40,7 @@ export class AuthService {
   }
 
   agentLogin(agent:any){
-    return this._http.post<any>(`${this.url}/login`,agent);
+    return this._http.post<any>(`${this.url}/token`,agent);
   }
 
   agentLoggedIn(){
@@ -46,6 +50,11 @@ export class AuthService {
   getCurrentAgent(){
     const currentAgent = sessionStorage.getItem('currentAgent');
     return JSON.parse(currentAgent || '{}');
+  }
+
+  agentLogout(){
+    sessionStorage.removeItem('token');
+    this.router.navigate(['/admin-login']);
   }
 
 }

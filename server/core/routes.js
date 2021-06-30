@@ -6,9 +6,9 @@ const middleware = require('../core/middleware');
 // Routes
 router.use('/token', async (req, res, next) => {
 
-    let Client_Id = req.body.Client_Id || req.body.client_id;
-    let Client_Secret = req.body.Client_Secret || req.body.client_secret;
-
+    let Client_Id = req.body.username || req.body.client_id;
+    let Client_Secret = req.body.password || req.body.client_secret;
+    let Client_Email = req.body.email;
     const UserDbo = new Dbo.User(global.dao);
     let validUser = false;
     let user, id;
@@ -21,8 +21,8 @@ router.use('/token', async (req, res, next) => {
                 user = 'API';
             }
             else {
-                let loginCredentials = await UserDbo.getByUserName(Client_Id);
-                if (loginCredentials.username == Client_Id && loginCredentials.password == Client_Secret) {
+                let loginCredentials = await UserDbo.getByEmail(Client_Email);
+                if (loginCredentials.name == Client_Id && loginCredentials.password == Client_Secret) {
                     validUser = true;
                     user = loginCredentials.username;
                     organisation_id = loginCredentials.id;

@@ -34,18 +34,14 @@ export class AgentLoginComponent implements OnInit {
     }
     if (this.formObject.invalid) return;
 
-    console.log(this.formObject.value);
+    // console.log(this.formObject.value);
     this.authService.agentLogin(this.formObject.value)
-      .subscribe(res => {
+    .subscribe(res => {
+        console.log(res);
         if (res.success) {
-          this.authService.getToken()
-            .subscribe(response => {
-              if (response.success) {
-                sessionStorage.setItem('token', response.access_token);
-                this.setCurrentAgent();
-                this.router.navigate(['/agent'])
-              }
-            });
+          sessionStorage.setItem('token', res.access_token);
+          this.setCurrentAgent();
+          this.router.navigate(['/agent']);
         }
       })
   }
