@@ -1,42 +1,66 @@
-var client, incoming_messages, outgoing_messages;
+var client, msg_image = false, msg_array = [];
 
-// if (localStorage.getItem('mail').value != null) {
-//     connect(localStorage.getItem('name'), localStorage.getItem('mail'), localStorage.getItem('desig'));
-// }
-
+if (localStorage.getItem('mail') != '') {
+    maill = localStorage.getItem('mail');
+    namee = localStorage.getItem('name');
+    deptt = localStorage.getItem('dept');
+    connect(nme, maill, deptt);
+    chat = localStorage.getItem('messages');
+    msg_array = chat;
+    for (i = 0; i < chat.length; i++) {
+        if (chat[i].obj_isclient) {
+            document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
+            <div class="bubble">
+            <p>${chat[i].obj_message}</p>
+            </div>
+            <span class="time_date">${chat[i].obj_date.toLocaleString('en-GB')}</span>`
+        }
+        else {
+            document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
+            <div class="bubble">
+            <p>${chat[i].obj_message}</p>
+            </div>
+            <span class="time_date">${chat[i].obj_date.toLocaleString('en-GB')}</span>`
+        }
+    }
+}
 
 function connect(name, email, dept, pid = "1") {
-    // localStorage.setItem('mail', email);
-    // localStorage.setItem('name', name);
-    switchVisible();
-    console.log('called', name, email);
+
     client = new WsClient({ url: `ws:localhost?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
+
+    localStorage.setItem('mail', email);
+    localStorage.setItem('name', name);
+    localStorage.setItem('dept', dept);
+
+    document.getElementsByClassName('info')[0].style.display = 'none';
+    document.getElementsByClassName('body')[0].style.display = 'block';
+    document.getElementsByClassName('foot')[0].style.display = 'flex';
+
+
     client.onMessage = function (msg) {
         var data = JSON.parse(msg.data);
-        if (data.name == undefined) {
-            console.log('undefined');
-            console.log(data);
-            if (data.message != '') {
-                incoming_messages += incoming_messages + "&&" + data.message;
-                // localStorage.setItem('incoming', incoming_messages);
-                document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
-        <div class="bubble">
-        <p>${data.message}</p>
-        </div>`
+        date = new Date();
+        if (data.message != '') {
+            var msg_obj = {
+                obj_message: data.message,
+                obj_isclient: false,
+                obj_date: date
             }
+            msg_array.push(msg_obj);
+            localStorage.setItem('messages', msg_array);
+            document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
+            <div class="bubble">
+            <p>${data.message}</p>
+            </div>
+            <span class="time_date">${date.toLocaleString('en-GB')}</span>`
+        }
+        if (data.name == undefined) {
             document.getElementsByClassName('msg')[0].disabled = true;
             document.getElementById('btn_sendMessage').disabled = true;
             document.getElementById('btn_Attachment').disabled = true;
         }
         else {
-            if (data.message != '') {
-                incoming_messages += incoming_messages + "&&" + data.message;
-                // localStorage.setItem('incoming', incoming_messages);
-                document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
-        <div class="bubble">
-        <p>${data.message}</p>
-        </div>`
-            }
             document.getElementsByClassName('msg')[0].disabled = false;
             document.getElementById('btn_sendMessage').disabled = false;
             document.getElementById('btn_Attachment').disabled = false;
@@ -67,6 +91,7 @@ function openChat() {
     document.getElementById("closeChat").style.display = "block";
     document.getElementById("openChat").style.display = "none";
 }
+
 function closeChat() {
     document.getElementById("closeChat").style.display = "none";
     document.getElementById("openChat").style.display = "block";
@@ -75,40 +100,49 @@ function closeChat() {
 
 
 function addmessage() {
-    var message = document.getElementsByClassName("msg")[0].value;
-    client.send(message);
-    if (message != '') {
-        console.log(message);
-        outgoing_messages += outgoing_messages + "&&" + message;
-        // localStorage.setItem('outgoing', outgoing_messages);
+    if (msg_image) {
+        var file = document.getElementById('filename').files[0];
+        var reader = new FileReader();
+        var rawData = new ArrayBuffer();
+        reader.onload = function (e) {
+            rawData = e.target.result;
+            client.send(rawData);
+            alert("the File has been transferred.")
+        }
+        reader.readAsArrayBuffer(file);
+        date = new Date();
+        var message = document.getElementsByClassName("msg")[0].value;
         document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
         <div class="bubble">
-        <p>${message}</p>
-        </div>`
+        <a>${message}</a>
+        </div>
+        <span class="time_date">${date.toLocaleString('en-GB')}</span>`
         document.getElementsByClassName("msg")[0].value = '';
     }
     else {
-        alert('type a message');
-    }
-}
-
-function switchVisible() {
-    if (document.getElementsByClassName('info')[0]) {
-
-        if (document.getElementsByClassName('info')[0].style.display == 'none') {
-            document.getElementsByClassName('info')[0].style.display = 'block';
-            document.getElementsByClassName('body')[0].style.display = 'none';
-            document.getElementsByClassName('foot')[0].style.display = 'none';
-
+        var message = document.getElementsByClassName("msg")[0].value;
+        if (message != '') {
+            client.send(message);
+            date = new Date();
+            var msg_obj = {
+                obj_message: message,
+                obj_isclient: true,
+                obj_date: date
+            };
+            msg_array.push(msg_obj);
+            localStorage.setItem('messages', msg_array);
+            document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
+        <div class="bubble">
+        <p>${message}</p>
+        </div>
+        <span class="time_date">${date.toLocaleString('en-GB')}</span>`
+            document.getElementsByClassName("msg")[0].value = '';
         }
         else {
-            document.getElementsByClassName('info')[0].style.display = 'none';
-            document.getElementsByClassName('body')[0].style.display = 'block';
-            document.getElementsByClassName('foot')[0].style.display = 'flex';
+            alert('type a message');
         }
     }
 }
-
 
 function attach() {
     var fileSelector = document.createElement('input');
@@ -116,14 +150,9 @@ function attach() {
     fileSelector.setAttribute('type', 'file');
     fileSelector.setAttribute('accept', '.jpg,.jpeg,.png')
     fileSelector.click();
-
-    // var drawing = document.getElementsByClassName("msg")[0];
-    // var con = drawing.getContext("2d");
-    // var img = document.getElementById("attached_file");
-    // con.drawImage(img, 0, 0, 50, 50);
-    // var image2 = new Image();
-    // image2.src = "andyGoofy.gif";
-    // con.drawImage(image2, 100, 100, 70, 50);
-
-
 }
+
+
+
+
+
