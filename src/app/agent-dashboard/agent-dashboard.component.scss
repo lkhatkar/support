@@ -9,12 +9,14 @@
 }
 
 .chat-box{
+  height: 150px;
   max-height: 150px;
   overflow: auto;
 }
 .agent{
   width: 25%;
   background: #40a9ff;
+  margin-bottom: 5px;
   color: #fff;
   float: right;
   clear: both;
@@ -31,6 +33,7 @@
   float: left;
   clear: both;
   border: 1px solid #ddd;
+  margin-bottom: 5px;
   border-radius: 16px;
   padding: 5px;
   font-family: "Roboto", "Helvetica Neue", sans-serif;

@@ -16,7 +16,7 @@ export class WebSocketService {
    }
 
   connect(selectedAgent: any): Observable<any> {
-    console.log('Selected agent service: ', selectedAgent);
+    // console.log('Selected agent service: ', selectedAgent);
     return of(`http://localhost:80?name=${selectedAgent.name}&email=${selectedAgent.email}&dept=crane&pid=${selectedAgent.pageid}&auth=${this.authService.acquireToken()}`).pipe(
       // https becomes wws, http becomes ws
       map(apiUrl => apiUrl.replace(/^http/, 'ws')),

@@ -5,6 +5,7 @@ import { WebSocketService } from '../services/web-socket.service';
 import { AuthService } from '../services/auth.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { interval } from 'rxjs';
 
 export interface Clients {
   id: string;
@@ -108,38 +109,40 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
           this.selectedAgent = resp.agents.find((agent:any)=>agent.email === currentAgent.email);
           // this.selectedAgent = resp.agents[0];
 
-
           //Client list
-          this.authService.getClients().subscribe((response:any)=> {
-            if(response.success) {
-              console.log(response);
+          // interval(6000).subscribe(() => {
+            this.authService.getClients().subscribe((response:any)=> {
+              if(response.success) {
+                console.log(response);
 
-              if(response.clients.length > 0) {
-                // this.selectedVisitor = response?.clients[0];
-                // console.log(this.selectedVisitor);
-                let jsonData:any = [];
-                response.clients.forEach((element:any) => {
-                  jsonData.push(element)
-                });
-                this.listOfData = jsonData;
-              }
-
-              // connect auth
-              this.websocket.connect(this.selectedAgent)
-              .pipe(takeUntil(this._subscription$))
-              .subscribe(data=> {
-                if(data.message && typeof(data.message)==='string') {
-                  this.chatData.push({
-                    message:data.message,
-                    time:new Date().getTime(),
-                    user_type:'client',
-                    id: data.id
+                if(response.clients.length > 0) {
+                  // this.selectedVisitor = response?.clients[0];
+                  // console.log(this.selectedVisitor);
+                  let jsonData:any = [];
+                  response.clients.forEach((element:any) => {
+                    jsonData.push(element)
                   });
+                  this.listOfData = jsonData;
                 }
-                console.log(data);
-              });
-            }
-          });
+
+                // connect auth
+                this.websocket.connect(this.selectedAgent)
+                .pipe(takeUntil(this._subscription$))
+                .subscribe(data=> {
+                  if(data.message && typeof(data.message)==='string') {
+                      this.chatData.push({
+                        message:data.message,
+                        time:new Date().getTime(),
+                        user_type:'client',
+                        id: data.id
+                      });
+                  }
+                  // console.log(data);
+                });
+              }
+            });
+          // });
+
         });
     //   }
 
