@@ -54,7 +54,7 @@ export class AuthService {
 
   agentLogout(){
     sessionStorage.removeItem('token');
-    this.router.navigate(['/admin-login']);
+    this.router.navigate(['/agent-login']);
   }
 
 }

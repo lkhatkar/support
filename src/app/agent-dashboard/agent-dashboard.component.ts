@@ -52,8 +52,14 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   //   },
   ]
   // Dropdown right click
-  contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent): void {
-    this.nzContextMenuService.create($event, menu);
+  contextMenu($event: any, menu: NzDropdownMenuComponent, nodes: any): void {
+    let agentName = $event.explicitOriginalTarget.nodeValue;
+    // console.log(this.selectedAgent);
+    if(agentName === this.selectedAgent.name) {
+      this.nzContextMenuService.create($event, menu);
+    }
+    // console.log($event.explicitOriginalTarget.nodeValue);
+    // console.log(nodes[0].children[0].title);
   }
 
   closeMenu(): void {
@@ -96,6 +102,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
               return list;
             };
             this.nodes = dig();
+            console.log(this.nodes);
           }
           // Selected agent
           this.selectedAgent = resp.agents.find((agent:any)=>agent.email === currentAgent.email);
@@ -192,6 +199,9 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
   private addMessage(message:string,userType:string){
 
+  }
+  onLogout() {
+    this.authService.agentLogout();
   }
 
   ngOnDestroy() {
