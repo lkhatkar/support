@@ -11,7 +11,7 @@ class Client{
         if(agent)
             this.ws.send(JSON.stringify({success: true, message: `Welcome ${this.name}`}));
         else
-            this.ws.send(JSON.stringify({success: true, message: `Welcome ${this.name}. Please wait while an agent will be assigned to you.`}));
+            this.ws.send(JSON.stringify({success: true}));
     }
 
     onMessage(message) {
@@ -20,7 +20,7 @@ class Client{
     }
 
     assignAgent(agent){
-        this.ws.send(JSON.stringify({success: true, message: `Hi ${this.name}. Agent ${agent.name} is assigned to you.`, name: agent.name}));
+        this.ws.send(JSON.stringify({success: true, message:"", name: agent.name}));
         this.agent = agent;
     }
 

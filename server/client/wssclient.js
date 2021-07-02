@@ -1,4 +1,4 @@
-var client, msg_image = false, msg_array = [];
+var client, msg_image = false, msg_array = [], client_connected = false;;
 
 // if (localStorage.getItem('mail') != '') {
 //     maill = localStorage.getItem('mail');
@@ -40,30 +40,42 @@ function connect(name, email, dept, pid = "1") {
 
     client.onMessage = function (msg) {
         var data = JSON.parse(msg.data);
-        date = new Date();
-        if (data.message != '') {
-            var msg_obj = {
-                obj_message: data.message,
-                obj_isclient: false,
-                obj_date: date
-            }
-            msg_array.push(msg_obj);
-            localStorage.setItem('messages', msg_array);
-            document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
-            <div class="bubble">
-            <p>${data.message}</p>
-            </div>
-            <span class="time_date">${date.toLocaleString('en-GB')}</span>`
-        }
         if (data.name == undefined) {
+
+            document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
+            Please wait while an agent will be assigned to you.</h3>`
+
+            client_connected = false;
             document.getElementsByClassName('msg')[0].disabled = true;
             document.getElementById('btn_sendMessage').disabled = true;
             document.getElementById('btn_Attachment').disabled = true;
         }
         else {
+
+            if (!client_connected) {
+                document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
+            Hi ${name}, Agent ${data.name} is assigned to you.</h3>`
+            }
+
             document.getElementsByClassName('msg')[0].disabled = false;
             document.getElementById('btn_sendMessage').disabled = false;
             document.getElementById('btn_Attachment').disabled = false;
+            client_connected = true;
+            date = new Date();
+            if (data.message != '') {
+                var msg_obj = {
+                    obj_message: data.message,
+                    obj_isclient: false,
+                    obj_date: date
+                }
+                msg_array.push(msg_obj);
+                localStorage.setItem('messages', msg_array);
+                document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
+                <div class="bubble">
+                <p>${data.message}</p>
+                </div>
+                <span class="time_date">${date.toLocaleString('en-GB')}</span>`
+            }
         }
     }
 }
@@ -149,31 +161,49 @@ function attach() {
     fileSelector.click();
 }
 
-function getImageData(event)
-{
+function getImageData(event) {
     console.log(event.target.files[0]);//sennd to server
-    let file=event.target.files[0];
-    let formData=new FormData();
+    let file = event.target.files[0];
+    let formData = new FormData();
     blobToDataURL(file);
-    formData.append('img',file);
+    formData.append('img', file);
     console.log(formData);
 }
 
-function blobToDataURL(blob){
-    let reader=new FileReader();
-    reader.onload=()=>{
-        let img=reader.result;
-        let imgTag=document.createElement('img');
-        imgTag.src=img;
+function blobToDataURL(blob) {
+    let reader = new FileReader();
+    reader.onload = () => {
+        let img = reader.result;
+        let imgTag = document.createElement('img');
+        imgTag.src = img;
         // imgTag.height=20+'px';
         // imgTag.width=50+'px';
-        console.log('imgTag',imgTag);
-        document.getElementsByClassName('body')[0].appendChild(imgTag); 
+        console.log('imgTag', imgTag);
+        document.getElementsByClassName('body')[0].appendChild(imgTag);
         // document.getElementsByClassName("msg")[0].value = '';
     }
     reader.readAsDataURL(blob);
 }
 
+function validateForm(e) {
+    e.preventDefault();
+    let x = document.forms["login_form"]["Name"].value;
+    if (x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+    let y = document.forms["login_form"]["Mail"].value;
+    if (y == "") {
+        alert("Email must be filled out");
+        return false;
+    }
+    if(document.login_form.desig.selectedIndex == "0")
+    {
+        alert("Designation must be selected");
+        return false; 
+    }
+    connect(document.getElementById('name').value, document.getElementById('mail').value, document.getElementById('desig').value);
+}
 
 
 

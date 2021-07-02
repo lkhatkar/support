@@ -24,37 +24,35 @@
             </div>
 
             <div class="info">
-                <label for="required">Name</label>
-                <input type="text" id="name" required>
+                <form name="login_form" onsubmit="return validateForm(event)" >
+                    <label for="required">Name</label>
+                    <input type="text" name="Name" id="name">
 
 
-                <label for="Email">Email</label>
-                <input type="Email" id="mail" required>
+                    <label for="Email">Email</label>
+                    <input type="Email" name="Mail" id="mail">
 
-                <label for="designation">Department</label>
-                <select id="desig">
-                    <option value="" selected disabled>Select Department</option>
-                    <option value="Sales">Sales</option>
-                    <option value="Billing">Billing</option>
-                    <option value="Support">Support</option>
-                </select>
+                    <label for="designation">Department</label>
+                    <select id="desig" name="desig">
+                        <option value="" selected disabled>Select Department</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Billing">Billing</option>
+                        <option value="Support">Support</option>
+                    </select>
 
-                <button type="submit"
-                    onclick="connect(document.getElementById('name').value, document.getElementById('mail').value, document.getElementById('desig').value)">Start
-                    Chat</button>
+                    <button type="submit" value="submit">Start
+                        Chat</button>
+                </form>
             </div>
 
             <div class="body">
             </div>
 
             <div class="foot">
-                <button id="btn_Attachment" onclick="attach()" style="float: left;"><i class="fa fa-paperclip"
-                        style="font-size: 2em;"></i></button>
+                <button id="btn_Attachment" onclick="attach()"><i class="fa fa-paperclip"></i></button>
                 <input type="file" id='attached_file' accept=".jpg,.jpeg,.png" hidden onchange='getImageData(event)'>
                 <input type="text" class="msg" placeholder="Type a message..." id='chatMsg' />
-                <!-- <img id="blah" src="#" alt="your image" style="width: 5px; height: 5px ; display: none;" /> -->
-                <button id="btn_sendMessage" onclick="addmessage()" style="float: right;"><i class="fa fa-paper-plane"
-                        style="font-size: 2em;"></i></button>
+                <button id="btn_sendMessage" onclick="addmessage()"><i class="fa fa-paper-plane"></i></button>
             </div>
 
         </div>

@@ -19,6 +19,11 @@
 @media screen {
 }
 
+.head{
+  margin: 0% 4%;
+  border-bottom: 2px solid #1a1a1b;
+}
+
 .chatPopup {
   display: none;
   width: 25%;
@@ -27,7 +32,7 @@
   right: 4.2em;
   border: 3px solid #f1f1f1;
   z-index: 9;
-  height: 60%;
+  height: 65%;
 }
 
 #closeChat {
@@ -46,7 +51,6 @@ body {
 
 input[type="text"],
 button {
-  padding: 4px 8px;
   border: 0;
   outline: 0;
 }
@@ -69,7 +73,7 @@ button:hover i {
 }
 
 .chat_box > * {
-  padding: 16px;
+  padding: 16px 0;
 }
 
 /* body */
@@ -78,13 +82,13 @@ button:hover i {
   flex-grow: 1;
   background-color: #eee;
   overflow-y: scroll;
+  padding: 0% 3%;
 }
 
 .body .bubble {
   display: inline-block;
-  padding: 10px;
-  margin-bottom: 5px;
-  border-radius: 15px;
+  padding: 0 3%;
+  border-radius: 35%;
 }
 
 .body .bubble p {
@@ -116,15 +120,39 @@ button:hover i {
 /* foot */
 .foot {
   display: none;
+  height : 4%
 }
 
 .foot .msg {
   flex-grow: 1;
+  background-color: white;
 }
 
-input[type="text"],
-select,
-textarea {
+#btn_sendMessage{
+  font-size: large;
+  color: #1a1a1b;
+  padding: 0% 3%;
+}
+
+#btn_Attachment{
+  color: #1a1a1b;
+  font-size: large;
+  padding:0 3%;
+}
+
+#name {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+
+#mail {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
@@ -137,6 +165,10 @@ textarea {
 
 #chatMsg {
   border: none;
+}
+
+.info {
+  margin: 2% 4%;
 }
 
 input[type="Email"],
@@ -156,8 +188,8 @@ button[type="submit"] {
   display: block;
   margin: 0 auto;
   width: 50%;
-  height: 15%;
-  background-color: #808080;
+  height: 25%;
+  background-color: #808080; 
   color: white;
   border: none;
   border-radius: 8px;
@@ -175,7 +207,8 @@ button[type="submit"]:hover {
   color: #747474;
   display: block;
   font-size: 12px;
-  margin: 8px 0 0;
+  margin: 3px 0 0;
+  padding-bottom: 5%;
 }
 
 img {
