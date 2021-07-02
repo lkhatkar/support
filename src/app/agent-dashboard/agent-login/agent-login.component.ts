@@ -17,9 +17,9 @@ export class AgentLoginComponent implements OnInit {
     private router: Router
   ) {
     this.formObject = this._formBuilder.group({
-      username: ['', Validators.required],
-      email: ['', Validators.required],
-      pid: ['', Validators.required],
+      userid: ['', Validators.required],
+      // email: ['', Validators.required],
+      // pid: ['', Validators.required],
       password: ['', Validators.required],
     })
   }
@@ -34,22 +34,20 @@ export class AgentLoginComponent implements OnInit {
     }
     if (this.formObject.invalid) return;
 
-    // console.log(this.formObject.value);
     this.authService.agentLogin(this.formObject.value)
     .subscribe(res => {
-        console.log(res);
         if (res.success) {
           sessionStorage.setItem('token', res.access_token);
-          this.setCurrentAgent();
+          this.setCurrentAgent(res.user);
           this.router.navigate(['/agent']);
         }
       })
   }
 
-  private setCurrentAgent(){
+  private setCurrentAgent(user:any){
     const agent = {
-      username: this.formObject.get('username')?.value,
-      email:this.formObject.get('email')?.value
+      username: user.name,
+      email:user.email
     }
     sessionStorage.setItem('currentAgent',JSON.stringify(agent));
   }
