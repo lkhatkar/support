@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./agent-login.component.scss']
 })
 export class AgentLoginComponent implements OnInit {
+  isSuccess: boolean = true;
 
   public formObject: FormGroup;
   constructor(
@@ -41,7 +42,16 @@ export class AgentLoginComponent implements OnInit {
           this.setCurrentAgent(res.user);
           this.router.navigate(['/agent']);
         }
+        else {
+          this.isSuccess = false;
+        }
+      }, error=> {
+        this.isSuccess = false;
+        console.log(error);
       })
+  }
+  afterAlertClose() {
+    this.isSuccess = true;
   }
 
   private setCurrentAgent(user:any){
