@@ -3,31 +3,31 @@
     <nz-card nzTitle="Agent Login">
       <form nz-form [formGroup]="formObject" (ngSubmit)="submitForm()">
         <nz-form-item>
-          <nz-form-label [nzSpan]="4" nzFor="Username">Username</nz-form-label>
+          <nz-form-label [nzSpan]="4" nzFor="userid">User ID</nz-form-label>
           <nz-form-control nzErrorTip="Please input your username!">
             <nz-input-group>
-              <input nz-input type="text" placeholder="Username" formControlName="username" />
+              <input nz-input type="text" placeholder="Enter username or user email" formControlName="userid" />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
 
-        <nz-form-item>
+        <!-- <nz-form-item>
           <nz-form-label [nzSpan]="4" nzFor="email">E-mail</nz-form-label>
           <nz-form-control nzErrorTip="Please input your E-mail!">
             <nz-input-group>
               <input nz-input type="email" placeholder="Email" formControlName="email" />
             </nz-input-group>
           </nz-form-control>
-        </nz-form-item>
+        </nz-form-item> -->
 
-          <nz-form-item>
+          <!-- <nz-form-item>
             <nz-form-label [nzSpan]="4" nzFor="PID">PID</nz-form-label>
             <nz-form-control nzErrorTip="Please input your PID!">
               <nz-input-group>
                 <input nz-input type="text" placeholder="PID" formControlName="pid"/>
               </nz-input-group>
             </nz-form-control>
-          </nz-form-item>
+          </nz-form-item> -->
 
         <nz-form-item>
           <nz-form-label [nzSpan]="4" nzFor="password">Password</nz-form-label>
