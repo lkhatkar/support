@@ -51,7 +51,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   //     time:new Date().getTime(),
   //     user_type:'client'
   //   },
-  ]
+  ];
+  isVisible = false;
   // Dropdown right click
   contextMenu($event: any, menu: NzDropdownMenuComponent, nodes: any): void {
     let agentName = $event.explicitOriginalTarget.nodeValue;
@@ -205,6 +206,14 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
   onLogout() {
     this.authService.agentLogout();
+  }
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  handleCancel(): void {
+    console.log('Button cancel clicked!');
+    this.isVisible = false;
   }
 
   ngOnDestroy() {

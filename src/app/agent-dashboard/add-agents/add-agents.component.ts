@@ -1,0 +1,29 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-add-agents',
+  templateUrl: './add-agents.component.html',
+  styleUrls: ['./add-agents.component.scss']
+})
+export class AddAgentsComponent implements OnInit {
+  validateForm!: FormGroup;
+
+  constructor(private fb: FormBuilder) { }
+
+  ngOnInit(): void {
+    this.validateForm = this.fb.group({
+      userName: [null, [Validators.required]],
+      email: [null, [Validators.required]],
+      password: [null, [Validators.required]]
+    });
+  }
+
+  submitForm(): void {
+    for (const i in this.validateForm.controls) {
+      this.validateForm.controls[i].markAsDirty();
+      this.validateForm.controls[i].updateValueAndValidity();
+    }
+  }
+
+}

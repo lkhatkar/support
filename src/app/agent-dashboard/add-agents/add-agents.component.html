@@ -1,0 +1,28 @@
+<form nz-form [nzLayout]="'vertical'" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please input your username!">
+      <nz-input-group nzPrefixIcon="user">
+        <input formControlName="userName" nz-input placeholder="Username" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please input your email!">
+      <nz-input-group nzPrefixIcon="lock">
+        <input formControlName="email" nz-input placeholder="Email" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please input your email!">
+      <nz-input-group nzPrefixIcon="lock">
+        <input formControlName="password" nz-input type="password" placeholder="password" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary">Add agent</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

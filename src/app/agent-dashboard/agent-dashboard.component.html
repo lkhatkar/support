@@ -26,13 +26,18 @@
       <!-- DropDown on click -->
       <nz-dropdown-menu #menu="nzDropdownMenu">
         <ul nz-menu>
-          <li nz-menu-item>Add Agent</li>
+          <li nz-menu-item (click)="showModal()">Add Agent</li>
           <li nz-menu-item>Rename this department</li>
           <li nz-menu-item>Delete this department</li>
           <li nz-menu-item>More options</li>
         </ul>
       </nz-dropdown-menu>
     </div>
+    <nz-modal [(nzVisible)]="isVisible" [nzFooter]="null" nzTitle="Add agent" (nzOnCancel)="handleCancel()">
+      <ng-container *nzModalContent>
+        <app-add-agents></app-add-agents>
+      </ng-container>
+    </nz-modal>
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Current Visitors" class="row1">
         <div style="margin-bottom: 16px;">

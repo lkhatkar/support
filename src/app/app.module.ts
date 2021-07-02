@@ -15,6 +15,8 @@ import { SupportChatAdminComponent } from './support-chat-admin/support-chat-adm
 import { AgentDashboardComponent } from './agent-dashboard/agent-dashboard.component';
 import { AgentLoginComponent } from './agent-dashboard/agent-login/agent-login.component';
 import { TokenInterceptorService } from './token-interceptor.service';
+import { AddAgentsComponent } from './agent-dashboard/add-agents/add-agents.component';
+
 
 registerLocaleData(en);
 
@@ -23,7 +25,8 @@ registerLocaleData(en);
     AppComponent,
     SupportChatAdminComponent,
     AgentDashboardComponent,
-    AgentLoginComponent
+    AgentLoginComponent,
+    AddAgentsComponent
   ],
   imports: [
     BrowserModule,
