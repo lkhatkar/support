@@ -46,14 +46,14 @@
             <thead>
               <tr>
                 <th>Client Name</th>
-                <th>Assign Client</th>
+                <th>Client Request</th>
                 <!-- <th>Reject Client</th> -->
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let client of clientTable.data">
                 <td>{{client.name}}</td>
-                <td><button nz-button (click)="newTab(client.id, client.name)" (keydown.enter)="newTab(client.id, client.name)">Assign</button></td>
+                <td><button #accept nz-button (click)="newTab(client.id, client.name, accept, $event)">Accept</button></td>
                 <!-- <td><button nz-button>Reject</button></td> -->
               </tr>
               <!-- <tr>

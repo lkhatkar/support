@@ -41,13 +41,27 @@ class Wss{
                     } else {
                         const agent = new Agent(nanoid(6), query.name, query.email, query.dept,  query.pid, ws);
                         global.agents.push(agent);
+
+                        //Broadcasting Client List To All Agents when new agent is connected.
+                        if(global.clients.length > 0){
+                          var clients = global.clients;
+                          clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }));
+                          agent.ws.send(JSON.stringify(clients));
+                        }
                     }
                 });
 
             }else{
-
                 const client = new Client(nanoid(6), query.name, query.email, query.dept,  query.pid, ws);
                 global.clients.push(client);
+                //Broadcasting Client List To All Agents when new client is connected.
+                var clients = global.clients;
+                clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }))
+                if(global.agents.length > 0){
+                  global.agents.forEach(element => {
+                    element.ws.send(JSON.stringify(clients))
+                  });
+                }
             }
 
             /*if(agents.length > 0 && clients.length > 0){

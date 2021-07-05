@@ -112,24 +112,33 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
           //Client list
           // interval(6000).subscribe(() => {
-            this.authService.getClients().subscribe((response:any)=> {
-              if(response.success) {
-                console.log(response);
+            // this.authService.getClients().subscribe((response:any)=> {
+            //   if(response.success) {
+            //     console.log(response);
 
-                if(response.clients.length > 0) {
-                  // this.selectedVisitor = response?.clients[0];
-                  // console.log(this.selectedVisitor);
-                  let jsonData:any = [];
-                  response.clients.forEach((element:any) => {
-                    jsonData.push(element)
-                  });
-                  this.listOfData = jsonData;
-                }
+            //     if(response.clients.length > 0) {
+            //       // this.selectedVisitor = response?.clients[0];
+            //       // console.log(this.selectedVisitor);
+            //       let jsonData:any = [];
+            //       response.clients.forEach((element:any) => {
+            //         jsonData.push(element)
+            //       });
+            //       this.listOfData = jsonData;
+            //     }
 
                 // connect auth
                 this.websocket.connect(this.selectedAgent)
                 .pipe(takeUntil(this._subscription$))
                 .subscribe(data=> {
+                  if(data.length > 0){
+                    let jsonData:any = [];
+                    data.forEach((element:any) => {
+                      jsonData.push(element)
+                    });
+                    this.listOfData = jsonData;
+                  }
+                  console.log('data',data);
+
                   if(data.message && typeof(data.message)==='string') {
                       this.chatData.push({
                         message:data.message,
@@ -140,8 +149,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                   }
                   // console.log(data);
                 });
-              }
-            });
+            //   }
+            // });
           // });
 
         });
@@ -159,7 +168,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     // this.websocket.closeConnection();
   }
 
-  newTab(id: string, name: string): void {
+  newTab(id: string, name: string, accept:any, acceptEvent:any): void {
     // this.websocket.connect()
     // .subscribe(message=>{
     //   console.log('message',message);
@@ -167,6 +176,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     // err=> {
     //   console.log(err);
     // });
+    acceptEvent.target.innerHTML = 'Accepted';
+    accept.disabled = true;
 
     this.authService.assignClient(this.selectedAgent.email, id).subscribe(res=> {
       if(res.success) {
