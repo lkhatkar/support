@@ -21,27 +21,27 @@
 
             <div class="head">
                 <i class="fa fa-user" style="font-size: 1.5em;"></i>&nbsp Chat Support
+                <button style="float: right; font-size: larger; display: none;" id="signout" onclick="logout()"><i class="fa fa-sign-out"></i></button>
             </div>
 
             <div class="info">
-                <form name="login_form" onsubmit="return validateForm(event)" >
+                <form name="login_form" onsubmit="return validateForm(event)">
                     <label for="required">Name</label>
                     <input type="text" name="Name" id="name">
-
-
                     <label for="Email">Email</label>
                     <input type="Email" name="Mail" id="mail">
-
                     <label for="designation">Department</label>
                     <select id="desig" name="desig">
                         <option value="" selected disabled>Select Department</option>
                         <option value="Sales">Sales</option>
                         <option value="Billing">Billing</option>
                         <option value="Support">Support</option>
-                    </select>
+                    </select><br><br><br>
+                    <div class="submitSection">
+                        <button type="submit" value="submit">Start
+                            Chat</button>
+                    </div>
 
-                    <button type="submit" value="submit">Start
-                        Chat</button>
                 </form>
             </div>
 
@@ -57,7 +57,20 @@
 
         </div>
     </div>
+
     <script>
+        if (saved_chat != '') {
+            document.getElementsByClassName('info')[0].style.display = 'none';
+            document.getElementsByClassName('body')[0].style.display = 'block';
+            document.getElementsByClassName('foot')[0].style.display = 'flex';
+            document.getElementsByClassName('body')[0].innerHTML = `<br>` + saved_chat;
+            maill = localStorage.getItem('mail');
+            namee = localStorage.getItem('name');
+            deptt = localStorage.getItem('dept');
+            connect(namee, maill, deptt);
+        }
+
+
         document.getElementsByClassName('msg')[0].addEventListener('keypress', function (e) {
             if (e.keyCode == 13) {
                 addmessage();
