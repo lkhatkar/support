@@ -54,7 +54,7 @@ function closeChat() {
 
 function validateForm(e) {
     e.preventDefault();
-    document.getElementById("logout").style.display = "block";
+    // document.getElementById("logout").style.display = "block";
     let x = document.forms["login_form"]["Name"].value;
     if (x == "") {
         alert("Name must be filled out");
@@ -88,6 +88,7 @@ function connect(name, email, dept, pid = "1") {
 
     client.onMessage = function (msg) {
         var data = JSON.parse(msg.data);
+        console.log(data);
         if (data.name == undefined) {
 
             document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">

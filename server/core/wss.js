@@ -61,6 +61,9 @@ class Wss{
                   global.agents.forEach(element => {
                     element.ws.send(JSON.stringify(clients))
                   });
+                  client.ws.send(JSON.stringify({isAgentsAvailable:true}))
+                }else{
+                  client.ws.send(JSON.stringify({isAgentsAvailable:false}))
                 }
             }
 
