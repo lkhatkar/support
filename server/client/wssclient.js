@@ -1,4 +1,4 @@
-var client, msg_image = false, msg_array = [], client_connected = false;
+var client, msg_image = false, msg_array = [], client_connected = false, saved_chat = '';
 
 class WsClient {
     constructor({ url }) {
@@ -17,36 +17,60 @@ class WsClient {
     }
 }
 
-
-
-if (localStorage.getItem('mail') != '') {
-    maill = localStorage.getItem('mail');
-    namee = localStorage.getItem('name');
-    deptt = localStorage.getItem('dept');
-    connect(namee, maill, deptt);
-    chat = localStorage.getItem('messages');
+if (localStorage.getItem('messages') != null) {
+    chat = JSON.parse(localStorage.getItem('messages'));
     msg_array = chat;
     if (chat != null) {
         for (i = 0; i < chat.length; i++) {
             if (chat[i].obj_isclient) {
-                document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
+                saved_chat += `<div class="outgoing">
             <div class="bubble">
             <p>${chat[i].obj_message}</p>
             </div>
-            <span class="time_date">${chat[i].obj_date}</span>`
+            <span class="time_date">${chat[i].obj_date}</span></div>`
             }
             else {
-                document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
+                saved_chat += `<div class="incoming">
             <div class="bubble">
             <p>${chat[i].obj_message}</p>
             </div>
-            <span class="time_date">${chat[i].obj_date}</span>`
+            <span class="time_date">${chat[i].obj_date}</span></div>`
             }
         }
     }
 }
 
+function openChat() {
+    document.getElementById("chatBox").style.display = "block";
+    document.getElementById("closeChat").style.display = "block";
+    document.getElementById("openChat").style.display = "none";
+}
 
+function closeChat() {
+    document.getElementById("closeChat").style.display = "none";
+    document.getElementById("openChat").style.display = "block";
+    document.getElementById("chatBox").style.display = "none";
+}
+
+function validateForm(e) {
+    e.preventDefault();
+    document.getElementById("logout").style.display = "block";
+    let x = document.forms["login_form"]["Name"].value;
+    if (x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+    let y = document.forms["login_form"]["Mail"].value;
+    if (y == "") {
+        alert("Email must be filled out");
+        return false;
+    }
+    if (document.login_form.desig.selectedIndex == "0") {
+        alert("Designation must be selected");
+        return false;
+    }
+    connect(document.getElementById('name').value, document.getElementById('mail').value, document.getElementById('desig').value);
+}
 
 function connect(name, email, dept, pid = "1") {
 
@@ -56,9 +80,11 @@ function connect(name, email, dept, pid = "1") {
     localStorage.setItem('name', name);
     localStorage.setItem('dept', dept);
 
-    document.getElementsByClassName('info')[0].style.display = 'none';
-    document.getElementsByClassName('body')[0].style.display = 'block';
-    document.getElementsByClassName('foot')[0].style.display = 'flex';
+    if (document.getElementsByClassName('info')[0] != undefined) {
+        document.getElementsByClassName('info')[0].style.display = 'none';
+        document.getElementsByClassName('body')[0].style.display = 'block';
+        document.getElementsByClassName('foot')[0].style.display = 'flex';
+    }
 
     client.onMessage = function (msg) {
         var data = JSON.parse(msg.data);
@@ -91,7 +117,7 @@ function connect(name, email, dept, pid = "1") {
                     obj_date: date.toLocaleTimeString()
                 }
                 msg_array.push(msg_obj);
-                localStorage.setItem('messages', msg_array);
+                localStorage.setItem('messages', JSON.stringify(msg_array));
                 document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
                 <div class="bubble">
                 <p>${data.message}</p>
@@ -101,24 +127,6 @@ function connect(name, email, dept, pid = "1") {
         }
     }
 }
-
-
-
-function openChat() {
-    document.getElementById("chatBox").style.display = "block";
-    document.getElementById("closeChat").style.display = "block";
-    document.getElementById("openChat").style.display = "none";
-}
-
-
-
-function closeChat() {
-    document.getElementById("closeChat").style.display = "none";
-    document.getElementById("openChat").style.display = "block";
-    document.getElementById("chatBox").style.display = "none";
-}
-
-
 
 function addmessage() {
     if (msg_image) {
@@ -137,7 +145,7 @@ function addmessage() {
         <div class="bubble">
         <a>${message}</a>
         </div>
-        <span class="time_date">${date.toLocaleTimeString()}</span>`
+        <span class="time_date">${date.toLocaleTimeString()}</span></div>`
         document.getElementsByClassName("msg")[0].value = '';
     }
     else {
@@ -151,12 +159,12 @@ function addmessage() {
                 obj_date: date.toLocaleTimeString()
             };
             msg_array.push(msg_obj);
-            localStorage.setItem('messages', msg_array);
+            localStorage.setItem('messages', JSON.stringify(msg_array));
             document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
             <div class="bubble">
             <p>${message}</p>
             </div>
-            <span class="time_date">${date.toLocaleTimeString()}</span>`
+            <span class="time_date">${date.toLocaleTimeString()}</span></div>`
             document.getElementsByClassName("msg")[0].value = '';
         }
         else {
@@ -165,14 +173,10 @@ function addmessage() {
     }
 }
 
-
-
 function attach() {
     var fileSelector = document.getElementById('attached_file');
     fileSelector.click();
 }
-
-
 
 function getImageData(event) {
     console.log(event.target.files[0]);
@@ -182,8 +186,6 @@ function getImageData(event) {
     formData.append('img', file);
 }
 
-
-
 function blobToDataURL(blob) {
     let reader = new FileReader();
     reader.onload = () => {
@@ -191,37 +193,23 @@ function blobToDataURL(blob) {
         let imgTag = document.createElement('img');
         imgTag.src = img;
         document.getElementsByClassName('body')[0].appendChild(imgTag);
-
+        // var msgDiv = document.createElement('div');
+        // msgDiv.setAttribute('class','outgoing');
+        // msgDiv.cr
         // document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
         // <div class="bubble">
         // ${document.appendChild(imgTag)}
         // </div>
         // <span class="time_date">${date.toLocaleTimeString()}</span>`
-
     }
     reader.readAsDataURL(blob);
 }
 
 
-
-function validateForm(e) {
-    e.preventDefault();
-    let x = document.forms["login_form"]["Name"].value;
-    if (x == "") {
-        alert("Name must be filled out");
-        return false;
+function logout(){
+    if(confirm('Your chat history will be cleared, you wish to proceed to logout?'))
+    {
+        localStorage.clear();
+        window.location.reload();
     }
-    let y = document.forms["login_form"]["Mail"].value;
-    if (y == "") {
-        alert("Email must be filled out");
-        return false;
-    }
-    if (document.login_form.desig.selectedIndex == "0") {
-        alert("Designation must be selected");
-        return false;
-    }
-    connect(document.getElementById('name').value, document.getElementById('mail').value, document.getElementById('desig').value);
 }
-
-
-

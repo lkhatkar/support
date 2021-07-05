@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="wssclient.js" type="text/javascript"></script>
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -20,6 +21,7 @@
 
             <div class="head">
                 <i class="fa fa-user" style="font-size: 1.5em;"></i>&nbsp Chat Support
+                <button style="float: right; font-size: larger; display: none;" id="signout" onclick="logout()"><i class="fa fa-sign-out"></i></button>
             </div>
 
             <div class="info">
@@ -55,8 +57,20 @@
 
         </div>
     </div>
-    <script src="wssclient.js" type="text/javascript"></script>
+
     <script>
+        if (saved_chat != '') {
+            document.getElementsByClassName('info')[0].style.display = 'none';
+            document.getElementsByClassName('body')[0].style.display = 'block';
+            document.getElementsByClassName('foot')[0].style.display = 'flex';
+            document.getElementsByClassName('body')[0].innerHTML = `<br>` + saved_chat;
+            maill = localStorage.getItem('mail');
+            namee = localStorage.getItem('name');
+            deptt = localStorage.getItem('dept');
+            connect(namee, maill, deptt);
+        }
+
+
         document.getElementsByClassName('msg')[0].addEventListener('keypress', function (e) {
             if (e.keyCode == 13) {
                 addmessage();
