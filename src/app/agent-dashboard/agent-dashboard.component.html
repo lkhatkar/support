@@ -53,8 +53,11 @@
             <tbody>
               <tr *ngFor="let client of clientTable.data">
                 <td>{{client.name}}</td>
-                <td><button #accept nz-button (click)="newTab(client.id, client.name, accept, $event)">Accept</button></td>
-                <!-- <td><button nz-button>Reject</button></td> -->
+                <td><button #accept nz-button (click)="newTab(client.id, client.name, accept, $event)" [disabled] = "client.isAgentAssigned"
+                  [nzTooltipTitle]="getAssignedAgent(client.agentName)" nzTooltipPlacement="leftTop" nz-tooltip>
+                    {{client.isAgentAssigned ? 'Assigned' : 'Accept'}}
+                </button></td>
+                <!-- <td><button nz-button>{{client.isAgentAssigned}}</button></td> -->
               </tr>
               <!-- <tr>
                 <td>Naman</td>

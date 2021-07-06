@@ -13,6 +13,8 @@ export interface Clients {
   email: string;
   dept: string;
   pid: string;
+  agentName:string;
+  isAgentAssigned:boolean
 }
 @Component({
   selector: 'app-agent-dashboard',
@@ -29,6 +31,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   chatMessage = "";
   listOfData: Clients[] = [];
   hidden:boolean = true;
+  currentAgent:any = '';
   private _subscription$: Subject<void>;
   chatData:any[] = [
   //   {
@@ -76,7 +79,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const currentAgent = this.authService.getCurrentAgent()
+    this.currentAgent = this.authService.getCurrentAgent()
 
     // this.authService.getToken().subscribe(res=> {
       let names:any = []
@@ -107,7 +110,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             console.log(this.nodes);
           }
           // Selected agent
-          this.selectedAgent = resp.agents.find((agent:any)=>agent.email === currentAgent.email);
+          this.selectedAgent = resp.agents.find((agent:any)=>agent.email === this.currentAgent.email);
           // this.selectedAgent = resp.agents[0];
 
           //Client list
@@ -127,15 +130,15 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             //     }
 
                 // connect auth
+                let jsonData:any = [];
                 this.websocket.connect(this.selectedAgent)
                 .pipe(takeUntil(this._subscription$))
                 .subscribe(data=> {
                   if(data.length > 0){
-                    let jsonData:any = [];
                     data.forEach((element:any) => {
                       jsonData.push(element)
                     });
-                    this.listOfData = jsonData;
+                    this.listOfData = [...jsonData];
                   }
                   console.log('data',data);
 
@@ -169,14 +172,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   newTab(id: string, name: string, accept:any, acceptEvent:any): void {
-    // this.websocket.connect()
-    // .subscribe(message=>{
-    //   console.log('message',message);
-    // },
-    // err=> {
-    //   console.log(err);
-    // });
-    acceptEvent.target.innerHTML = 'Accepted';
+    acceptEvent.target.innerHTML = 'Assigned';
     accept.disabled = true;
 
     this.authService.assignClient(this.selectedAgent.email, id).subscribe(res=> {
@@ -196,6 +192,12 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
       }
 
     })
+  }
+
+  getAssignedAgent(agentName:string){
+    if(!agentName) return 'Not Yet Assigned';
+    else if(agentName === this.currentAgent.username) return `Assigned to you`;
+    else return `Assigned to ${agentName}`;
   }
 
   onChatSend(id: string): void {

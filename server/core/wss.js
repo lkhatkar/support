@@ -56,7 +56,7 @@ class Wss{
                 global.clients.push(client);
                 //Broadcasting Client List To All Agents when new client is connected.
                 var clients = global.clients;
-                clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }))
+                clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest })).filter(cl=>cl.id === client.id)
                 if(global.agents.length > 0){
                   global.agents.forEach(element => {
                     element.ws.send(JSON.stringify(clients))
