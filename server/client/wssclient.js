@@ -1,5 +1,6 @@
 var client, msg_image = false, msg_array = [], client_connected = false, saved_chat = '';
 
+
 class WsClient {
     constructor({ url }) {
         this.webSocket = new WebSocket(url);
@@ -40,6 +41,11 @@ if (localStorage.getItem('messages') != null) {
     }
 }
 
+
+
+
+/** FUNCTIONS : */
+
 function openChat() {
     document.getElementById("chatBox").style.display = "block";
     document.getElementById("closeChat").style.display = "block";
@@ -54,7 +60,6 @@ function closeChat() {
 
 function validateForm(e) {
     e.preventDefault();
-    // document.getElementById("logout").style.display = "block";
     let x = document.forms["login_form"]["Name"].value;
     if (x == "") {
         alert("Name must be filled out");
@@ -73,39 +78,44 @@ function validateForm(e) {
 }
 
 function connect(name, email, dept, pid = "1") {
-
     client = new WsClient({ url: `ws:localhost?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
-
     localStorage.setItem('mail', email);
     localStorage.setItem('name', name);
     localStorage.setItem('dept', dept);
-
     if (document.getElementsByClassName('info')[0] != undefined) {
         document.getElementsByClassName('info')[0].style.display = 'none';
         document.getElementsByClassName('body')[0].style.display = 'block';
         document.getElementsByClassName('foot')[0].style.display = 'flex';
+        document.getElementById("logout").style.display = "block";
     }
-
     client.onMessage = function (msg) {
         var data = JSON.parse(msg.data);
         console.log(data);
         if (data.name == undefined) {
-
-            document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
+            if (data.isAgentsAvailable != undefined) {
+                if (data.isAgentsAvailable) {
+                    document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
             Please wait while an agent will be assigned to you.</h3>`
-
-            client_connected = false;
-            document.getElementsByClassName('msg')[0].disabled = true;
-            document.getElementById('btn_sendMessage').disabled = true;
-            document.getElementById('btn_Attachment').disabled = true;
+                    client_connected = false;
+                    document.getElementsByClassName('msg')[0].disabled = true;
+                    document.getElementById('btn_sendMessage').disabled = true;
+                    document.getElementById('btn_Attachment').disabled = true;
+                }
+                else
+                {
+                    document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
+                    No agents are available currently.</h3>`  
+                    document.getElementsByClassName('msg')[0].disabled = true;
+                    document.getElementById('btn_sendMessage').disabled = true;
+                    document.getElementById('btn_Attachment').disabled = true;
+                }
+            }
         }
         else {
-
             if (!client_connected) {
                 document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
             Hi ${name}, Agent ${data.name} is assigned to you.</h3>`
             }
-
             document.getElementsByClassName('msg')[0].disabled = false;
             document.getElementById('btn_sendMessage').disabled = false;
             document.getElementById('btn_Attachment').disabled = false;
@@ -207,10 +217,10 @@ function blobToDataURL(blob) {
 }
 
 
-function logout(){
-    if(confirm('Your chat history will be cleared, you wish to proceed to logout?'))
-    {
+function logout() {
+    if (confirm('Your chat history will be cleared, you wish to proceed to logout?')) {
         localStorage.clear();
         window.location.reload();
     }
 }
+
