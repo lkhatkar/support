@@ -20,8 +20,9 @@
         <div class="chat_box">
 
             <div class="head">
-                <i class="fa fa-user" style="font-size: 1.5em;"></i>&nbsp Chat Support
-                <button style="float: right; font-size: larger; display: none;" id="signout" onclick="logout()"><i class="fa fa-sign-out"></i></button>
+                <i class="fa fa-user" style="font-size: 1.5em;"></i>&nbsp Live Chat
+                <button style="float: right; font-size: larger; display: none;" id="logout" onclick="logout()"><i
+                        class="fa fa-sign-out"></i></button>
             </div>
 
             <div class="info">
@@ -55,6 +56,7 @@
                 <button id="btn_sendMessage" onclick="addmessage()"><i class="fa fa-paper-plane"></i></button>
             </div>
 
+
         </div>
     </div>
 
@@ -69,8 +71,6 @@
             deptt = localStorage.getItem('dept');
             connect(namee, maill, deptt);
         }
-
-
         document.getElementsByClassName('msg')[0].addEventListener('keypress', function (e) {
             if (e.keyCode == 13) {
                 addmessage();

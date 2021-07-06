@@ -116,6 +116,12 @@ button:hover i {
   max-width       : 40%;
 }
 
+#logout {
+  display  : none;
+  float    : right;
+  font-size: larger;
+}
+
 /* foot */
 .foot {
   display: none;
@@ -230,3 +236,6 @@ img {
   justify-content: center;
   align-items    : center;
 }
+
+
+

@@ -6,12 +6,7 @@ class Client{
         this.dept = dept;
         this.pid = pid;
         this.ws = ws;
-
-        // this.ws.on('message', this.onMessage.bind(this))
-        if(agent)
-            this.ws.send(JSON.stringify({success: true, message: `Welcome ${this.name}`}));
-        else
-            this.ws.send(JSON.stringify({success: true}));
+        
     }
 
     onMessage(message) {
