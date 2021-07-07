@@ -140,6 +140,11 @@ router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
             if (agentIndex != -1 && clientIndex != -1) {
                 global.clients[clientIndex]['agentName'] = global.agents[agentIndex]['name'];
                 global.clients[clientIndex]['isAgentAssigned'] = true;
+                var tempClient = [];
+                tempClient.push(global.clients[clientIndex]);
+                global.agents.forEach(element => {
+                  element.ws.send(JSON.stringify(tempClient));
+                });
 
                 global.agents[agentIndex].onHandleClient(global.clients[clientIndex]);
                 res.status(200).send({ success: true });

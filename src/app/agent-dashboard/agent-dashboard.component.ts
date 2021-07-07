@@ -55,6 +55,12 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   //     user_type:'client'
   //   },
   ];
+  defaultMessageData:any[]=[
+    'Hello',
+    'Okay',
+    'Sorry',
+    'Please tell your issue',
+  ];
   isVisible = false;
   // Dropdown right click
   contextMenu($event: any, menu: NzDropdownMenuComponent, nodes: any): void {
@@ -135,9 +141,14 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this._subscription$))
                 .subscribe(data=> {
                   if(data.length > 0){
-                    data.forEach((element:any) => {
-                      jsonData.push(element)
-                    });
+                    let index = jsonData.findIndex((agent:any)=>agent.id === data[0].id);
+                    if(index === -1){
+                      data.forEach((element:any) => {
+                        jsonData.push(element)
+                      });
+                    }else{
+                      jsonData.splice(index,1,data[0]);
+                    }
                     this.listOfData = [...jsonData];
                   }
                   console.log('data',data);
