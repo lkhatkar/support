@@ -42,12 +42,12 @@
       <nz-card nzTitle="Current Visitors" class="row1">
         <div style="margin-bottom: 16px;">
           <!-- <button nz-button (click)="newTab()">ADD</button> -->
-          <nz-table #clientTable [nzData]="listOfData" nzSize="small" [nzScroll]="{ x: '1000px', y: '140px' }">
+          <nz-table #clientTable [nzData]="listOfData" nzSize="small" [nzScroll]="{ y: '150px' }">
             <thead>
               <tr>
                 <th>Client Name</th>
                 <th>Client Request</th>
-                <!-- <th>Reject Client</th> -->
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -57,6 +57,7 @@
                   [nzTooltipTitle]="getAssignedAgent(client.agentName)" nzTooltipPlacement="leftTop" nz-tooltip>
                     {{client.isAgentAssigned ? 'Assigned' : 'Accept'}}
                 </button></td>
+                <td>{{getAssignedAgent(client.agentName)}}</td>
                 <!-- <td><button nz-button>{{client.isAgentAssigned}}</button></td> -->
               </tr>
               <!-- <tr>
