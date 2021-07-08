@@ -141,9 +141,9 @@
                   </nz-card>
                 </div>
                 <div nz-col nzSpan="8">
-                  <nz-card class="chat-box" nzTitle="Template Messages">
+                  <nz-card class="chat-box" nzTitle="Template Messages" [id]="tab.id">
                     <ul nz-menu>
-                      <li nz-menu-item *ngFor="let message of defaultMessageData" (click)="chatMessage=message">
+                      <li nz-menu-item *ngFor="let message of defaultMessageData" (click)="chatMessage = message">
                         {{message}}
                       </li>
                     </ul>
