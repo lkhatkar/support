@@ -55,7 +55,7 @@
                 <td>{{client.name}}</td>
                 <td><button #accept nz-button (click)="newTab(client.id, client.name, accept, $event)" [disabled] = "client.isAgentAssigned"
                    nzTooltipPlacement="leftTop" nz-tooltip> <!-- [nzTooltipTitle]="getAssignedAgent(client.agentName)" -->
-                    {{client.isAgentAssigned ? getAssignedAgent(client.agentName) : 'Accept'}}
+                    {{client.isAgentAssigned ? 'Assigned' : 'Accept'}}
                 </button></td>
                 <td>{{getAssignedAgent(client.agentName)}}</td>
                 <!-- <td><button nz-button>{{client.isAgentAssigned}}</button></td> -->
