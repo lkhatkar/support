@@ -56,9 +56,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   //   },
   ];
   defaultMessageData:any[]=[
-    'Hello',
     'Okay',
-    'Sorry',
+    'Sorry, for the inconvinience cause',
     'Please tell your issue',
   ];
   isVisible = false;
@@ -191,8 +190,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
       if(res.success) {
         if(this.tabs.filter(e => e.id === id).length == 0) {
           this.tabs.push({name: name, id: id});
-           this.index = this.tabs.length - 1;
-           console.log(res);
+          this.defaultMessageData.push(`Hello ${name}, how may I assist you ?`);
+          this.defaultMessageData.reverse();
+          this.index = this.tabs.length - 1;
+          console.log(res);
         }
        }
       else {
