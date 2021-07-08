@@ -95,8 +95,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
         // Get Agents
         this.authService.getAgents().subscribe(resp=> {
           if(resp.success) {
-
-            resp.agents.forEach((element:any, index:any) => {
+            let agents = this.getAgents(resp.agents);
+            agents.forEach((element:any, index:any) => {
               names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
             });
             const dig = (path = '0', level = 3) => {
@@ -229,6 +229,13 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   private addMessage(message:string,userType:string){
 
   }
+
+  private getAgents(agents:any){
+      let agentIndex = agents.findIndex((agent:any) => agent.email === this.currentAgent.email);
+      [ agents[0], agents[agentIndex] ] = [ agents[agentIndex], agents[0] ];
+      return agents;
+  }
+
   onLogout() {
     this.authService.agentLogout();
   }
