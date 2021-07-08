@@ -64,12 +64,12 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   isVisible = false;
   // Dropdown right click
   contextMenu($event: any, menu: NzDropdownMenuComponent, nodes: any): void {
-    console.log($event);
-    let agentName = $event.explicitOriginalTarget.nodeValue;
-    // console.log(this.selectedAgent);
-    if(agentName === 'Agents') {
+    // console.log($event);
+    // let agentName = $event.explicitOriginalTarget.nodeValue;
+    // // console.log(this.selectedAgent);
+    // if(agentName === 'Agents') {
       this.nzContextMenuService.create($event, menu);
-    }
+    // }
     // console.log($event.explicitOriginalTarget.nodeValue);
     // console.log(nodes[0].children[0].title);
   }

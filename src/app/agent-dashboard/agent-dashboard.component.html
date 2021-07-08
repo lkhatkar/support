@@ -21,7 +21,18 @@
   <div nz-row>
     <div nz-col nzSpan="6">
       <nz-card nzTitle="Departments/Agents" class="row1">
-        <nz-tree [nzData]="nodes" nzBlockNode nzVirtualHeight="150px" nzShowIcon (contextmenu)="contextMenu($event, menu, nodes)"></nz-tree>
+        <nz-tree [nzData]="nodes" nzBlockNode nzVirtualHeight="150px" [nzTreeTemplate]="nzTreeTemplate"></nz-tree>
+        <ng-template #nzTreeTemplate let-node let-origin="origin">
+          <span *ngIf="!node.isLeaf" (contextmenu)="contextMenu($event, menu, nodes)" >
+            <i nz-icon nzType="team"></i>
+            <span class="folder-name">{{node.title}}</span>
+          </span>
+          <span *ngIf="node.isLeaf">
+            <i nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'" *ngIf="node.title == currentAgent.username"></i>
+            <i nz-icon nzType="user"  *ngIf="!(node.title == currentAgent.username)"></i>
+            <span class="file-name">{{ node.title }}</span>
+          </span>
+        </ng-template>
       </nz-card>
       <!-- DropDown on click -->
       <nz-dropdown-menu #menu="nzDropdownMenu">
@@ -103,7 +114,7 @@
             <div>
              <br/>
               <div nz-row>
-                <div nz-col nzSpan="22">
+                <div nz-col nzSpan="16">
                   <!-- <textarea rows="4" cols="10" nz-input [(ngModel)]="inputValueTab" disabled></textarea> -->
                   <nz-card class="chat-box" [id]="tab.id">
                     <div *ngFor="let data of chatData">
@@ -129,23 +140,32 @@
                     </div>
                   </nz-card>
                 </div>
+                <div nz-col nzSpan="8">
+                  <nz-card class="chat-box" nzTitle="Template Messages">
+                    <ul nz-menu>
+                      <li nz-menu-item *ngFor="let message of defaultMessageData" (click)="chatMessage=message">
+                        {{message}}
+                      </li>
+                    </ul>
+                  </nz-card>
+                </div>
               </div><br/>
               <div nz-row [nzGutter]="[24, 24]">
                 <div nz-col nzSpan="20"><input nz-input placeholder="write message" nzSize="default" [(ngModel)]="chatMessage" (keyup.enter)="onChatSend(tab.id)"/></div>
                 <div nz-col nzSpan="4">
                   <nz-button-group>
                     <button nz-button nzType="primary" (click)="onChatSend(tab.id)" >Send</button>
-                    <button nz-button nz-dropdown [nzDropdownMenu]="defaultMessages" nzPlacement="topRight">
+                    <!-- <button nz-button nz-dropdown [nzDropdownMenu]="defaultMessages" nzPlacement="topRight">
                       <i nz-icon nzType="ellipsis"></i>
-                    </button>
+                    </button> -->
                   </nz-button-group>
-                  <nz-dropdown-menu #defaultMessages="nzDropdownMenu">
-                    <ul nz-menu>
+                  <!-- <nz-dropdown-menu #defaultMessages="nzDropdownMenu">
+                    <ul nz-menu >
                       <li nz-menu-item *ngFor="let message of defaultMessageData" (click)="chatMessage=message">
                         {{message}}
                       </li>
                     </ul>
-                  </nz-dropdown-menu>
+                  </nz-dropdown-menu> -->
                 </div>
               </div>
             </div>
