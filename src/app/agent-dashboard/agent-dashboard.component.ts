@@ -64,9 +64,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   isVisible = false;
   // Dropdown right click
   contextMenu($event: any, menu: NzDropdownMenuComponent, nodes: any): void {
+    console.log($event);
     let agentName = $event.explicitOriginalTarget.nodeValue;
     // console.log(this.selectedAgent);
-    if(agentName === this.selectedAgent.name) {
+    if(agentName === 'Agents') {
       this.nzContextMenuService.create($event, menu);
     }
     // console.log($event.explicitOriginalTarget.nodeValue);
@@ -101,7 +102,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             const dig = (path = '0', level = 3) => {
               const list = [
                 {
-                  title: 'Default',
+                  title: 'Agents',
                   key: '100',
                   expanded: true,
                   icon: 'team',
