@@ -149,6 +149,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                     this.authService.getOnlineAgents().subscribe(res=>{
                       console.log(res.agents);
                       this.tempAgents = res.agents;
+                      console.log(this.tempAgents);
                       this.setNodes(this.globalAgents);
                     });
 
@@ -218,8 +219,14 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.nodes = dig();
   }
 
-  check(node:any){
-    console.log(node);
+  check(title:any){
+    let bool = false;
+    this.tempAgents.forEach((element:any) => {
+      if(!bool && element.name == title) {
+        bool = true;
+      }
+    });
+    return bool;
 
   }
 
