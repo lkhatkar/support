@@ -145,14 +145,13 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                 this.websocket.connect(this.selectedAgent)
                 .pipe(takeUntil(this._subscription$))
                 .subscribe(data=> {
-                  if(data.length > 0){
+                  if(data.refreshAgents){
                     this.authService.getOnlineAgents().subscribe(res=>{
-                      console.log(res.agents);
                       this.tempAgents = res.agents;
-                      console.log(this.tempAgents);
                       this.setNodes(this.globalAgents);
                     });
-
+                  }
+                  if(data.length > 0){
                     let index = jsonData.findIndex((agent:any)=>agent.id === data[0].id);
                     if(index === -1){
                       data.forEach((element:any) => {

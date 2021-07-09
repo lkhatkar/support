@@ -48,6 +48,9 @@ class Wss{
                           clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }));
                           agent.ws.send(JSON.stringify(clients));
                         }
+                        global.agents.forEach(element=>{
+                          element.ws.send(JSON.stringify({refreshAgents:true}));
+                        })
                     }
                 });
 
@@ -81,6 +84,10 @@ class Wss{
                     if(closedIndex != -1) {
                         global.agents[closedIndex].detachClients();
                         global.agents.splice(closedIndex, 1);
+
+                        global.agents.forEach(element=>{
+                          element.ws.send(JSON.stringify({refreshAgents:true}));
+                        })
                     }
                 }
             })

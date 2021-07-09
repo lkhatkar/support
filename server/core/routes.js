@@ -131,10 +131,6 @@ router.get('/agents', middleware.checkToken, async (req, res, next) => {
 })
 
 router.get('/onlineAgents',middleware.checkToken, async (req, res, next) => {
-    for(let item of global.agents)
-    {
-      item.isOnline = true;
-    }
     res.json({agents:global.agents});
 })
 
