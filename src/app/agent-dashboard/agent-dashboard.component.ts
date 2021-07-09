@@ -5,7 +5,6 @@ import { WebSocketService } from '../services/web-socket.service';
 import { AuthService } from '../services/auth.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { interval } from 'rxjs';
 
 export interface Clients {
   id: string;
@@ -55,6 +54,9 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   //     user_type:'client'
   //   },
   ];
+  names:any = [];
+  tempAgents:any = [];
+  globalAgents:any = [];
   defaultMessageData:any[]=[
     'Hello, how may I assist you',
     'Okay',
@@ -89,32 +91,34 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.currentAgent = this.authService.getCurrentAgent()
 
     // this.authService.getToken().subscribe(res=> {
-      let names:any = []
+      this.names = []
       // if(res.success) {
         // sessionStorage.setItem('token', res.access_token);
         // Get Agents
         this.authService.getAgents().subscribe(resp=> {
           if(resp.success) {
-            let agents = this.getAgents(resp.agents);
-            agents.forEach((element:any, index:any) => {
-              names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
-            });
-            const dig = (path = '0', level = 3) => {
-              const list = [
-                {
-                  title: 'Agents',
-                  key: '100',
-                  expanded: true,
-                  icon: 'team',
-                  children: names
-                }
+            this.globalAgents = resp.agents;
+            this.setNodes(resp.agents);
 
-              ];
+            // agents.forEach((element:any, index:any) => {
+            //   this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
+            // });
+            // const dig = (path = '0', level = 3) => {
+            //   const list = [
+            //     {
+            //       title: 'Agents',
+            //       key: '100',
+            //       expanded: true,
+            //       icon: 'team',
+            //       children: this.names
+            //     }
 
-              return list;
-            };
-            this.nodes = dig();
-            console.log(this.nodes);
+            //   ];
+
+            //   return list;
+            // };
+            // this.nodes = dig();
+            // console.log(this.nodes);
           }
           // Selected agent
           this.selectedAgent = resp.agents.find((agent:any)=>agent.email === this.currentAgent.email);
@@ -142,6 +146,12 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this._subscription$))
                 .subscribe(data=> {
                   if(data.length > 0){
+                    this.authService.getOnlineAgents().subscribe(res=>{
+                      console.log(res.agents);
+                      this.tempAgents = res.agents;
+                      this.setNodes(this.globalAgents);
+                    });
+
                     let index = jsonData.findIndex((agent:any)=>agent.id === data[0].id);
                     if(index === -1){
                       data.forEach((element:any) => {
@@ -167,7 +177,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             //   }
             // });
           // });
-
+          // this.authService.getOnlineAgents().subscribe(res=>{
+          //   console.log(res.agents);
+          //   this.setNodes(res.agents)
+          // });
         });
     //   }
 
@@ -181,6 +194,33 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   closeTab({ index }: { index: number }): void {
     this.tabs.splice(index, 1);
     // this.websocket.closeConnection();
+  }
+
+  private setNodes(agents:any){
+    this.names = [];
+    this.getOrganizedAgents(agents).forEach((element:any, index:any) => {
+      this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
+    });
+    const dig = (path = '0', level = 3) => {
+      const list = [
+        {
+          title: 'Agents',
+          key: '100',
+          expanded: true,
+          icon: 'team',
+          children: this.names
+        }
+
+      ];
+
+      return list;
+    };
+    this.nodes = dig();
+  }
+
+  check(node:any){
+    console.log(node);
+
   }
 
   newTab(id: string, name: string, accept:any, acceptEvent:any): void {
@@ -232,7 +272,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
   }
 
-  private getAgents(agents:any){
+  private getOrganizedAgents(agents:any){
       let agentIndex = agents.findIndex((agent:any) => agent.email === this.currentAgent.email);
       [ agents[0], agents[agentIndex] ] = [ agents[agentIndex], agents[0] ];
       return agents;

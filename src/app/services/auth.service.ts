@@ -57,4 +57,8 @@ export class AuthService {
     this.router.navigate(['/agent-login']);
   }
 
+  getOnlineAgents(){
+    return this._http.get<any>(this.url+"/onlineAgents");
+  }
+
 }
