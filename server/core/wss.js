@@ -48,6 +48,9 @@ class Wss{
                           clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }));
                           agent.ws.send(JSON.stringify(clients));
                         }
+                        global.agents.forEach(element=>{
+                          element.ws.send(JSON.stringify({refreshAgents:true}));
+                        })
                     }
                 });
 
@@ -56,7 +59,7 @@ class Wss{
                 global.clients.push(client);
                 //Broadcasting Client List To All Agents when new client is connected.
                 var clients = global.clients;
-                clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }))
+                clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest })).filter(cl=>cl.id === client.id)
                 if(global.agents.length > 0){
                   global.agents.forEach(element => {
                     element.ws.send(JSON.stringify(clients))
@@ -81,6 +84,10 @@ class Wss{
                     if(closedIndex != -1) {
                         global.agents[closedIndex].detachClients();
                         global.agents.splice(closedIndex, 1);
+
+                        global.agents.forEach(element=>{
+                          element.ws.send(JSON.stringify({refreshAgents:true}));
+                        })
                     }
                 }
             })

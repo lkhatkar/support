@@ -1,5 +1,8 @@
 .row1 {
   min-height: 50vh;
+  max-height: 50vh;
+  overflow: hidden;
+  // resize: both;
 }
 .row2 {
   min-height: 60vh;
@@ -8,13 +11,13 @@
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
 }
 
-.chat-box{
+.chat-box {
   height: 150px;
   max-height: 150px;
   overflow: auto;
 }
-.agent{
-  width: 25%;
+.agent {
+  width: 40%;
   background: #40a9ff;
   margin-bottom: 5px;
   color: #fff;
@@ -26,8 +29,8 @@
   padding: 5px;
   font-family: "Roboto", "Helvetica Neue", sans-serif;
 }
-.client{
-  width: 25%;
+.client {
+  width: 40%;
   background: #eee;
   color: #111;
   float: left;
@@ -38,8 +41,12 @@
   padding: 5px;
   font-family: "Roboto", "Helvetica Neue", sans-serif;
 }
-.time{
+.time {
   font-size: 70%;
   float: right;
   clear: both;
+}
+.file-name,
+.folder-name {
+  margin-left: 4px;
 }

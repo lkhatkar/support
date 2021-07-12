@@ -5,7 +5,6 @@ import { WebSocketService } from '../services/web-socket.service';
 import { AuthService } from '../services/auth.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { interval } from 'rxjs';
 
 export interface Clients {
   id: string;
@@ -13,6 +12,8 @@ export interface Clients {
   email: string;
   dept: string;
   pid: string;
+  agentName:string;
+  isAgentAssigned:boolean
 }
 @Component({
   selector: 'app-agent-dashboard',
@@ -29,6 +30,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   chatMessage = "";
   listOfData: Clients[] = [];
   hidden:boolean = true;
+  currentAgent:any = '';
   private _subscription$: Subject<void>;
   chatData:any[] = [
   //   {
@@ -52,14 +54,24 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   //     user_type:'client'
   //   },
   ];
+  names:any = [];
+  tempAgents:any = [];
+  globalAgents:any = [];
+  defaultMessageData:any[]=[
+    'Hello, how may I assist you',
+    'Okay',
+    'Sorry, for the inconvinience cause',
+    'Please tell your issue',
+  ];
   isVisible = false;
   // Dropdown right click
   contextMenu($event: any, menu: NzDropdownMenuComponent, nodes: any): void {
-    let agentName = $event.explicitOriginalTarget.nodeValue;
-    // console.log(this.selectedAgent);
-    if(agentName === this.selectedAgent.name) {
+    // console.log($event);
+    // let agentName = $event.explicitOriginalTarget.nodeValue;
+    // // console.log(this.selectedAgent);
+    // if(agentName === 'Agents') {
       this.nzContextMenuService.create($event, menu);
-    }
+    // }
     // console.log($event.explicitOriginalTarget.nodeValue);
     // console.log(nodes[0].children[0].title);
   }
@@ -76,38 +88,40 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const currentAgent = this.authService.getCurrentAgent()
+    this.currentAgent = this.authService.getCurrentAgent()
 
     // this.authService.getToken().subscribe(res=> {
-      let names:any = []
+      this.names = []
       // if(res.success) {
         // sessionStorage.setItem('token', res.access_token);
         // Get Agents
         this.authService.getAgents().subscribe(resp=> {
           if(resp.success) {
+            this.globalAgents = resp.agents;
+            this.setNodes(resp.agents);
 
-            resp.agents.forEach((element:any, index:any) => {
-              names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
-            });
-            const dig = (path = '0', level = 3) => {
-              const list = [
-                {
-                  title: 'Default',
-                  key: '100',
-                  expanded: true,
-                  icon: 'team',
-                  children: names
-                }
+            // agents.forEach((element:any, index:any) => {
+            //   this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
+            // });
+            // const dig = (path = '0', level = 3) => {
+            //   const list = [
+            //     {
+            //       title: 'Agents',
+            //       key: '100',
+            //       expanded: true,
+            //       icon: 'team',
+            //       children: this.names
+            //     }
 
-              ];
+            //   ];
 
-              return list;
-            };
-            this.nodes = dig();
-            console.log(this.nodes);
+            //   return list;
+            // };
+            // this.nodes = dig();
+            // console.log(this.nodes);
           }
           // Selected agent
-          this.selectedAgent = resp.agents.find((agent:any)=>agent.email === currentAgent.email);
+          this.selectedAgent = resp.agents.find((agent:any)=>agent.email === this.currentAgent.email);
           // this.selectedAgent = resp.agents[0];
 
           //Client list
@@ -127,15 +141,26 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             //     }
 
                 // connect auth
+                let jsonData:any = [];
                 this.websocket.connect(this.selectedAgent)
                 .pipe(takeUntil(this._subscription$))
                 .subscribe(data=> {
-                  if(data.length > 0){
-                    let jsonData:any = [];
-                    data.forEach((element:any) => {
-                      jsonData.push(element)
+                  if(data.refreshAgents){
+                    this.authService.getOnlineAgents().subscribe(res=>{
+                      this.tempAgents = res.agents;
+                      this.setNodes(this.globalAgents);
                     });
-                    this.listOfData = jsonData;
+                  }
+                  if(data.length > 0){
+                    let index = jsonData.findIndex((agent:any)=>agent.id === data[0].id);
+                    if(index === -1){
+                      data.forEach((element:any) => {
+                        jsonData.push(element)
+                      });
+                    }else{
+                      jsonData.splice(index,1,data[0]);
+                    }
+                    this.listOfData = [...jsonData];
                   }
                   console.log('data',data);
 
@@ -152,7 +177,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             //   }
             // });
           // });
-
+          // this.authService.getOnlineAgents().subscribe(res=>{
+          //   console.log(res.agents);
+          //   this.setNodes(res.agents)
+          // });
         });
     //   }
 
@@ -168,23 +196,51 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     // this.websocket.closeConnection();
   }
 
+  private setNodes(agents:any){
+    this.names = [];
+    this.getOrganizedAgents(agents).forEach((element:any, index:any) => {
+      this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
+    });
+    const dig = (path = '0', level = 3) => {
+      const list = [
+        {
+          title: 'Agents',
+          key: '100',
+          expanded: true,
+          icon: 'team',
+          children: this.names
+        }
+
+      ];
+
+      return list;
+    };
+    this.nodes = dig();
+  }
+
+  check(title:any){
+    let bool = false;
+    this.tempAgents.forEach((element:any) => {
+      if(!bool && element.name == title) {
+        bool = true;
+      }
+    });
+    return bool;
+
+  }
+
   newTab(id: string, name: string, accept:any, acceptEvent:any): void {
-    // this.websocket.connect()
-    // .subscribe(message=>{
-    //   console.log('message',message);
-    // },
-    // err=> {
-    //   console.log(err);
-    // });
-    acceptEvent.target.innerHTML = 'Accepted';
+    acceptEvent.target.innerHTML = 'Assigned';
     accept.disabled = true;
 
     this.authService.assignClient(this.selectedAgent.email, id).subscribe(res=> {
       if(res.success) {
         if(this.tabs.filter(e => e.id === id).length == 0) {
           this.tabs.push({name: name, id: id});
-           this.index = this.tabs.length - 1;
-           console.log(res);
+          // this.defaultMessageData.push(`Hello ${name}, how may I assist you ?`);
+          // this.defaultMessageData.reverse();
+          this.index = this.tabs.length - 1;
+          console.log(res);
         }
        }
       else {
@@ -196,6 +252,12 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
       }
 
     })
+  }
+
+  getAssignedAgent(agentName:string){
+    if(!agentName) return 'Not Yet Assigned';
+    else if(agentName === this.currentAgent.username) return `Assigned to you`;
+    else return `Assigned to ${agentName}`;
   }
 
   onChatSend(id: string): void {
@@ -215,6 +277,13 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   private addMessage(message:string,userType:string){
 
   }
+
+  private getOrganizedAgents(agents:any){
+      let agentIndex = agents.findIndex((agent:any) => agent.email === this.currentAgent.email);
+      [ agents[0], agents[agentIndex] ] = [ agents[agentIndex], agents[0] ];
+      return agents;
+  }
+
   onLogout() {
     this.authService.agentLogout();
   }
