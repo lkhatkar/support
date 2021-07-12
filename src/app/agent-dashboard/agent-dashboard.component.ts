@@ -12,6 +12,7 @@ export interface Clients {
   email: string;
   dept: string;
   pid: string;
+  date: Date;
   agentName:string;
   isAgentAssigned:boolean
 }
@@ -31,6 +32,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   listOfData: Clients[] = [];
   hidden:boolean = true;
   currentAgent:any = '';
+  requestQueue:any[] = [];
   private _subscription$: Subject<void>;
   chatData:any[] = [
   //   {
@@ -152,6 +154,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                     });
                   }
                   if(data.length > 0){
+                    this.requestQueueHandler(data);
                     let index = jsonData.findIndex((agent:any)=>agent.id === data[0].id);
                     if(index === -1){
                       data.forEach((element:any) => {
@@ -177,10 +180,6 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             //   }
             // });
           // });
-          // this.authService.getOnlineAgents().subscribe(res=>{
-          //   console.log(res.agents);
-          //   this.setNodes(res.agents)
-          // });
         });
     //   }
 
@@ -194,6 +193,31 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   closeTab({ index }: { index: number }): void {
     this.tabs.splice(index, 1);
     // this.websocket.closeConnection();
+  }
+
+  requestInfo:any = [];
+  private requestQueueHandler(requestData:Clients[]){
+      // console.log(requestData);
+      let index = this.requestInfo.findIndex((client:any)=>client.name === requestData[0].name);
+      if(index === -1){
+        requestData.forEach(client=>{
+          let timerTick = 0;
+          this.requestInfo.push({
+            name:client.name,
+            dept:client.dept,
+            duration:client.date
+            // duration:setInterval(()=>{
+            //   timerTick++;
+            // },1000)
+          })
+        })
+      }else{
+        let newObj = this.requestInfo[index];
+        newObj.duration = new Date().valueOf() - newObj.duration.valueOf();
+        console.log(newObj.duration)
+        this.requestInfo.splice(index,1,newObj);
+      }
+      this.requestQueue = [...this.requestInfo];
   }
 
   private setNodes(agents:any){

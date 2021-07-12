@@ -31,7 +31,6 @@
             <i nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'" *ngIf="check(node.title)"></i>
             <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#e50000'"  *ngIf="!(check(node.title))"></i>
             <span class="file-name">{{ node.title }}</span>
-
           </span>
         </ng-template>
       </nz-card>
@@ -87,26 +86,24 @@
   <br />
   <div nz-row>
     <div nz-col nzSpan="6">
-      <nz-card nzTitle="Request Queue" class="row2" [nzActions]="[actionSetting, actionEdit]">
-        <nz-table #requestQueue nzSize="small" nzBordered>
+      <nz-card nzTitle="Request Queue" class="row2">
+        <nz-table #request [nzData]="requestQueue" nzSize="small" [nzScroll]="{ y: '150px' }" nzBordered>
           <thead>
             <tr>
               <th>Name</th>
-              <th>Department</th>
-              <th>Duration</th>
+              <th>Dept</th>
+              <th>Waiting</th>
             </tr>
           </thead>
           <tbody>
-
+            <tr *ngFor="let item of request.data">
+            <td>{{item.name}}</td>
+            <td>{{item.dept}}</td>
+            <td>{{item.duration | date:'shortTime'}}</td>
+            </tr>
           </tbody>
         </nz-table>
       </nz-card>
-      <ng-template #actionSetting>
-        <button nz-button>Accept First</button>
-      </ng-template>
-      <ng-template #actionEdit>
-        <button nz-button>Auto Accept</button>
-      </ng-template>
     </div>
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Conversations" class="row2">

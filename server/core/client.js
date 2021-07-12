@@ -6,7 +6,7 @@ class Client{
         this.dept = dept;
         this.pid = pid;
         this.ws = ws;
-        
+
     }
 
     onMessage(message) {

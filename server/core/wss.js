@@ -55,7 +55,8 @@ class Wss{
                 });
 
             }else{
-                const client = new Client(nanoid(6), query.name, query.email, query.dept,  query.pid, ws);
+                const client = new Client(nanoid(6), query.name, query.email, query.dept ,query.pid, ws);
+                client['date'] = new Date();
                 global.clients.push(client);
                 //Broadcasting Client List To All Agents when new client is connected.
                 var clients = global.clients;
@@ -85,9 +86,11 @@ class Wss{
                         global.agents[closedIndex].detachClients();
                         global.agents.splice(closedIndex, 1);
 
-                        global.agents.forEach(element=>{
-                          element.ws.send(JSON.stringify({refreshAgents:true}));
-                        })
+                        if(global.agents.length > 0){
+                          global.agents.forEach(element=>{
+                            element.ws.send(JSON.stringify({refreshAgents:true}));
+                          })
+                        }
                     }
                 }
             })
