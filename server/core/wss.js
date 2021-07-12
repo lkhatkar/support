@@ -24,7 +24,8 @@ class Wss{
                 || !query.dept
                 || !query.pid
                 ){
-                    ws.send(JSON.stringify({error: "Please pass all parameters {name, email, dept, pid}"}));
+                    if(ws.readyState==1)
+                        ws.send(JSON.stringify({error: "Please pass all parameters {name, email, dept, pid}"}));
                     ws.close();
                     return;
                 };
@@ -35,7 +36,8 @@ class Wss{
                 //validate auth
                 jwt.verify(query.auth, process.env.API_SECRET, (err, decoded) => {
                     if (err) {
-                        ws.send(JSON.stringify({error: "Token is not valid"}));
+                        if(ws.readyState == 1)
+                            ws.send(JSON.stringify({error: "Token is not valid"}));
                         ws.close();
                         return;
                     } else {
@@ -46,17 +48,19 @@ class Wss{
                         if(global.clients.length > 0){
                           var clients = global.clients;
                           clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }));
-                          agent.ws.send(JSON.stringify(clients));
+                          
+                          if(agent.ws.readyState==1)
+                            agent.ws.send(JSON.stringify(clients));
                         }
                         global.agents.forEach(element=>{
-                          element.ws.send(JSON.stringify({refreshAgents:true}));
+                            if(element.ws.readyState == 1)
+                                element.ws.send(JSON.stringify({refreshAgents:true}));
                         })
                     }
                 });
 
             }else{
-                const client = new Client(nanoid(6), query.name, query.email, query.dept ,query.pid, ws);
-                client['date'] = new Date();
+                const client = new Client(nanoid(6), query.name, query.email, query.dept,  query.pid, ws);
                 global.clients.push(client);
                 //Broadcasting Client List To All Agents when new client is connected.
                 var clients = global.clients;
@@ -86,11 +90,10 @@ class Wss{
                         global.agents[closedIndex].detachClients();
                         global.agents.splice(closedIndex, 1);
 
-                        if(global.agents.length > 0){
-                          global.agents.forEach(element=>{
-                            element.ws.send(JSON.stringify({refreshAgents:true}));
-                          })
-                        }
+                        global.agents.forEach(element=>{
+                            if(element.ws.readyState==1)
+                                element.ws.send(JSON.stringify({refreshAgents:true}));
+                        })
                     }
                 }
             })

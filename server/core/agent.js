@@ -13,7 +13,9 @@ class Agent extends Client{
             let {clientId, message} = JSON.parse(jsonString);
             let client = this.clients.find(c => c.id == clientId);
             if(client){
-                client.ws.send(JSON.stringify({success: true, message, name: this.name}));
+                if(client.ws.readyState == 1){
+                    client.ws.send(JSON.stringify({success: true, message, name: this.name}));
+                }
             }
         }
         catch(e) {
@@ -25,7 +27,9 @@ class Agent extends Client{
         try {
         //this will refer to client
             // this.agent.ws.send(message);
-            this.agent.ws.send(JSON.stringify({id: this.id, message}));
+            if(this.agent.ws.readyState == 1){
+                this.agent.ws.send(JSON.stringify({id: this.id, message}));
+            }
         }
         catch(e) {
             console.error("On Client Message", e);

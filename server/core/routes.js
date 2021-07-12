@@ -55,14 +55,14 @@ router.use('/token', async (req, res, next) => {
                 });
             }
             else {
-                res.status(401).sendData({
+                res.status(401).send({
                     success: false,
                     message: 'Incorrect userID or password'
                 });
             }
         }
         else {
-            res.status(400).sendData({
+            res.status(400).send({
                 success: false,
                 message: 'Authentication failed! Please check the request'
             });
@@ -147,7 +147,8 @@ router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
                 var tempClient = [];
                 tempClient.push(global.clients[clientIndex]);
                 global.agents.forEach(element => {
-                  element.ws.send(JSON.stringify(tempClient));
+                  if(element.ws.readyState == 1)
+                    element.ws.send(JSON.stringify(tempClient));
                 });
 
                 global.agents[agentIndex].onHandleClient(global.clients[clientIndex]);

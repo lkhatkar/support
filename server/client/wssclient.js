@@ -400,7 +400,7 @@ function validateForm(e) {
 }
 
 function connect(name, email, dept, pid = "1") {
-    client = new WsClient({ url: `ws:localhost?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
+    client = new WsClient({ url: `wss:support.arieducation.com?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
     localStorage.setItem('mail', email);
     localStorage.setItem('name', name);
     localStorage.setItem('dept', dept);

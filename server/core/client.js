@@ -6,21 +6,26 @@ class Client{
         this.dept = dept;
         this.pid = pid;
         this.ws = ws;
-
+        
     }
 
     onMessage(message) {
         console.log('received: %s', message);
-        this.ws.send(`Hello, you sent -> ${message}`);
+        if(this.ws.readyState == 1)
+            this.ws.send(`Hello, you sent -> ${message}`);
     }
 
     assignAgent(agent){
-        this.ws.send(JSON.stringify({success: true, message:"", name: agent.name}));
+        if(this.ws.readyState == 1)
+            this.ws.send(JSON.stringify({success: true, message:"", name: agent.name}));
+        
         this.agent = agent;
     }
 
     detachAgent() {
-        this.ws.send(JSON.stringify({success: true, message: "Agent Disconnected"}));
+        if(this.ws.readyState == 1)
+            this.ws.send(JSON.stringify({success: true, message: "Agent Disconnected"}));
+            
         this.agent = null;
     }
 }

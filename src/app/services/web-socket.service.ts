@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { delay, map, retryWhen, switchMap } from 'rxjs/operators'
 import { AuthService } from './auth.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,10 @@ export class WebSocketService {
 
   connect(selectedAgent: any): Observable<any> {
     // console.log('Selected agent service: ', selectedAgent);
-    return of(`http://localhost:80?name=${selectedAgent.name}&email=${selectedAgent.email}&dept=crane&pid=${selectedAgent.pageid}&auth=${this.authService.acquireToken()}`).pipe(
+    let url = environment.url;
+    return of(`${url}?name=${selectedAgent.name}&email=${selectedAgent.email}&dept=crane&pid=${selectedAgent.pageid}&auth=${this.authService.acquireToken()}`).pipe(
       // https becomes wws, http becomes ws
-      map(apiUrl => apiUrl.replace(/^http/, 'ws')),
+      map(apiUrl => apiUrl.replace(/^http?/, 'ws')),
       switchMap(wsUrl => {
         if (this.connection$) {
           return this.connection$;

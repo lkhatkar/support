@@ -24,4 +24,4 @@ function initDb()
 
 initDb();
 
-module.exports = require('./core/server');
+require('./core/server');
