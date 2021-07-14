@@ -3,3 +3,4 @@ exports.MessagesRecipients = require('./message-recipient-dbo');
 exports.DepartmentGroup = require('./department-group-dbo');
 exports.Department = require('./department-dbo');
 exports.User = require('./user-dbo');
+exports.initMessages = require('./agent-init-messages');

@@ -166,4 +166,54 @@ router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
     }
 })
 
+router.get('/initmessages', middleware.checkToken, async(req,res)=>{
+  try {
+    const initMessageDbo = new Dbo.initMessages(global.dao);
+    const messages = await initMessageDbo.getAll();
+    if (messages) {
+        res.status(200).send({ success: true, messages });
+    }
+    else {
+        res.status(200).send({ success: false, message: "No Messages Found" });
+    }
+}
+catch (e) {
+    next(e);
+}
+})
+
+router.post('/initmessages', middleware.checkToken ,async(req,res)=>{
+  try {
+    const {agentName, message} = req.body;
+    const initMessageDbo = new Dbo.initMessages(global.dao);
+    const messages = await initMessageDbo.create(agentName, message);
+    if (messages) {
+        res.status(200).send({ success: true});
+    }
+    else {
+        res.status(200).send({ success: false, message: "Failed to add message" });
+    }
+}
+catch (e) {
+    next(e);
+}
+})
+
+router.delete('/initmessages/:id', middleware.checkToken ,async(req,res)=>{
+  try {
+    const id = req.params.id;
+    const initMessageDbo = new Dbo.initMessages(global.dao);
+    const messages = await initMessageDbo.delete(id);
+    if (messages) {
+        res.status(200).send({ success: true});
+    }
+    else {
+        res.status(200).send({ success: false, message: "Failed to delete message" });
+    }
+}
+catch (e) {
+    next(e);
+}
+})
+
 module.exports = router;
