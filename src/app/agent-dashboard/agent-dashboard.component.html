@@ -59,6 +59,8 @@
                 <th>Client Name</th>
                 <th>Client Request</th>
                 <th>Status</th>
+                <!-- <th>Request Time</th>
+                <th>Accepted Time</th> -->
               </tr>
             </thead>
             <tbody>
@@ -69,6 +71,8 @@
                     {{client.isAgentAssigned ? 'Assigned' : 'Accept'}}
                 </button></td>
                 <td>{{getAssignedAgent(client.agentName)}}</td>
+                <!-- <td>10:20am</td>
+                <td>10:30am</td> -->
                 <!-- <td><button nz-button>{{client.isAgentAssigned}}</button></td> -->
               </tr>
               <!-- <tr>
@@ -168,7 +172,7 @@
                   </nz-dropdown-menu> -->
                 </div>
                 <div nz-col nzSpan="6">
-                  <input nz-input placeholder="Add message" nzSize="default" #initmessage (keyup.enter)="addInitMessage(initmessage.value)"/>
+                  <input nz-input placeholder="Add default message" nzSize="default" #initmessage (keyup.enter)="addInitMessage(initmessage.value)"/>
                 </div>
                 <div nz-col nzSpan="2">
                   <button nz-button nzType="primary" (click)="addInitMessage(initmessage)">Add</button>

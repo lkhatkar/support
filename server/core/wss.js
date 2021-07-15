@@ -48,7 +48,7 @@ class Wss{
                         if(global.clients.length > 0){
                           var clients = global.clients;
                           clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }));
-                          
+
                           if(agent.ws.readyState==1)
                             agent.ws.send(JSON.stringify(clients));
                         }
@@ -82,7 +82,17 @@ class Wss{
             ws.on('close', () => {
                 var closedIndex = global.clients.findIndex(client => client.ws == ws);
                 if(closedIndex != -1) {
+                    let closedClient = global.clients[closedIndex];
+                    delete closedClient['ws'];
+                    delete closedClient['agent'];
                     global.clients.splice(closedIndex, 1);
+                    //BroadCasting disconnected client to all Agents....
+                    if(global.agents.length > 0){
+                      global.agents.forEach(element=>{
+                        if(element.ws.readyState==1)
+                            element.ws.send(JSON.stringify({clientDisconnected:true, closedClient}));
+                      })
+                    }
                 }
                 else {
                     closedIndex = global.agents.findIndex(agent => agent.ws == ws);
@@ -90,10 +100,13 @@ class Wss{
                         global.agents[closedIndex].detachClients();
                         global.agents.splice(closedIndex, 1);
 
-                        global.agents.forEach(element=>{
+                        //BroadCasting Agents Online/Offline status to all Agents....
+                        if(global.agents.length > 0){
+                          global.agents.forEach(element=>{
                             if(element.ws.readyState==1)
                                 element.ws.send(JSON.stringify({refreshAgents:true}));
-                        })
+                          })
+                        }
                     }
                 }
             })
