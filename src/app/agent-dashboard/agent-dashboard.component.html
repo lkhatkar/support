@@ -53,7 +53,7 @@
       <nz-card nzTitle="Current Visitors" class="row1">
         <div style="margin-bottom: 16px;">
           <!-- <button nz-button (click)="newTab()">ADD</button> -->
-          <nz-table #clientTable [nzData]="listOfData" nzSize="small" [nzScroll]="{ y: '150px' }">
+          <nz-table #clientTable [nzData]="listOfData" nzSize="small" [nzScroll]="{ y: '150px' }" nzShowPagination="false">
             <thead>
               <tr>
                 <th>Client Name</th>
@@ -87,7 +87,7 @@
   <div nz-row>
     <div nz-col nzSpan="6">
       <nz-card nzTitle="Request Queue" class="row2">
-        <nz-table #request [nzData]="requestQueue" nzSize="small" [nzScroll]="{ y: '150px' }" nzBordered>
+        <!-- <nz-table #request [nzData]="requestQueue" nzSize="small" [nzScroll]="{ y: '150px' }" nzBordered nzShowPagination="false">
           <thead>
             <tr>
               <th>Name</th>
@@ -102,7 +102,7 @@
             <td>{{item.duration | date:'shortTime'}}</td>
             </tr>
           </tbody>
-        </nz-table>
+        </nz-table> -->
       </nz-card>
     </div>
     <div nz-col nzSpan="18">
@@ -141,16 +141,18 @@
                 <div nz-col nzSpan="8">
                   <nz-card class="chat-box" nzTitle="Template Messages" [id]="tab.id">
                     <ul nz-menu>
-                      <li nz-menu-item *ngFor="let message of defaultMessageData" (click)="chatMessage = message">
-                        {{message}}
+                      <li nz-menu-item *ngFor="let data of defaultMessageData" (click)="chatMessage = data.message">
+                        <i nz-icon nzType="delete" nzTheme="fill" (click)="deleteInitMessage(data.sno)" nzTooltipTitle="Delete"
+                        nzTooltipPlacement="topRight" nz-tooltip></i>&nbsp;&nbsp;
+                        {{data.message}}
                       </li>
                     </ul>
                   </nz-card>
                 </div>
               </div><br/>
               <div nz-row [nzGutter]="[24, 24]">
-                <div nz-col nzSpan="20"><input nz-input placeholder="write message" nzSize="default" [(ngModel)]="chatMessage" (keyup.enter)="onChatSend(tab.id)"/></div>
-                <div nz-col nzSpan="4">
+                <div nz-col nzSpan="14"><input nz-input placeholder="write message" nzSize="default" [(ngModel)]="chatMessage" (keyup.enter)="onChatSend(tab.id)"/></div>
+                <div nz-col nzSpan="2">
                   <nz-button-group>
                     <button nz-button nzType="primary" (click)="onChatSend(tab.id)" >Send</button>
                     <!-- <button nz-button nz-dropdown [nzDropdownMenu]="defaultMessages" nzPlacement="topRight">
@@ -164,6 +166,12 @@
                       </li>
                     </ul>
                   </nz-dropdown-menu> -->
+                </div>
+                <div nz-col nzSpan="6">
+                  <input nz-input placeholder="Add message" nzSize="default" #initmessage (keyup.enter)="addInitMessage(initmessage.value)"/>
+                </div>
+                <div nz-col nzSpan="2">
+                  <button nz-button nzType="primary" (click)="addInitMessage(initmessage)">Add</button>
                 </div>
               </div>
             </div>

@@ -166,12 +166,15 @@ router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
     }
 })
 
-router.get('/initmessages', middleware.checkToken, async(req,res)=>{
+//Agent Default Message Routes....
+router.get('/initmessages/:agent', async(req,res,next)=>{
   try {
+    const agent = req.params.agent;
     const initMessageDbo = new Dbo.initMessages(global.dao);
     const messages = await initMessageDbo.getAll();
+    const agentMessages = messages.filter(mes=>mes.name === agent);
     if (messages) {
-        res.status(200).send({ success: true, messages });
+        res.status(200).send({ success: true, agentMessages });
     }
     else {
         res.status(200).send({ success: false, message: "No Messages Found" });
@@ -182,13 +185,13 @@ catch (e) {
 }
 })
 
-router.post('/initmessages', middleware.checkToken ,async(req,res)=>{
+router.post('/initmessages', middleware.checkToken ,async(req,res,next)=>{
   try {
-    const {agentName, message} = req.body;
+    const {name, message} = req.body;
     const initMessageDbo = new Dbo.initMessages(global.dao);
-    const messages = await initMessageDbo.create(agentName, message);
+    const messages = await initMessageDbo.create(name, message);
     if (messages) {
-        res.status(200).send({ success: true});
+        res.status(200).send({ success: true, messages:messages.rows[0]});
     }
     else {
         res.status(200).send({ success: false, message: "Failed to add message" });
@@ -199,7 +202,7 @@ catch (e) {
 }
 })
 
-router.delete('/initmessages/:id', middleware.checkToken ,async(req,res)=>{
+router.delete('/initmessages/:id', middleware.checkToken ,async(req,res,next)=>{
   try {
     const id = req.params.id;
     const initMessageDbo = new Dbo.initMessages(global.dao);

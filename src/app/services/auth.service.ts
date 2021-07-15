@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { WebSocketService } from './web-socket.service';
 
 
 @Injectable({
@@ -12,6 +13,7 @@ export class AuthService {
 
   constructor(
     private _http: HttpClient,
+    private injector: Injector,
     private router:Router
     ) { }
 
@@ -54,7 +56,10 @@ export class AuthService {
   }
 
   agentLogout(){
+    let socketService = this.injector.get(WebSocketService);
     sessionStorage.removeItem('token');
+    sessionStorage.removeItem('currentAgent');
+    socketService.closeConnection();
     this.router.navigate(['/agent-login']);
   }
 

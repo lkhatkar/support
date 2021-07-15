@@ -25,7 +25,7 @@ class agentInitMessages {
 
   create(agentName, message) {
       return this.dao.run(
-        'INSERT INTO agent_init_messages (name, message) VALUES ($1,$2)',
+        'INSERT INTO agent_init_messages (name, message) VALUES ($1,$2) RETURNING *',
         [agentName, message])
   }
   update(obj) {

@@ -5,6 +5,7 @@ import { WebSocketService } from '../services/web-socket.service';
 import { AuthService } from '../services/auth.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { AgentMessagesService } from '../services/agent-messages.service';
 
 export interface Clients {
   id: string;
@@ -60,10 +61,26 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   tempAgents:any = [];
   globalAgents:any = [];
   defaultMessageData:any[]=[
-    'Hello, how may I assist you',
-    'Okay',
-    'Sorry, for the inconvinience cause',
-    'Please tell your issue',
+    // {
+    //   sno:10,
+    //   name:'agent',
+    //   message:'Hello, how may I assist you'
+    // },
+    // {
+    //   sno:11,
+    //   name:'agent',
+    //   message:'Okay'
+    // },
+    // {
+    //   sno:12,
+    //   name:'agent',
+    //   message:'Sorry, for the inconvinience cause'
+    // },
+    // {
+    //   sno:13,
+    //   name:'agent',
+    //   message:'Please tell your issue'
+    // },
   ];
   isVisible = false;
   // Dropdown right click
@@ -85,13 +102,14 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     private nzContextMenuService: NzContextMenuService,
     private websocket:WebSocketService,
     private authService: AuthService,
+    private messageService:AgentMessagesService,
     private changeDetector: ChangeDetectorRef) {
       this._subscription$ = new Subject();
   }
 
   ngOnInit(): void {
     this.currentAgent = this.authService.getCurrentAgent()
-
+    this.getInitMessages(this.currentAgent.username);
     // this.authService.getToken().subscribe(res=> {
       this.names = []
       // if(res.success) {
@@ -154,7 +172,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                     });
                   }
                   if(data.length > 0){
-                    this.requestQueueHandler(data);
+                    // this.requestQueueHandler(data);
                     let index = jsonData.findIndex((agent:any)=>agent.id === data[0].id);
                     if(index === -1){
                       data.forEach((element:any) => {
@@ -206,9 +224,6 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             name:client.name,
             dept:client.dept,
             duration:client.date
-            // duration:setInterval(()=>{
-            //   timerTick++;
-            // },1000)
           })
         })
       }else{
@@ -251,6 +266,39 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     });
     return bool;
 
+  }
+
+  getInitMessages(agentName:string){
+    this.messageService.getMessages(agentName)
+    .subscribe(resp=>{
+      if(resp.success){
+        this.defaultMessageData = resp.agentMessages;
+      }
+    })
+  }
+
+  addInitMessage(message:any){
+    this.messageService.addMessage({name:this.currentAgent.username,message:message.value})
+    .subscribe(resp=>{
+      if(resp.success){
+        this.defaultMessageData.push(resp.messages);
+        message.value='';
+      }else{
+        console.log(resp.message);
+      }
+    })
+  }
+
+  deleteInitMessage(id:any){
+    this.messageService.deleteMessage(id)
+    .subscribe(resp=>{
+      if(resp.success){
+        let index = this.defaultMessageData.findIndex(mes=>mes.sno === id);
+        this.defaultMessageData.splice(index,1);
+        this.defaultMessageData = [...this.defaultMessageData];
+        this.chatMessage = '';
+      }
+    })
   }
 
   newTab(id: string, name: string, accept:any, acceptEvent:any): void {
