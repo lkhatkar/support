@@ -60,28 +60,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   names:any = [];
   tempAgents:any = [];
   globalAgents:any = [];
-  defaultMessageData:any[]=[
-    // {
-    //   sno:10,
-    //   name:'agent',
-    //   message:'Hello, how may I assist you'
-    // },
-    // {
-    //   sno:11,
-    //   name:'agent',
-    //   message:'Okay'
-    // },
-    // {
-    //   sno:12,
-    //   name:'agent',
-    //   message:'Sorry, for the inconvinience cause'
-    // },
-    // {
-    //   sno:13,
-    //   name:'agent',
-    //   message:'Please tell your issue'
-    // },
-  ];
+  defaultMessageData:any[] = [];
   isVisible = false;
   // Dropdown right click
   contextMenu($event: any, menu: NzDropdownMenuComponent, nodes: any): void {
@@ -110,10 +89,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentAgent = this.authService.getCurrentAgent()
     this.getInitMessages(this.currentAgent.username);
-    // this.authService.getToken().subscribe(res=> {
       this.names = []
-      // if(res.success) {
-        // sessionStorage.setItem('token', res.access_token);
         // Get Agents
         this.authService.getAgents().subscribe(resp=> {
           if(resp.success) {
@@ -142,67 +118,85 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
           }
           // Selected agent
           this.selectedAgent = resp.agents.find((agent:any)=>agent.email === this.currentAgent.email);
-          // this.selectedAgent = resp.agents[0];
-
-          //Client list
-          // interval(6000).subscribe(() => {
-            // this.authService.getClients().subscribe((response:any)=> {
-            //   if(response.success) {
-            //     console.log(response);
-
-            //     if(response.clients.length > 0) {
-            //       // this.selectedVisitor = response?.clients[0];
-            //       // console.log(this.selectedVisitor);
-            //       let jsonData:any = [];
-            //       response.clients.forEach((element:any) => {
-            //         jsonData.push(element)
-            //       });
-            //       this.listOfData = jsonData;
-            //     }
-
                 // connect auth
                 let jsonData:any = [];
                 this.websocket.connect(this.selectedAgent)
                 .pipe(takeUntil(this._subscription$))
-                .subscribe(data=> {
-                  if(data.refreshAgents){
-                    this.authService.getOnlineAgents().subscribe(res=>{
-                      this.tempAgents = res.agents;
-                      this.setNodes(this.globalAgents);
-                    });
-                  }
-                  if(data.length > 0){
-                    // this.requestQueueHandler(data);
-                    let index = jsonData.findIndex((agent:any)=>agent.id === data[0].id);
-                    if(index === -1){
-                      data.forEach((element:any) => {
-                        jsonData.push(element)
+                .subscribe(connectionData=> {
+                  console.log('connection data:',connectionData);
+                  switch (connectionData.type) {
+                    case 'ReloadAgents':{
+                      this.authService.getOnlineAgents().subscribe(res=>{
+                        this.tempAgents = res.agents;
+                        this.setNodes(this.globalAgents);
                       });
-                    }else{
-                      jsonData.splice(index,1,data[0]);
+                      break;
                     }
-                    this.listOfData = [...jsonData];
-                  }
-                  console.log('data',data);
+                    case 'ClientConnect':{
+                      let data = connectionData.clients;
+                      if(data.length > 0){
+                          // this.requestQueueHandler(data);
+                          let index = jsonData.findIndex((agent:any)=>agent.id === data[0].id);
+                          if(index === -1){
+                            data.forEach((element:any) => {
+                              jsonData.push(element)
+                            });
+                          }else{
+                            jsonData.splice(index,1,data[0]);
+                          }
+                          this.listOfData = [...jsonData];
+                        }
+                      break;
+                    }
+                    case 'ClientMessage':{
+                      let data = connectionData;
+                      if(data.message && typeof(data.message)==='string') {
+                            this.chatData.push({
+                              message:data.message,
+                              time:new Date().getTime(),
+                              user_type:'client',
+                              id: data.id
+                            });
+                        }
+                      break;
+                    }
+                    case 'ClientDisconnect':{
 
-                  if(data.message && typeof(data.message)==='string') {
-                      this.chatData.push({
-                        message:data.message,
-                        time:new Date().getTime(),
-                        user_type:'client',
-                        id: data.id
-                      });
+                      break;
+                    }
+                    default:
+                      break;
                   }
-                  // console.log(data);
+                  // if(data.refreshAgents){
+                  //   this.authService.getOnlineAgents().subscribe(res=>{
+                  //     this.tempAgents = res.agents;
+                  //     this.setNodes(this.globalAgents);
+                  //   });
+                  // }
+                  // if(data.length > 0){
+                  //   // this.requestQueueHandler(data);
+                  //   let index = jsonData.findIndex((agent:any)=>agent.id === data[0].id);
+                  //   if(index === -1){
+                  //     data.forEach((element:any) => {
+                  //       jsonData.push(element)
+                  //     });
+                  //   }else{
+                  //     jsonData.splice(index,1,data[0]);
+                  //   }
+                  //   this.listOfData = [...jsonData];
+                  // }
+                  // console.log('data',data);
+
+                  // if(data.message && typeof(data.message)==='string') {
+                  //     this.chatData.push({
+                  //       message:data.message,
+                  //       time:new Date().getTime(),
+                  //       user_type:'client',
+                  //       id: data.id
+                  //     });
+                  // }
                 });
-            //   }
-            // });
-          // });
         });
-    //   }
-
-    // })
-
   }
   // For table
   // ngAfterContentChecked() : void {
@@ -210,7 +204,6 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   // }
   closeTab({ index }: { index: number }): void {
     this.tabs.splice(index, 1);
-    // this.websocket.closeConnection();
   }
 
   requestInfo:any = [];
@@ -265,7 +258,6 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
       }
     });
     return bool;
-
   }
 
   getInitMessages(agentName:string){
@@ -359,6 +351,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   onLogout() {
     this.authService.agentLogout();
   }
+
   showModal(): void {
     this.isVisible = true;
   }

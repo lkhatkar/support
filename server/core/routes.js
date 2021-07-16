@@ -131,7 +131,13 @@ router.get('/agents', middleware.checkToken, async (req, res, next) => {
 })
 
 router.get('/onlineAgents',middleware.checkToken, async (req, res, next) => {
-    res.json({agents:global.agents});
+  try{
+    let globalAgents = global.agents;
+    res.json({agents:globalAgents.map(({ ws, clients, ...rest }) => ({ ...rest }))});
+  }
+  catch (e) {
+    next(e);
+  }
 })
 
 router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
@@ -146,11 +152,12 @@ router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
                 global.clients[clientIndex]['isAgentAssigned'] = true;
                 var tempClient = [];
                 tempClient.push(global.clients[clientIndex]);
+                tempClient = tempClient.map(({ ws, agent, ...rest }) => ({ ...rest }));
                 global.agents.forEach(element => {
                   if(element.ws.readyState == 1)
-                    element.ws.send(JSON.stringify(tempClient));
+                    element.ws.send(JSON.stringify({type:'ClientConnect',clients:tempClient}));
+                    // element.ws.send(JSON.stringify(tempClient));
                 });
-
                 global.agents[agentIndex].onHandleClient(global.clients[clientIndex]);
                 res.status(200).send({ success: true });
             }

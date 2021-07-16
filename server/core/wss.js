@@ -43,18 +43,18 @@ class Wss{
                     } else {
                         const agent = new Agent(nanoid(6), query.name, query.email, query.dept,  query.pid, ws);
                         global.agents.push(agent);
-
                         //Broadcasting Client List To All Agents when new agent is connected.
                         if(global.clients.length > 0){
                           var clients = global.clients;
                           clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest }));
-
                           if(agent.ws.readyState==1)
-                            agent.ws.send(JSON.stringify(clients));
+                            agent.ws.send(JSON.stringify({type:'ClientConnect',clients}));
+                            // agent.ws.send(JSON.stringify(clients));
                         }
                         global.agents.forEach(element=>{
                             if(element.ws.readyState == 1)
-                                element.ws.send(JSON.stringify({refreshAgents:true}));
+                              element.ws.send(JSON.stringify({type:'ReloadAgents'}));
+                                // element.ws.send(JSON.stringify({refreshAgents:true}));
                         })
                     }
                 });
@@ -67,7 +67,8 @@ class Wss{
                 clients = clients.map(({ ws, agent, ...rest }) => ({ ...rest })).filter(cl=>cl.id === client.id)
                 if(global.agents.length > 0){
                   global.agents.forEach(element => {
-                    element.ws.send(JSON.stringify(clients))
+                    element.ws.send(JSON.stringify({type:'ClientConnect',clients}));
+                    // element.ws.send(JSON.stringify(clients))
                   });
                   client.ws.send(JSON.stringify({isAgentsAvailable:true}))
                 }else{
@@ -90,7 +91,7 @@ class Wss{
                     if(global.agents.length > 0){
                       global.agents.forEach(element=>{
                         if(element.ws.readyState==1)
-                            element.ws.send(JSON.stringify({clientDisconnected:true, closedClient}));
+                            element.ws.send(JSON.stringify({type:'ClientDisconnect', closedClient}));
                       })
                     }
                 }
@@ -104,7 +105,8 @@ class Wss{
                         if(global.agents.length > 0){
                           global.agents.forEach(element=>{
                             if(element.ws.readyState==1)
-                                element.ws.send(JSON.stringify({refreshAgents:true}));
+                              element.ws.send(JSON.stringify({type:'ReloadAgents'}));
+                              // element.ws.send(JSON.stringify({refreshAgents:true}));
                           })
                         }
                     }
