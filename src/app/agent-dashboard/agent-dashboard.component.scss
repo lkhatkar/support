@@ -24,6 +24,7 @@
   float: right;
   clear: both;
   text-align: right;
+  overflow-wrap: break-word;
   border: 1px solid #40a9ff;
   border-radius: 25px;
   padding: 5px;
@@ -35,6 +36,7 @@
   color: #111;
   float: left;
   clear: both;
+  overflow-wrap: break-word;
   border: 1px solid #ddd;
   margin-bottom: 5px;
   border-radius: 25px;

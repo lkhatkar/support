@@ -84,6 +84,7 @@ class Wss{
                 var closedIndex = global.clients.findIndex(client => client.ws == ws);
                 if(closedIndex != -1) {
                     let closedClient = global.clients[closedIndex];
+                    this.addDisconnectedClients(closedClient);
                     delete closedClient['ws'];
                     delete closedClient['agent'];
                     global.clients.splice(closedIndex, 1);
@@ -114,6 +115,9 @@ class Wss{
             })
 
         });
+    }
+    addDisconnectedClients(client){
+      // console.log('disconnected: ',client);
     }
 }
 

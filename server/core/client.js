@@ -6,7 +6,7 @@ class Client{
         this.dept = dept;
         this.pid = pid;
         this.ws = ws;
-        
+
     }
 
     onMessage(message) {
@@ -18,14 +18,14 @@ class Client{
     assignAgent(agent){
         if(this.ws.readyState == 1)
             this.ws.send(JSON.stringify({success: true, message:"", name: agent.name}));
-        
+
         this.agent = agent;
     }
 
     detachAgent() {
-        if(this.ws.readyState == 1)
+        if(this.ws && this.ws.readyState == 1)
             this.ws.send(JSON.stringify({success: true, message: "Agent Disconnected"}));
-            
+
         this.agent = null;
     }
 }
