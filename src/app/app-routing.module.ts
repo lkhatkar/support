@@ -7,7 +7,7 @@ import { SupportChatAdminComponent } from './support-chat-admin/support-chat-adm
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/agent' },
-  { path: 'admin', component: SupportChatAdminComponent },
+  // { path: 'admin', component: SupportChatAdminComponent },
   { path: 'agent', component: AgentDashboardComponent, canActivate:[AgentGuard]},
   { path: 'agent-login', component: AgentLoginComponent}
 ];

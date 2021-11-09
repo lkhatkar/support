@@ -17,7 +17,7 @@
   overflow: auto;
 }
 .agent {
-  width: 40%;
+  width: 55%;
   background: #40a9ff;
   margin-bottom: 5px;
   color: #fff;
@@ -26,12 +26,19 @@
   text-align: right;
   overflow-wrap: break-word;
   border: 1px solid #40a9ff;
-  border-radius: 25px;
+  border-radius: 3px;
   padding: 5px;
+  font-size : 15px;
   font-family: "Roboto", "Helvetica Neue", sans-serif;
 }
+
+.agent-mes{
+  float: left;
+  margin : 0 5px 0;
+}
+
 .client {
-  width: 40%;
+  width: 55%;
   background: #eee;
   color: #111;
   float: left;
@@ -39,8 +46,10 @@
   overflow-wrap: break-word;
   border: 1px solid #ddd;
   margin-bottom: 5px;
-  border-radius: 25px;
+  border-radius: 3px;
   padding: 5px;
+  font-size : 15px;
+  padding-left: 10px;
   font-family: "Roboto", "Helvetica Neue", sans-serif;
 }
 .time {

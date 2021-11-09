@@ -123,7 +123,7 @@
                       <!-- For agent -->
                       <p *ngIf="data.user_type === 'agent' ">
                         <span [class] = "data.user_type === 'agent' ? 'agent' : 'client' " *ngIf="data.id === tab.id">
-                          {{data.message}}<br>
+                          <span class="agent-mes">{{data.message}}</span><br>
                           <small class="time">
                             {{data.time | date: 'shortTime'}}
                           </small>
