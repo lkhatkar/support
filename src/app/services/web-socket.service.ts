@@ -19,7 +19,7 @@ export class WebSocketService {
   connect(selectedAgent: any): Observable<any> {
     // console.log('Selected agent service: ', selectedAgent);
     let url = environment.url;
-    return of(`${url}?name=${selectedAgent.name}&email=${selectedAgent.email}&dept=crane&pid=${selectedAgent.pageid}&auth=${this.authService.acquireToken()}`).pipe(
+    return of(`${url}?id=${selectedAgent.id}&name=${selectedAgent.name}&email=${selectedAgent.email}&dept=crane&pid=${selectedAgent.pageid}&auth=${this.authService.acquireToken()}`).pipe(
       // https becomes wws, http becomes ws
       map(apiUrl => apiUrl.replace(/^http?/, 'ws')),
       switchMap(wsUrl => {

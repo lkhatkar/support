@@ -30,9 +30,10 @@ router.use('/token', async (req, res, next) => {
                     validUser = true;
                     user = {
                       name:loginCredentials.name,
-                      email:loginCredentials.email
+                      email:loginCredentials.email,
+                      id:loginCredentials.id
                     };
-                    organisation_id = loginCredentials.id;
+                    // organisation_id = loginCredentials.id;
                 }
             }
 
@@ -40,7 +41,7 @@ router.use('/token', async (req, res, next) => {
                 let token = jwt.sign({ username: Client_Id },
                     process.env.API_SECRET,
                     {
-                        expiresIn: '1h' // expires in 24 hours
+                        expiresIn: '1h' // expires in 1 hours
                     }
                 );
                 // return the JWT token for the future API calls

@@ -57,7 +57,8 @@ export class AgentLoginComponent implements OnInit {
   private setCurrentAgent(user:any){
     const agent = {
       username: user.name,
-      email:user.email
+      email:user.email,
+      id:user.id
     }
     sessionStorage.setItem('currentAgent',JSON.stringify(agent));
   }
