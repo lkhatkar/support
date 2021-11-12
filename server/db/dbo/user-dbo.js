@@ -7,9 +7,9 @@ class UserDbo {
       const sql = `
       CREATE TABLE IF NOT EXISTS userdata (
         Sno        BIGSERIAL PRIMARY KEY,
-        Id         TEXT NOT NULL,
+        Id         TEXT NOT NULL UNIQUE,
         Name TEXT  NOT NULL,
-        Email TEXT  NOT NULL,
+        Email TEXT  NOT NULL UNIQUE,
         PageId TEXT  NOT NULL,
         Create_Date  DATE  NOT NULL,
         IsActive  BOOLEAN NOT NULL DEFAULT (false),

@@ -2,26 +2,28 @@ class MessageDbo {
     constructor(dao) {
       this.dao = dao
     }
-  
+
     createTable() {
       const sql = `
       CREATE TABLE IF NOT EXISTS Message (
         Sno        BIGSERIAL PRIMARY KEY,
-        Subject TEXT,
-        Creator_Id BIGINT NOT NULL
-						REFERENCES Userdata (Sno) ON DELETE NO ACTION
-                        ON UPDATE NO ACTION,   
+        Agent_Id TEXT NOT NULL
+            REFERENCES Userdata (id) ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+        Client_Id BIGINT NOT NULL
+						REFERENCES Userdata (email) ON DELETE NO ACTION
+                        ON UPDATE NO ACTION,
 		    Message_Body TEXT NOT NULL,
         Create_Date  DATE  NOT NULL,
         Parent_Message_Id BIGINT,
-        Expiry_Date  DATE      
+        Expiry_Date  DATE
     )`
       return this.dao.run(sql)
     }
 
     getAll() {
       return this.dao.all(`SELECT * FROM Message`)
-    }        
+    }
 
     get(id) {
       return this.dao.get(
@@ -48,5 +50,5 @@ class MessageDbo {
         )
     }
   }
-  
+
   module.exports = MessageDbo;
