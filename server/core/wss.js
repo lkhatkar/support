@@ -5,6 +5,7 @@ const { nanoid } = require('nanoid')
 const Client = require('./client');
 const Agent = require('./agent');
 const jwt = require('jsonwebtoken');
+const { Dbo } = require('../db');
 
 class Wss {
   constructor(app) {
@@ -14,7 +15,7 @@ class Wss {
     //initialize the WebSocket server instance
     const wss = new WebSocket.Server({ server });
 
-    wss.on('connection', (ws /*: WebSocket*/, req) => {
+    wss.on('connection', async (ws /*: WebSocket*/, req) => {
 
       const query = url.parse(req.url, true).query;
 
@@ -54,6 +55,9 @@ class Wss {
 
       } else {
         const client = new Client(nanoid(6), query.name, query.email, query.dept, query.pid, ws);
+        // Check for client in database
+        let clientCheck = await this.addOrUpdateClient(client)
+        if(!clientCheck) return; // Check for error here
         global.clients.push(client);
         //Broadcasting New Client To All Agents.
         var clients = global.clients;
@@ -109,6 +113,21 @@ class Wss {
   }
   addDisconnectedClients(client) {
     // console.log('disconnected: ',client);
+  }
+  async addOrUpdateClient(client) {
+    try {
+      const UserDbo = new Dbo.User(global.dao);
+      const user = await UserDbo.getByEmail(client.email);
+
+      if(!user) {
+        return await UserDbo.create(client.id, client.name, client.email, 'axy', new Date(), true, null, null, false);
+      }
+      else {
+        return await UserDbo.update(user.sno, client.id, client.name, client.email, 'axy', new Date(), true, null, null, false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
