@@ -7,10 +7,10 @@ class MessageDbo {
       const sql = `
       CREATE TABLE IF NOT EXISTS Message (
         Sno        BIGSERIAL PRIMARY KEY,
-        Agent_Id TEXT NOT NULL
+        From TEXT NOT NULL
             REFERENCES Userdata (id) ON DELETE NO ACTION
         ON UPDATE NO ACTION,
-        Client_Id BIGINT NOT NULL
+        to BIGINT NOT NULL
 						REFERENCES Userdata (email) ON DELETE NO ACTION
                         ON UPDATE NO ACTION,
 		    Message_Body TEXT NOT NULL,
@@ -31,16 +31,16 @@ class MessageDbo {
         [id])
     }
 
-    create(Subject, Creator_Id, Message_Body, Create_Date, Parent_Message_Id, Expiry_Date) {
+    create(From, Message_Body, Create_Date, Parent_Message_Id, To, Attachment, Is_Read, Is_Deleted) {
         return this.dao.run(
-          'INSERT INTO Message (Subject, Creator_Id, Message_Body, Create_Date, Parent_Message_Id, Expiry_Date) VALUES ($1,$2,$3,$4,$5,$6)',
-          [Subject, Creator_Id, Message_Body, Create_Date, Parent_Message_Id, Expiry_Date])
+          'INSERT INTO Message ("from", Message_Body, Create_Date, Parent_Message_Id, "to", Attachment, Is_Read, Is_Deleted) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)',
+          [ From, Message_Body, Create_Date, Parent_Message_Id, To, Attachment, Is_Read, Is_Deleted])
     }
     update(obj) {
-        const {Sno, Subject, Creator_Id, Message_Body, Create_Date, Parent_Message_Id, Expiry_Date} = obj
+        const {Sno, From, Message_Body, Create_Date, Parent_Message_Id, To, Attachment, Is_Read, Is_Deleted} = obj
         return this.dao.run(
-            `UPDATE Message SET Subject = $1, Creator_Id = $2, Message_Body = $3, Create_Date = $4, Parent_Message_Id = $5, Expiry_Date = $6 WHERE Sno = $7`,
-            [Subject, Creator_Id, Message_Body, Create_Date, Parent_Message_Id, Expiry_Date, Sno]
+            `UPDATE Message SET "from" = $1, Message_Body = $2, Create_Date = $3, Parent_Message_Id = $4, "to" = $5, Attachment = $6, Is_Read = $7, Is_Deleted = $8  WHERE Sno = $9`,
+            [From, Message_Body, Create_Date, Parent_Message_Id, To, Attachment, Is_Read, Is_Deleted, Sno]
         )
     }
     delete(id) {

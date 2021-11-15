@@ -1,4 +1,5 @@
 const Client = require('./client');
+const { Dbo } = require('../db');
 class Agent extends Client{
 
     clients = [];
@@ -15,6 +16,7 @@ class Agent extends Client{
             if(client){
                 if(client.ws.readyState == 1){
                     client.ws.send(JSON.stringify({success: true, message, name: this.name}));
+                    saveMessagesToDB(this.email, client.email, message, null, 0);
                 }
             }
         }
@@ -29,6 +31,7 @@ class Agent extends Client{
             // this.agent.ws.send(message);
             if(this.agent.ws.readyState == 1){
                 this.agent.ws.send(JSON.stringify({type:'ClientMessage', id: this.id, message}));
+                saveMessagesToDB(this.email, this.agent.email, message, null, 0);
             }
         }
         catch(e) {
@@ -48,6 +51,20 @@ class Agent extends Client{
         });
         this.clients = [];
     }
+
+    // saveMessagesToDB(agentId, clientId, message, isAgent = false){
+    //   console.log(message);
+    // }
+
+}
+
+async function saveMessagesToDB(from, to, message, attachment, isRead, isDeleted = false){
+  try{
+    const MessageDbo = new Dbo.Messages(global.dao);
+    return await MessageDbo.create(from, message, new Date(), null, to, attachment, isRead, isDeleted);
+  } catch(error){
+    console.error(error);
+  }
 }
 
 module.exports = Agent;
