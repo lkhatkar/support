@@ -290,7 +290,7 @@ document.write(`<!DOCTYPE html>
             <div class="foot">
                 <button id="btn_Attachment" onclick="attach()"><i class="fa fa-paperclip"></i></button>
                 <input type="file" id='attached_file' accept=".jpg,.jpeg,.png" hidden onchange='getImageData(event)'>
-                <input type="text" class="msg" placeholder="Type a message..." id='chatMsg' />
+                <input type="text" class="msg" placeholder="Type a message..." id='chatMsg' onkeypress="onValueEnter()" />
                 <button id="btn_sendMessage" onclick="addmessage()"><i class="fa fa-paper-plane"></i></button>
             </div>
 
@@ -527,3 +527,6 @@ function logout() {
     }
 }
 
+function onValueEnter(){
+  client.send("isClientTyping");
+}
