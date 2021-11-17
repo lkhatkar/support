@@ -15,6 +15,7 @@
   height: 150px;
   max-height: 150px;
   overflow: auto;
+  box-sizing: border-box
   // position: relative;
   // display: block;
 
@@ -83,4 +84,16 @@
   clear: both;
   margin-top: 5px;
 }
-
+.ant-card {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 5px;
+  font-size: 14px;
+  font-variant: tabular-nums;
+  list-style: none;
+  font-feature-settings: 'tnum', "tnum";
+  background: #fff;
+}
+.ant-card-bordered {
+  border: 1px solid #f0f0f0;
+}

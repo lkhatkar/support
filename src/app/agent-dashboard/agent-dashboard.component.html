@@ -118,7 +118,7 @@
               <div nz-row>
                 <div nz-col nzSpan="16">
                   <!-- <textarea rows="4" cols="10" nz-input [(ngModel)]="inputValueTab" disabled></textarea> -->
-                  <nz-card class="chat-box" [id]="tab.id">
+                  <div class="ant-card ant-card-bordered chat-box" [id]="tab.id" #scrollToBottom [scrollTop]="scrollToBottom.scrollHeight">
                     <div *ngFor="let data of chatData">
                       <!-- For agent -->
                       <p *ngIf="data.user_type === 'agent' ">
@@ -147,7 +147,7 @@
                         </div>
                       </div>
                     </div>
-                  </nz-card>
+                  </div>
                 </div>
                 <div nz-col nzSpan="8">
                   <nz-card class="chat-box" nzTitle="Template Messages" [id]="tab.id">
