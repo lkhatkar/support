@@ -27,7 +27,16 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   selectedAgent: any;
   selectedVisitor: any;
   index = 0;
-  tabs: { name: string, id: string }[] = [];
+  tabs: { name: string, id: string }[] = [
+    {
+      name: 'rishabh',
+      id: '1'
+    },
+    {
+      name: 'naman',
+      id: '2'
+    },
+  ];
   inputValueTab?: string = "Hello there";
   chatMessage = "";
   listOfData: Clients[] = [];
@@ -77,6 +86,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
       }
       // Selected agent
       this.selectedAgent = resp.agents.find((agent: any) => agent.email === this.currentAgent.email);
+      console.log('agent comp', this.selectedAgent);
 
       // connect auth
       let jsonData: any = [];
@@ -111,6 +121,11 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             case 'ClientMessage': {
               let data = connectionData;
               if (data.message && typeof (data.message) === 'string') {
+                let index = this.chatData.findIndex(chat => (chat.user_type === 'clientTyping' && chat.id == data.id));
+                if (index != -1) {
+                  this.chatData.splice(index, 1);
+                  this.chatData = [...this.chatData];
+                }
                 this.chatData.push({
                   message: data.message,
                   time: new Date().getTime(),
@@ -118,6 +133,20 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
                   id: data.id
                 });
               }
+              break;
+            }
+            case 'ClientTyping': {
+              let data = connectionData;
+              let index = this.chatData.findIndex(chat => (chat.user_type === 'clientTyping' && chat.id == data.id));
+              console.log('index:', index);
+              if (index != -1) {
+                this.chatData.splice(index, 1);
+                this.chatData = [...this.chatData];
+              }
+              this.chatData.push({
+                user_type: 'clientTyping',
+                id: data.id
+              });
               break;
             }
             case 'ClientDisconnect': {
@@ -130,6 +159,11 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
         });
     });
   }
+
+  deleteTypingMessage() {
+
+  }
+
   // For table
   // ngAfterContentChecked() : void {
   //   this.changeDetector.detectChanges();

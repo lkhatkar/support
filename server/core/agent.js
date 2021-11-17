@@ -30,8 +30,12 @@ class Agent extends Client{
         //this will refer to client
             // this.agent.ws.send(message);
             if(this.agent.ws.readyState == 1){
+              if(message === 'isClientTyping'){
+                this.agent.ws.send(JSON.stringify({type:'ClientTyping', id: this.id}));
+              }else{
                 this.agent.ws.send(JSON.stringify({type:'ClientMessage', id: this.id, message}));
                 saveMessagesToDB(this.email, this.agent.email, message, null, 0);
+              }
             }
         }
         catch(e) {

@@ -15,7 +15,16 @@
   height: 150px;
   max-height: 150px;
   overflow: auto;
+  // position: relative;
+  // display: block;
+
+  // &::before,
+  // .typing-box {
+  //   display: inline-block;
+  //   vertical-align: bottom;
+  // }
 }
+
 .agent {
   width: 55%;
   background: #40a9ff;
@@ -61,3 +70,17 @@
 .folder-name {
   margin-left: 4px;
 }
+
+.typing{
+  font-size: 1.1em;
+  position: absolute;
+  left: 2%;
+  bottom: 5%;
+}
+
+.typing-indicator{
+  float: left;
+  clear: both;
+  margin-top: 5px;
+}
+
