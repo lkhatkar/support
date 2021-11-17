@@ -290,6 +290,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     else return `Assigned to ${agentName}`;
   }
 
+  onAgentTyping(clientId:any):void{
+    this.websocket.send({ clientId: clientId, isAgentTyping: true });
+  }
+
   onChatSend(id: string): void {
     this.websocket.send({ clientId: id, message: this.chatMessage });
 

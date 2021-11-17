@@ -138,7 +138,7 @@
                           </small>
                         </span>
                       </p>
-
+                      <!-- Typing Indicator -->
                       <div class="typing-box" *ngIf="data.user_type === 'clientTyping' && data.id == tab.id">
                         <div class="typing-indicator">
                           <span></span>
@@ -162,7 +162,7 @@
                 </div>
               </div><br/>
               <div nz-row [nzGutter]="[24, 24]">
-                <div nz-col nzSpan="14"><input nz-input placeholder="write message" nzSize="default" [(ngModel)]="chatMessage" (keyup.enter)="onChatSend(tab.id)"/></div>
+                <div nz-col nzSpan="14"><input nz-input placeholder="write message" nzSize="default" [(ngModel)]="chatMessage" (keypress)="onAgentTyping(tab.id)" (keyup.enter)="onChatSend(tab.id)"/></div>
                 <div nz-col nzSpan="2">
                   <nz-button-group>
                     <button nz-button nzType="primary" (click)="onChatSend(tab.id)" >Send</button>

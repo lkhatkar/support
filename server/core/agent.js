@@ -11,12 +11,16 @@ class Agent extends Client{
 
     onAgentMessage(jsonString) {
         try {
-            let {clientId, message} = JSON.parse(jsonString);
+            let {clientId, message, isAgentTyping} = JSON.parse(jsonString);
             let client = this.clients.find(c => c.id == clientId);
             if(client){
                 if(client.ws.readyState == 1){
+                  if(isAgentTyping){
+                    client.ws.send(JSON.stringify({isAgentTyping}));
+                  }else{
                     client.ws.send(JSON.stringify({success: true, message, name: this.name}));
                     saveMessagesToDB(this.email, client.email, message, null, 0);
+                  }
                 }
             }
         }
