@@ -1,0 +1,71 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()"  >
+   <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="postuser">PGUSER</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="This is the required field">
+      <input nz-input formControlName="postuser" id="postuser" />
+    </nz-form-control>
+  </nz-form-item> 
+    <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="password">PGPASSWORD</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="This is the required field">
+      <input nz-input formControlName="password" id="password" />
+    </nz-form-control>
+  </nz-form-item> 
+    <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="pghost">PGHOST</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="This is the required field">
+      <input nz-input formControlName="pghost" id="pghost" />
+    </nz-form-control>
+  </nz-form-item> 
+    <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="pgdatabse">PGDATABASE</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="This is the required field">
+      <input nz-input formControlName="pgdatabase" id="pgdatabase" />
+      </nz-form-control>
+    </nz-form-item> 
+      <nz-form-item>
+      
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="pgport">PGPORT</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="This is the required field">
+      <input nz-input formControlName="pgport" id="pgport" />
+    </nz-form-control>
+    
+  </nz-form-item> 
+  <nz-form-item>
+    <nz-form-control [nzSpan]="2" style="margin: auto;">
+      <button type="submit" nz-button nzType="primary" nzBlock>Initialize </button>
+    </nz-form-control>
+  </nz-form-item>
+  </form>
+
+
+    <!-- <nz-form-item>
+    
+
+        <nz-form-label  nzFor="postuser">PGUSER </nz-form-label>
+     
+      <nz-form-control >
+        <input nz-input name="postuser" type="text"  value="postgres" placeholder="postgres" id="postuser" />
+      </nz-form-control>
+      
+      <nz-form-label nzFor="password">PGPASSWORD</nz-form-label>
+      <nz-form-control >
+        <input nz-input name="password" type="text" id="password" placeholder="password" />
+      </nz-form-control>
+      <nz-form-label   nzFor="pghost">PGHOST</nz-form-label>
+      
+      <nz-form-control >
+        <input nz-input name="pghost" type="text" id="pghost" value="localhost"/>
+    </nz-form-control>
+    <nz-form-label  nzFor="pgdatabase">PGDATABASE</nz-form-label>
+      <nz-form-control>
+        <input nz-input name="pgdatabase" type="text" id="pgdatabase" placeholder="database"/>
+      </nz-form-control>
+      <nz-form-label nzFor="pgport">PGPORT</nz-form-label>
+      <nz-form-control>
+        <input nz-input name="pgport" type="number" id="pgport" value="5432"/>
+      </nz-form-control>
+      
+      
+    </nz-form-item > -->
+ 
