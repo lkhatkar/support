@@ -16,9 +16,9 @@ class Agent extends Client{
             if(client){
                 if(client.ws.readyState == 1){
                   if(isAgentTyping){
-                    client.ws.send(JSON.stringify({isAgentTyping}));
+                    client.ws.send(JSON.stringify({success: true, message, name: this.name, isAgentTyping}));
                   }else{
-                    client.ws.send(JSON.stringify({success: true, message, name: this.name}));
+                    client.ws.send(JSON.stringify({success: true, message, name: this.name, isAgentTyping: false}));
                     saveMessagesToDB(this.email, client.email, message, null, 0);
                   }
                 }

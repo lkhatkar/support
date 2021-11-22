@@ -2,7 +2,10 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { Dbo } = require('../db');
 const middleware = require('../core/middleware');
-
+const fs = require('fs');
+const path = require('path');
+//check for file path
+const filePath = path.join(__dirname, '..', 'config', 'config.json');
 // Routes
 router.use('/token', async (req, res, next) => {
 
@@ -225,6 +228,36 @@ router.delete('/initmessages/:id', middleware.checkToken ,async(req,res,next)=>{
 catch (e) {
     next(e);
 }
+})
+// settings
+router.get('/settings', (req, res, next)=> {
+  try {
+    if (fs.existsSync(filePath)) {
+      let jsonData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      res.json(jsonData);
+    }
+    else {
+      res.json({dbInitialized: false});
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+router.post('/settings', (req, res, next)=> {
+  try {
+    let jsonData = req.body;  //{PGUSER, PGPASSWORD, PGHOST, PGDATABASE, PGPORT}
+    fs.writeFileSync(filePath, JSON.stringify(jsonData), 'utf8');
+    res.json({dbInitialized: true});
+  } catch (e) {
+    next(e);
+  }
+});
+router.post('/setAdmin', (req, res, next)=> {
+  try {
+
+  } catch (e) {
+    next(e);
+  }
 })
 
 module.exports = router;
