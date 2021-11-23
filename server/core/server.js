@@ -1,3 +1,4 @@
+require('../index.js');
 require('./global');
 const express = require('express');
 const http = require('http');

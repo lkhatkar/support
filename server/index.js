@@ -1,18 +1,19 @@
 const path = require('path');
 const { Dao, Dbo } = require('./db');
-// require('dotenv/config');
+const fs = require('fs');
+const filePath = path.join(__dirname, '.', 'config', 'config.json');
 require('dotenv').config({
     path: path.resolve(__dirname, `./config/${process.env.ENV || 'prod'}.env`)
 });
 
-function initDb()
+let initDatabse = function(data)
 {
     global.dao = new Dao({
-        user: process.env.PGUSER,
-        host: process.env.PGHOST,
-        database: process.env.PGDATABASE,
-        password: process.env.PGPASSWORD,
-        port: process.env.PGPORT,
+        user: data.PGUSER,
+        host: data.PGHOST,
+        database: data.PGDATABASE,
+        password: data.PGPASSWORD,
+        port: data.PGPORT,
     });
 
     this.UserDbo = new Dbo.User(global.dao);
@@ -21,8 +22,20 @@ function initDb()
     this.DepartmentDbo = new Dbo.Department(global.dao);
     this.DepartmentGroupDbo = new Dbo.DepartmentGroup(global.dao);
     this.initMessagesDbo =  new Dbo.initMessages(global.dao);
-}
+};
 
-initDb();
+//immediately invoked function....
+(()=>{
+  try {
+    if (fs.existsSync(filePath)) {
+      let data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      initDatabse(data);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+})();
 
-require('./core/server');
+module.exports = initDatabse;
+
+// require('./core/server');

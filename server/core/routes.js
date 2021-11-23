@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 //check for file path
 const filePath = path.join(__dirname, '..', 'config', 'config.json');
+const initDb = require('../index.js');
 // Routes
 router.use('/token', async (req, res, next) => {
 
@@ -229,12 +230,13 @@ catch (e) {
     next(e);
 }
 })
+
 // settings
 router.get('/settings', (req, res, next)=> {
   try {
     if (fs.existsSync(filePath)) {
       let jsonData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      res.json(jsonData);
+      res.json({dbInitialized: true});
     }
     else {
       res.json({dbInitialized: false});
@@ -243,15 +245,18 @@ router.get('/settings', (req, res, next)=> {
     next(e);
   }
 });
+
 router.post('/settings', (req, res, next)=> {
   try {
     let jsonData = req.body;  //{PGUSER, PGPASSWORD, PGHOST, PGDATABASE, PGPORT}
     fs.writeFileSync(filePath, JSON.stringify(jsonData), 'utf8');
+    initDb(jsonData);
     res.json({dbInitialized: true});
   } catch (e) {
     next(e);
   }
 });
+
 router.post('/setAdmin', (req, res, next)=> {
   try {
 
