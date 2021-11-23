@@ -7,13 +7,9 @@ class MessageDbo {
       const sql = `
       CREATE TABLE IF NOT EXISTS Message (
         Sno        BIGSERIAL PRIMARY KEY,
-        From TEXT NOT NULL
-            REFERENCES Userdata (id) ON DELETE NO ACTION
-        ON UPDATE NO ACTION,
-        to BIGINT NOT NULL
-						REFERENCES Userdata (email) ON DELETE NO ACTION
-                        ON UPDATE NO ACTION,
-		    Message_Body TEXT NOT NULL,
+        "from" TEXT NOT NULL,
+        "to" BIGINT NOT NULL,
+	      Message_Body TEXT NOT NULL,
         Create_Date  DATE  NOT NULL,
         Parent_Message_Id BIGINT,
         Expiry_Date  DATE

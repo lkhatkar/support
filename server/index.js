@@ -6,7 +6,7 @@ require('dotenv').config({
     path: path.resolve(__dirname, `./config/${process.env.ENV || 'prod'}.env`)
 });
 
-let initDatabse = function(data)
+let initDatabse = async function(data)
 {
     global.dao = new Dao({
         user: data.PGUSER,
@@ -22,6 +22,13 @@ let initDatabse = function(data)
     this.DepartmentDbo = new Dbo.Department(global.dao);
     this.DepartmentGroupDbo = new Dbo.DepartmentGroup(global.dao);
     this.initMessagesDbo =  new Dbo.initMessages(global.dao);
+
+    await this.UserDbo.createTable();
+    await this.MessagesDbo.createTable();
+    await this.MessagesRecipientsDbo.createTable();
+    await this.DepartmentDbo.createTable();
+    await this.DepartmentGroupDbo.createTable();
+    await this.initMessagesDbo.createTable();
 };
 
 //immediately invoked function....
