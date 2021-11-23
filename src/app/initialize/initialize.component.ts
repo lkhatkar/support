@@ -33,14 +33,14 @@ export class InitializeComponent implements OnInit {
       pgport: ['5432', [Validators.required]],
     });
   }
-  submitForm(): void {
-
+  dbCredSubmit(): void {
     for (const i in this.validateForm.controls) {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
-
-
+    this.tabs[0].disabled = true;
+    this.tabs[1].disabled = false;
+    this.currentIndex = 1;
   }
 
 }
