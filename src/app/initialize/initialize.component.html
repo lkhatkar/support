@@ -3,9 +3,9 @@
     <nz-tab *ngFor="let tab of tabs" [nzTitle]="tab.name" [nzDisabled]="tab.disabled">
       <ng-container [ngSwitch]="tab.component">
         <ng-container *ngSwitchCase="'database-cred'" [ngTemplateOutlet]="dbCredentials"></ng-container>
-        <ng-container *ngSwitchCase="'admin-cred'">
-          <p>Admin card</p>
-        </ng-container>
+        <ng-container *ngSwitchCase="'admin-cred'" [ngTemplateOutlet]="adminCredentials"></ng-container>
+          <!-- <p>Admin card</p> -->
+       
       </ng-container>
     </nz-tab>
   </nz-tabset>
@@ -54,5 +54,27 @@
 </ng-template>
 
 <ng-template #adminCredentials>
-<h1>write code here..</h1>
+  <form nz-form [formGroup]="validateForm1" class="login-form" >
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="20" nzFor="username">USERNAME</nz-form-label>
+      <nz-form-control nzErrorTip="Please input your username!">
+        <nz-input-group nzPrefixIcon="user">
+          <input type="text" nz-input formControlName="username" placeholder="Username" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="20" nzFor="Password">PASSWORD</nz-form-label>
+      <nz-form-control nzErrorTip="Please input your Password!">
+        <nz-input-group nzPrefixIcon="lock">
+          <input type="Password" nz-input formControlName="Password" placeholder="Password" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control [nzSpan]="2" style="margin: auto;">
+        <button type="button" nz-button nzType="primary" nzBlock (click)="adminCredSubmit()">Submit</button>
+      </nz-form-control>
+    </nz-form-item>
+    </form>
 </ng-template>

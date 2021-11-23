@@ -8,6 +8,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 })
 export class InitializeComponent implements OnInit {
   validateForm!: FormGroup;
+  validateForm1!: FormGroup;
   currentIndex: number = 0;
   tabs = [
     {
@@ -18,7 +19,7 @@ export class InitializeComponent implements OnInit {
     {
       name: 'Tab 2',
       component: 'admin-cred',
-      disabled: true
+      disabled: false
     }
   ];
 
@@ -32,15 +33,48 @@ export class InitializeComponent implements OnInit {
       pgdatabase: [null, [Validators.required]],
       pgport: ['5432', [Validators.required]],
     });
+
+      this.validateForm1 = this.fb.group({
+        Password:[null,[Validators.required]],
+        username:[null,[Validators.required]]
+
+      });
+     
+      
+      
+ 
+   
+
+
   }
   dbCredSubmit(): void {
     for (const i in this.validateForm.controls) {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
-    this.tabs[0].disabled = true;
-    this.tabs[1].disabled = false;
-    this.currentIndex = 1;
+  }
+  adminCredSubmit(): void {
+    for (const i in this.validateForm1.controls) {
+      this.validateForm1.controls[i].markAsDirty();
+      this.validateForm1.controls[i].updateValueAndValidity();
+    }
+
+  }
+  // submitForm(): void {
+  //   if (this.validateForm.valid) {
+  //     console.log('submit', this.validateForm.value);
+  //   }
+  // }
+    
+     
+
+    
+    // this.tabs[0].disabled = true;
+    // this.tabs[1].disabled = false;
+    // this.currentIndex = 1;
   }
 
-}
+
+
+
+
