@@ -37,7 +37,8 @@ export class InitializeComponent implements OnInit {
 
       this.validateForm1 = this.fb.group({
         Password:[null,[Validators.required]],
-        username:[null,[Validators.required]]
+        username:[null,[Validators.required]],
+        email:[null,[Validators.required]],
 
       });
   }
