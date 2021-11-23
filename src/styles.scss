@@ -2,6 +2,12 @@
 body {
   background-color: #F0F2F5;
 }
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
 .typing-indicator {
   $ti-color-bg: #E6E7ED;
   background-color: $ti-color-bg;
