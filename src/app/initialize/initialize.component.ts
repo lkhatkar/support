@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { InitializeService } from '../services/initialize.service';
 
 @Component({
@@ -8,8 +9,8 @@ import { InitializeService } from '../services/initialize.service';
   styleUrls: ['./initialize.component.scss']
 })
 export class InitializeComponent implements OnInit {
-  validateForm!: FormGroup;
-  validateForm1!: FormGroup;
+  dbCredForm!: FormGroup;
+  adminCredForm!: FormGroup;
   currentIndex: number = 0;
   tabs = [
     {
@@ -24,10 +25,14 @@ export class InitializeComponent implements OnInit {
     }
   ];
 
-  constructor(private fb: FormBuilder, private initalizeService: InitializeService) { }
+  constructor(
+    private fb: FormBuilder,
+    private initalizeService: InitializeService,
+    private router:Router
+    ) { }
 
   ngOnInit(): void {
-    this.validateForm = this.fb.group({
+    this.dbCredForm = this.fb.group({
       postuser: ['postgres', [Validators.required]],
       password: [null, [Validators.required]],
       pghost: ['localhost', [Validators.required]],
@@ -35,52 +40,43 @@ export class InitializeComponent implements OnInit {
       pgport: ['5432', [Validators.required]],
     });
 
-      this.validateForm1 = this.fb.group({
-        Password:[null,[Validators.required]],
-        username:[null,[Validators.required]],
-        email:[null,[Validators.required]],
+    this.adminCredForm = this.fb.group({
+      username: [null, [Validators.required]],
+      email: [null, [Validators.required]],
+      password: [null, [Validators.required]],
 
-      });
+    });
   }
   dbCredSubmit(): void {
-    for (const i in this.validateForm.controls) {
-      this.validateForm.controls[i].markAsDirty();
-      this.validateForm.controls[i].updateValueAndValidity();
+    for (const i in this.dbCredForm.controls) {
+      this.dbCredForm.controls[i].markAsDirty();
+      this.dbCredForm.controls[i].updateValueAndValidity();
     }
-    if(this.validateForm.valid) {
-      this.initalizeService.sendInitialData(this.validateForm.value)
-      .subscribe(res=>{
-        console.log(res);
-        this.tabs[0].disabled = true;
-        this.tabs[1].disabled = false;
-        this.currentIndex = 1;
-      }, error=> {
-        console.error(error);
-      });
+    if (this.dbCredForm.valid) {
+      this.initalizeService.sendInitialData(this.dbCredForm.value)
+        .subscribe(res => {
+          console.log(res);
+          this.tabs[0].disabled = true;
+          this.tabs[1].disabled = false;
+          this.currentIndex = 1;
+        }, error => {
+          console.error(error);
+        });
     }
   }
   adminCredSubmit(): void {
-    for (const i in this.validateForm1.controls) {
-      this.validateForm1.controls[i].markAsDirty();
-      this.validateForm1.controls[i].updateValueAndValidity();
+    for (const i in this.adminCredForm.controls) {
+      this.adminCredForm.controls[i].markAsDirty();
+      this.adminCredForm.controls[i].updateValueAndValidity();
     }
-
+    if(this.adminCredForm.valid){
+      this.initalizeService.addAgent(this.adminCredForm.value)
+      .subscribe(res=>{
+        if(res){
+          console.log(res);
+          this.router.navigate(['/agent']);
+        }
+      })
+    }
   }
-  // submitForm(): void {
-  //   if (this.validateForm.valid) {
-  //     console.log('submit', this.validateForm.value);
-  //   }
-  // }
-
-
-
-
-    // this.tabs[0].disabled = true;
-    // this.tabs[1].disabled = false;
-    // this.currentIndex = 1;
-  }
-
-
-
-
-
+}

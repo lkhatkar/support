@@ -12,7 +12,7 @@
 </div>
 <!-- PostGres Form-->
 <ng-template #dbCredentials>
-  <form nz-form [formGroup]="validateForm">
+  <form nz-form [formGroup]="dbCredForm">
      <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="postuser">PGUSER</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="This is the required field">
@@ -54,7 +54,7 @@
 </ng-template>
 
 <ng-template #adminCredentials>
-  <form nz-form [formGroup]="validateForm1" class="login-form" >
+  <form nz-form [formGroup]="adminCredForm" class="login-form" >
     <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24"  nzFor="username">Username</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your username!">
@@ -67,7 +67,7 @@
       <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="email">E-mail</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid E-mail!">
         <nz-input-group nzPrefixIcon="mail">
-        <input nz-input formControlName="email" placeholder="E-mail" id="email" />
+        <input type="email" nz-input formControlName="email" placeholder="E-mail" id="email" />
       </nz-input-group>
       </nz-form-control>
     </nz-form-item>
@@ -75,7 +75,7 @@
       <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="Password">Password</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your Password!">
         <nz-input-group nzPrefixIcon="lock">
-          <input type="Password" nz-input formControlName="Password" placeholder="Password" />
+          <input type="password" nz-input formControlName="password" placeholder="Password" />
         </nz-input-group>
       </nz-form-control>
     </nz-form-item>

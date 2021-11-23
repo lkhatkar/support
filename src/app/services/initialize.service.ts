@@ -17,4 +17,7 @@ export class InitializeService {
   sendInitialData(data: any) {
     return this.http.post(`${this.url}/settings`, data);
   }
+  addAgent(data:any){
+    return this.http.post<any>(`${this.url}/setAdmin`, data);
+  }
 }
