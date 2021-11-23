@@ -5,7 +5,7 @@
         <ng-container *ngSwitchCase="'database-cred'" [ngTemplateOutlet]="dbCredentials"></ng-container>
         <ng-container *ngSwitchCase="'admin-cred'" [ngTemplateOutlet]="adminCredentials"></ng-container>
           <!-- <p>Admin card</p> -->
-       
+
       </ng-container>
     </nz-tab>
   </nz-tabset>
@@ -22,7 +22,7 @@
       <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="password">PGPASSWORD</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="This is the required field">
-        <input nz-input formControlName="password" id="password" />
+        <input nz-input type="password" formControlName="password" id="password" />
       </nz-form-control>
     </nz-form-item>
       <nz-form-item>

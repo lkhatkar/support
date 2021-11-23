@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { InitializeService } from '../services/initialize.service';
 
 @Component({
   selector: 'app-initialize',
@@ -19,11 +20,11 @@ export class InitializeComponent implements OnInit {
     {
       name: 'Tab 2',
       component: 'admin-cred',
-      disabled: false
+      disabled: true
     }
   ];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private initalizeService: InitializeService) { }
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
@@ -39,18 +40,22 @@ export class InitializeComponent implements OnInit {
         username:[null,[Validators.required]]
 
       });
-     
-      
-      
- 
-   
-
-
   }
   dbCredSubmit(): void {
     for (const i in this.validateForm.controls) {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
+    }
+    if(this.validateForm.valid) {
+      this.initalizeService.sendInitialData(this.validateForm.value)
+      .subscribe(res=>{
+        console.log(res);
+        this.tabs[0].disabled = true;
+        this.tabs[1].disabled = false;
+        this.currentIndex = 1;
+      }, error=> {
+        console.error(error);
+      });
     }
   }
   adminCredSubmit(): void {
@@ -65,10 +70,10 @@ export class InitializeComponent implements OnInit {
   //     console.log('submit', this.validateForm.value);
   //   }
   // }
-    
-     
 
-    
+
+
+
     // this.tabs[0].disabled = true;
     // this.tabs[1].disabled = false;
     // this.currentIndex = 1;

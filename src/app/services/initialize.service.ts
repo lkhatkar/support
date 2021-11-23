@@ -8,14 +8,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class InitializeService {
-  url:any = `${environment.url}/api`;
+  url: any = `${environment.url}/api`;
+  constructor(private http: HttpClient) { }
 
-  constructor(
-
-    private http:HttpClient
-  ) { }
-  isinitialized()
-  {
+  isInitialized() {
     return this.http.get(`${this.url}/settings`);
+  }
+  sendInitialData(data: any) {
+    return this.http.post(`${this.url}/settings`, data);
   }
 }
