@@ -23,12 +23,13 @@ let initDatabse = async function(data)
     this.DepartmentGroupDbo = new Dbo.DepartmentGroup(global.dao);
     this.initMessagesDbo =  new Dbo.initMessages(global.dao);
 
-    await this.UserDbo.createTable();
-    await this.MessagesDbo.createTable();
-    await this.MessagesRecipientsDbo.createTable();
+    // Keep the sequence same for createTable
     await this.DepartmentDbo.createTable();
-    await this.DepartmentGroupDbo.createTable();
+    await this.MessagesDbo.createTable();
     await this.initMessagesDbo.createTable();
+    await this.UserDbo.createTable();
+    await this.MessagesRecipientsDbo.createTable();
+    await this.DepartmentGroupDbo.createTable();
 };
 
 //immediately invoked function....

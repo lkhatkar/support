@@ -13,7 +13,7 @@ class UserDbo {
         PageId TEXT  NOT NULL,
         Create_Date  DATE  NOT NULL,
         IsActive  BOOLEAN NOT NULL DEFAULT (false),
-        Group_Id BIGINT NOT NULL
+        Group_Id BIGINT
                         REFERENCES Department (Sno) ON DELETE NO ACTION
                         ON UPDATE NO ACTION,
         Password TEXT,
@@ -34,14 +34,14 @@ class UserDbo {
 
     getByUserName(name) {
       return this.dao.get(
-        `SELECT * FROM userdata WHERE Name = $1`,
-        [name])
+        `SELECT * FROM userdata WHERE Name = $1 AND IsAgent = $2`,
+        [name, true])
     }
 
     getByEmail(email){
       return this.dao.get(
-        `SELECT * FROM userdata WHERE email = $1`,
-        [email])
+        `SELECT * FROM userdata WHERE email = $1 AND IsAgent = $2`,
+        [email, true])
     }
 
     getAgents() {
