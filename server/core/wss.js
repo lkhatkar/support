@@ -117,7 +117,7 @@ class Wss {
   async addOrUpdateClient(client) {
     try {
       const UserDbo = new Dbo.User(global.dao);
-      const user = await UserDbo.getByEmail(client.email);
+      const user = await UserDbo.getClientByEmail(client.email);
 
       if(!user) {
         return await UserDbo.create(client.id, client.name, client.email, 'axy', new Date(), true, null, null, false);

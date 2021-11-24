@@ -43,6 +43,12 @@ class UserDbo {
         `SELECT * FROM userdata WHERE email = $1 AND IsAgent = $2`,
         [email, true])
     }
+    getClientByEmail(email) {
+      return this.dao.get(
+        `SELECT * FROM userdata WHERE email = $1 AND IsAgent = $2`,
+        [email, false]
+      )
+    }
 
     getAgents() {
       return this.dao.all(`SELECT * FROM userdata WHERE IsAgent = true`);
