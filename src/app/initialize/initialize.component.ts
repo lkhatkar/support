@@ -14,12 +14,12 @@ export class InitializeComponent implements OnInit {
   currentIndex: number = 0;
   tabs = [
     {
-      name: 'Tab 1',
+      name: 'Database Credentials',
       component: 'database-cred',
       disabled: false
     },
     {
-      name: 'Tab 2',
+      name: 'Admin Credentials',
       component: 'admin-cred',
       disabled: true
     }
