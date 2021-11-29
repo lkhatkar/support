@@ -9,11 +9,11 @@ require('dotenv').config({
 let initDatabse = async function(data)
 {
     global.dao = new Dao({
-        user: data.PGUSER,
-        host: data.PGHOST,
-        database: data.PGDATABASE,
-        password: data.PGPASSWORD,
-        port: data.PGPORT,
+        user: data.postuser,
+        host: data.pghost,
+        database: data.pgdatabase,
+        password: data.password,
+        port: data.pgport,
     });
 
     this.UserDbo = new Dbo.User(global.dao);
