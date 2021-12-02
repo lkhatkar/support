@@ -44,7 +44,7 @@
     </div>
     <nz-modal [(nzVisible)]="isVisible" [nzFooter]="null" nzTitle="Add agent" (nzOnCancel)="handleCancel()">
       <ng-container *nzModalContent>
-        <app-add-agents></app-add-agents>
+        <app-add-agents (isAgentAddedEvent)="toggleAgentModal($event)"></app-add-agents>
       </ng-container>
     </nz-modal>
     <nz-modal [(nzVisible)]="isDeptVisible" [nzFooter]="null" nzTitle="Add Department" (nzOnCancel)="handleDeptCancel()">

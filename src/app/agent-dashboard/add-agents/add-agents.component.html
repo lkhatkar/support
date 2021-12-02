@@ -2,7 +2,7 @@
   <nz-form-item>
     <nz-form-control nzErrorTip="Please input your username!">
       <nz-input-group nzPrefixIcon="user">
-        <input formControlName="userName" nz-input placeholder="Username" />
+        <input formControlName="username" nz-input placeholder="Username" />
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -21,7 +21,7 @@
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-control>
+    <nz-form-control [nzSpan]="6" style="margin: auto;">
       <button nz-button nzType="primary">Add agent</button>
     </nz-form-control>
   </nz-form-item>

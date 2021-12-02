@@ -57,14 +57,22 @@ export class AuthService {
 
   agentLogout(){
     let socketService = this.injector.get(WebSocketService);
+    socketService.closeConnection();
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('currentAgent');
-    socketService.closeConnection();
     this.router.navigate(['/agent-login']);
   }
 
   getOnlineAgents(){
     return this._http.get<any>(this.url+"/onlineAgents");
+  }
+
+  getDepartments(){
+    return this._http.get<any>(`${this.url}/department`);
+  }
+
+  addDepartments(department:string){
+    return this._http.post<any>(`${this.url}/department`,{department});
   }
 
 }

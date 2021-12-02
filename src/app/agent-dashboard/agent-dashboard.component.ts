@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Output } from '@angular/core';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { WebSocketService } from '../services/web-socket.service';
@@ -345,7 +345,16 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
   DeptSubmit(department:string): void {
     if(!department) return;
-    console.log(department);
+    this.authService.addDepartments(department)
+    .subscribe(res=>{
+      if(res.success){
+        this.isDeptVisible = false;
+      }
+    })
+  }
+
+  toggleAgentModal(isAgentAdded:boolean){
+    this.isVisible = !isAgentAdded;
   }
 
   ngOnDestroy() {

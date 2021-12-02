@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { InitializeService } from 'src/app/services/initialize.service';
 
 @Component({
   selector: 'app-add-agents',
@@ -7,13 +8,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./add-agents.component.scss']
 })
 export class AddAgentsComponent implements OnInit {
+  @Output() isAgentAddedEvent = new EventEmitter<boolean>();
   validateForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private initService:InitializeService
+    ) { }
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
-      userName: [null, [Validators.required]],
+      username: [null, [Validators.required]],
       email: [null, [Validators.required]],
       password: [null, [Validators.required]]
     });
@@ -24,6 +29,13 @@ export class AddAgentsComponent implements OnInit {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
+    if(this.validateForm.invalid) return;
+    this.initService.addAgent(this.validateForm.value)
+    .subscribe(res=>{
+      if(res.success){
+        this.isAgentAddedEvent.emit(true);
+      }
+    })
   }
 
 }

@@ -274,4 +274,34 @@ router.post('/setAdmin', async (req, res, next) => {
   }
 })
 
+router.get('/department', async(req,res,next)=>{
+  try {
+    const departmentDbo = new Dbo.Department(global.dao);
+    const departments = await departmentDbo.getAll();
+    if(departments){
+      res.status(200).send({ success: true, departments });
+    }else{
+      res.status(200).send({success: false, message: "Failed to get departments" });
+    }
+  } catch (e) {
+    next(e);
+  }
+})
+
+router.post('/department', async(req,res,next)=>{
+  try {
+    const departmentDbo = new Dbo.Department(global.dao);
+    const department = req.body.department;
+    let deptResponse = await departmentDbo.create(department, new Date, true);
+    if(deptResponse){
+      res.status(200).send({ success: true, message: "Department created successfully" });
+    }
+    else {
+      res.status(200).send({success: false, message: "Failed to create department" });
+    }
+  } catch (e) {
+    next(e);
+  }
+})
+
 module.exports = router;
