@@ -15,7 +15,7 @@ export interface Clients {
   pid: string;
   date: Date;
   agentName: string;
-  isAgentAssigned: boolean
+  isAgentAssigned: boolean;
 }
 @Component({
   selector: 'app-agent-dashboard',
@@ -23,33 +23,27 @@ export interface Clients {
   styleUrls: ['./agent-dashboard.component.scss']
 })
 export class AgentDashboardComponent implements OnInit, OnDestroy {
+  private _subscription$: Subject<void>;
+  tabs: { name: string, id: string }[] = [];
   nodes: NzTreeNodeOptions[] = [];
   selectedAgent: any;
   selectedVisitor: any;
   index = 0;
-  tabs: { name: string, id: string }[] = [
-    {
-      name: 'rishabh',
-      id: '1'
-    },
-    {
-      name: 'naman',
-      id: '2'
-    },
-  ];
   inputValueTab?: string = "Hello there";
   chatMessage = "";
   listOfData: Clients[] = [];
   hidden: boolean = true;
   currentAgent: any = '';
   requestQueue: any[] = [];
-  private _subscription$: Subject<void>;
   chatData: any[] = [];
   names: any = [];
   tempAgents: any = [];
   globalAgents: any = [];
   defaultMessageData: any[] = [];
   isVisible = false;
+  isDeptVisible = false;
+  typingTimer:any;
+
   // Dropdown right click
   contextMenu($event: any, menu: NzDropdownMenuComponent, nodes: any): void {
     // console.log($event);
@@ -294,6 +288,16 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.websocket.send({ clientId: clientId, isAgentTyping: true });
   }
 
+  typingTimerCheck(){
+    this.typingTimer = setTimeout(() => {
+
+    }, 10000);
+  }
+
+  clearTimer(){
+
+  }
+
   onChatSend(id: string): void {
     this.websocket.send({ clientId: id, message: this.chatMessage });
 
@@ -326,9 +330,22 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.isVisible = true;
   }
 
+  showDeptModal(): void {
+    this.isDeptVisible = true;
+  }
+
   handleCancel(): void {
     console.log('Button cancel clicked!');
     this.isVisible = false;
+  }
+
+  handleDeptCancel(): void {
+    this.isDeptVisible = false;
+  }
+
+  DeptSubmit(department:string): void {
+    if(!department) return;
+    console.log(department);
   }
 
   ngOnDestroy() {

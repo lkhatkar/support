@@ -38,15 +38,30 @@
       <nz-dropdown-menu #menu="nzDropdownMenu">
         <ul nz-menu>
           <li nz-menu-item (click)="showModal()">Add Agent</li>
-          <li nz-menu-item>Rename this department</li>
-          <li nz-menu-item>Delete this department</li>
-          <li nz-menu-item>More options</li>
+          <li nz-menu-item (click)="showDeptModal()">Add Department</li>
         </ul>
       </nz-dropdown-menu>
     </div>
     <nz-modal [(nzVisible)]="isVisible" [nzFooter]="null" nzTitle="Add agent" (nzOnCancel)="handleCancel()">
       <ng-container *nzModalContent>
         <app-add-agents></app-add-agents>
+      </ng-container>
+    </nz-modal>
+    <nz-modal [(nzVisible)]="isDeptVisible" [nzFooter]="null" nzTitle="Add Department" (nzOnCancel)="handleDeptCancel()">
+      <ng-container *nzModalContent>
+        <form nz-form>
+          <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzFor="dept">Department</nz-form-label>
+            <nz-form-control [nzSpan]="14">
+              <input nz-input type="text" placeholder="Department" id="dept" #dept>
+            </nz-form-control>
+          </nz-form-item >
+          <nz-form-item>
+            <nz-form-control [nzSpan]="6" style="margin: auto;">
+              <button type="button" nz-button nzType="primary" nzBlock (click)="DeptSubmit(dept.value)">Add</button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
       </ng-container>
     </nz-modal>
     <div nz-col nzSpan="18">
