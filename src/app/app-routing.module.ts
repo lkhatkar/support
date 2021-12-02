@@ -9,10 +9,11 @@ import { InitializeComponent } from './initialize/initialize.component';
 import { SupportChatAdminComponent } from './support-chat-admin/support-chat-admin.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/agent' },
+  { path: '', pathMatch: 'full', redirectTo: '/admin-dashboard' },
   { path: 'init', component:InitializeComponent, canActivate:[ConfigGuard]},
   { path: 'agent-login', component: AgentLoginComponent, canActivate:[InitializeGuard]},
   { path: 'agent', component: AgentDashboardComponent, canActivate:[AgentGuard]},
+  { path: 'admin-dashboard', component: SupportChatAdminComponent, canActivate:[AgentGuard]}
 ];
 
 @NgModule({

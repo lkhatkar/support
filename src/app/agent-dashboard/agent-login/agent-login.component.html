@@ -1,7 +1,7 @@
 <div nz-row>
   <div nz-col nzSpan="12" class="login">
     <nz-alert nzType="error" nzMessage="Authentication Failed" nzDescription="Username or password incorrect" nzShowIcon *ngIf="!isSuccess" nzCloseable (nzOnClose)="afterAlertClose()"></nz-alert><br/>
-    <nz-card nzTitle="Agent Login">
+    <nz-card nzTitle="Login">
       <form nz-form [formGroup]="formObject" (ngSubmit)="submitForm()">
         <nz-form-item>
           <nz-form-label [nzSpan]="4" nzFor="userid">User ID</nz-form-label>

@@ -40,7 +40,7 @@ export class AgentLoginComponent implements OnInit {
         if (res.success) {
           sessionStorage.setItem('token', res.access_token);
           this.setCurrentAgent(res.user);
-          this.router.navigate(['/agent']);
+          this.router.navigate(['/admin-dashboard']);
         }
         else {
           this.isSuccess = false;
