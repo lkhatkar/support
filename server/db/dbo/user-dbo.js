@@ -56,7 +56,7 @@ class UserDbo {
 
     create(Id, Name, Email, PageId, Create_Date, IsActive, Group_Id, Password, IsAgent) {
         return this.dao.run(
-          'INSERT INTO userdata (Id, Name, Email, PageId, Create_Date, IsActive, Group_Id, Password, IsAgent) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)',
+          'INSERT INTO userdata (Id, Name, Email, PageId, Create_Date, IsActive, Group_Id, Password, IsAgent) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *',
           [Id, Name, Email, PageId, Create_Date, IsActive, Group_Id, Password, IsAgent])
     }
     update(Sno, Id, Name, Email, PageId, Create_Date, IsActive, Group_Id, Password, IsAgent) {

@@ -8,7 +8,7 @@ import { InitializeService } from 'src/app/services/initialize.service';
   styleUrls: ['./add-agents.component.scss']
 })
 export class AddAgentsComponent implements OnInit {
-  @Output() isAgentAddedEvent = new EventEmitter<boolean>();
+  @Output() isAgentAddedEvent = new EventEmitter<any>();
   validateForm!: FormGroup;
 
   constructor(
@@ -33,7 +33,7 @@ export class AddAgentsComponent implements OnInit {
     this.initService.addAgent(this.validateForm.value)
     .subscribe(res=>{
       if(res.success){
-        this.isAgentAddedEvent.emit(true);
+        this.isAgentAddedEvent.emit(res.user);
       }
     })
   }

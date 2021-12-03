@@ -90,10 +90,11 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
           console.log('connection data:', connectionData);
           switch (connectionData.type) {
             case 'ReloadAgents': {
-              this.authService.getOnlineAgents().subscribe(res => {
-                this.tempAgents = res.agents;
-                this.setNodes(this.globalAgents);
-              });
+              // this.authService.getOnlineAgents().subscribe(res => {
+              //   this.tempAgents = res.agents;
+              //   this.setNodes(this.globalAgents);
+              // });
+              this.reloadAgents();
               break;
             }
             case 'ClientConnect': {
@@ -151,6 +152,13 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
               break;
           }
         });
+    });
+  }
+
+  reloadAgents(){
+    this.authService.getOnlineAgents().subscribe(res => {
+      this.tempAgents = res.agents;
+      this.setNodes(this.globalAgents);
     });
   }
 
@@ -353,8 +361,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     })
   }
 
-  toggleAgentModal(isAgentAdded:boolean){
-    this.isVisible = !isAgentAdded;
+  toggleAgentModal(agent:boolean){
+    this.isVisible = false;
+    this.globalAgents.push(agent);
+    this.reloadAgents();
   }
 
   ngOnDestroy() {

@@ -264,7 +264,7 @@ router.post('/setAdmin', async (req, res, next) => {
     const { username, email, password } = req.body;
     let userCredentials = await UserDbo.create(nanoid(6), username, email, 'qwe', new Date(), true, null, password, true);
     if (userCredentials) {
-      res.status(200).send({ success: true, message: "User created successfully" });
+      res.status(200).send({ success: true, message: "User created successfully", user:userCredentials.rows[0] });
     }
     else {
       res.status(200).send({success: false, message: "Failed to create user" });
