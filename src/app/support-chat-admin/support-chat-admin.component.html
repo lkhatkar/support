@@ -27,9 +27,10 @@
       </nz-breadcrumb> -->
       <br />
       <div class="inner-content">
-        <nz-input-group class="size-medium" nzAddOnBefore="Http://">
-          <input type="text" nz-input [(ngModel)]="embeddedLink" size="50"/>
-        </nz-input-group>
+        <nz-input-group class="size-medium">
+          <input type="text" nz-input [(ngModel)]="embeddedLink" size="50" />
+        </nz-input-group><br/>
+        <button nz-button [cdkCopyToClipboard]="embeddedLink"> Copy To ClipBoard </button>
       </div>
     </nz-content>
     <nz-footer>ARI Simulation ©2021.</nz-footer>

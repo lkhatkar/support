@@ -17,7 +17,7 @@ import { AgentLoginComponent } from './agent-dashboard/agent-login/agent-login.c
 import { TokenInterceptorService } from './token-interceptor.service';
 import { AddAgentsComponent } from './agent-dashboard/add-agents/add-agents.component';
 import { InitializeComponent } from './initialize/initialize.component';
-
+import { ClipboardModule } from '@angular/cdk/clipboard'
 
 
 registerLocaleData(en);
@@ -30,7 +30,7 @@ registerLocaleData(en);
     AgentLoginComponent,
     AddAgentsComponent,
     InitializeComponent,
-   
+
   ],
   imports: [
     BrowserModule,
@@ -40,6 +40,7 @@ registerLocaleData(en);
     HttpClientModule,
     BrowserAnimationsModule,
     NgZorroAntdModule,
+    ClipboardModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US },{
     provide: HTTP_INTERCEPTORS,
