@@ -39,6 +39,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   requestQueue: any[] = [];
   chatData: any[] = [];
   names: any = [];
+  treeObj: any = [];
   tempAgents: any = [];
   globalAgents: any = [];
   defaultMessageData: any[] = [];
@@ -209,26 +210,29 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     // this.getOrganizedAgents(agents).forEach((element: any, index: any) => {
     //   this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
     // });
-    const dig = (path = '0', level = 3) => {
-      const list = [
-        {
-          title: 'Agents',
-          key: '100',
-          expanded: true,
-          icon: 'team',
-          children: this.getDepartmentAgents(agents)
-        }
+    departments.forEach((element, index)=> {
+        this.treeObj.push({
+        title: element.name,
+        key: (index+1)*100,
+        expanded: false,
+        icon: 'team',
+        children: this.getDepartmentAgents(element.sno, agents)
+      });
+    })
 
-      ];
+    const dig = (path = '0', level = 3) => {
+      const list = this.treeObj;
 
       return list;
     };
     this.nodes = dig();
   }
 
-  getDepartmentAgents(agents: any){
+  getDepartmentAgents(sno:any, agents: any){
+    agents = agents.filter((item: any)=> item.department_id == sno);
+    // console.log(agents);
     this.names = [];
-    this.getOrganizedAgents(agents).forEach((element: any, index: any) => {
+    agents.forEach((element: any, index: any) => {
       this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
     });
     return this.names;
