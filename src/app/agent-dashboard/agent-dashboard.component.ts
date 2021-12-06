@@ -3,9 +3,10 @@ import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { WebSocketService } from '../services/web-socket.service';
 import { AuthService } from '../services/auth.service';
-import { Subject } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AgentMessagesService } from '../services/agent-messages.service';
+import { department } from '../interface/interface';
 
 export interface Clients {
   id: string;
@@ -26,6 +27,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   private _subscription$: Subject<void>;
   tabs: { name: string, id: string }[] = [];
   nodes: NzTreeNodeOptions[] = [];
+  departments:department[]=[];
   selectedAgent: any;
   selectedVisitor: any;
   index = 0;
@@ -73,13 +75,19 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.getInitMessages(this.currentAgent.username);
     this.names = []
     // Get Agents
-    this.authService.getAgents().subscribe(resp => {
-      if (resp.success) {
-        this.globalAgents = resp.agents;
-        this.setNodes(resp.agents);
+    let calls = [];
+    calls.push(this.authService.getDepartments());
+    calls.push(this.authService.getAgents());
+    forkJoin([...calls]).subscribe(resp => {
+      const departmentResp = resp[0];
+      const agentResp = resp[1];
+      if (departmentResp.success && agentResp.success) {
+        this.globalAgents = agentResp.agents;
+        this.departments = departmentResp.departments;
+        this.setNodes(this.departments, this.globalAgents);
       }
       // Selected agent
-      this.selectedAgent = resp.agents.find((agent: any) => agent.email === this.currentAgent.email);
+      this.selectedAgent = agentResp.agents.find((agent: any) => agent.email === this.currentAgent.email);
       console.log('agent comp', this.selectedAgent);
 
       // connect auth
@@ -158,7 +166,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   reloadAgents(){
     this.authService.getOnlineAgents().subscribe(res => {
       this.tempAgents = res.agents;
-      this.setNodes(this.globalAgents);
+      this.setNodes(this.departments,this.globalAgents);
     });
   }
 
@@ -196,11 +204,11 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.requestQueue = [...this.requestInfo];
   }
 
-  private setNodes(agents: any) {
-    this.names = [];
-    this.getOrganizedAgents(agents).forEach((element: any, index: any) => {
-      this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
-    });
+  private setNodes(departments:department[], agents: any) {
+    // this.names = [];
+    // this.getOrganizedAgents(agents).forEach((element: any, index: any) => {
+    //   this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
+    // });
     const dig = (path = '0', level = 3) => {
       const list = [
         {
@@ -208,7 +216,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
           key: '100',
           expanded: true,
           icon: 'team',
-          children: this.names
+          children: this.getDepartmentAgents(agents)
         }
 
       ];
@@ -216,6 +224,14 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
       return list;
     };
     this.nodes = dig();
+  }
+
+  getDepartmentAgents(agents: any){
+    this.names = [];
+    this.getOrganizedAgents(agents).forEach((element: any, index: any) => {
+      this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
+    });
+    return this.names;
   }
 
   check(title: any) {
