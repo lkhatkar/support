@@ -28,9 +28,11 @@
       <br />
       <div class="inner-content">
         <nz-input-group class="size-medium">
-          <input type="text" nz-input [(ngModel)]="embeddedLink" size="50" />
-        </nz-input-group><br/>
-        <button nz-button [cdkCopyToClipboard]="embeddedLink"> Copy To ClipBoard </button>
+          <textarea nz-input placeholder="Embed link" nzAutosize [(ngModel)]="embeddedLink" readonly></textarea>
+        </nz-input-group><br />
+        <button nz-button [cdkCopyToClipboard]="embeddedLink"> Copy To ClipBoard </button>&nbsp;&nbsp;
+        <button nz-button nzType="primary" nzShape="circle" nzSize="small" nzTooltipTitle="Place the script tag above or under body"
+          nzTooltipPlacement="rightTop" nz-tooltip><i nz-icon nzType="info"></i></button>
       </div>
     </nz-content>
     <nz-footer>ARI Simulation ©2021.</nz-footer>

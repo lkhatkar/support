@@ -14,7 +14,7 @@ export class SupportChatAdminComponent implements OnInit {
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.embeddedLink = `<script src='${window.location.host}/client/wssclient.js' type='text/javascript'></script>`;
+    this.embeddedLink = `<script defer src='${window.location.host}/client/wssclient.js' type='text/javascript'></script>`;
   }
   onLogout(): void {
     console.log('Inside logout');
