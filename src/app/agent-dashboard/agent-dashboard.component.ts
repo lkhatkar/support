@@ -28,6 +28,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   tabs: { name: string, id: string }[] = [];
   nodes: NzTreeNodeOptions[] = [];
   departments:department[]=[];
+  selectedDepartment:string='';
   selectedAgent: any;
   selectedVisitor: any;
   index = 0;
@@ -39,7 +40,6 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   requestQueue: any[] = [];
   chatData: any[] = [];
   names: any = [];
-  treeObj: any = [];
   tempAgents: any = [];
   globalAgents: any = [];
   defaultMessageData: any[] = [];
@@ -54,6 +54,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     // // console.log(this.selectedAgent);
     // if(agentName === 'Agents') {
     this.nzContextMenuService.create($event, menu);
+    this.selectedDepartment = $event.explicitOriginalTarget.nodeValue;
     // }
     // console.log($event.explicitOriginalTarget.nodeValue);
     // console.log(nodes[0].children[0].title);
@@ -206,31 +207,24 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   private setNodes(departments:department[], agents: any) {
-    // this.names = [];
-    // this.getOrganizedAgents(agents).forEach((element: any, index: any) => {
-    //   this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
-    // });
-    departments.forEach((element, index)=> {
-        this.treeObj.push({
-        title: element.name,
+    let treeList: any = [];
+    departments.forEach((department, index)=> {
+        treeList.push({
+        title: department.name,
         key: (index+1)*100,
-        expanded: false,
+        expanded: true,
         icon: 'team',
-        children: this.getDepartmentAgents(element.sno, agents)
+        children: this.getDepartmentAgents(department.sno, agents)
       });
     })
-
     const dig = (path = '0', level = 3) => {
-      const list = this.treeObj;
-
-      return list;
+      return treeList;
     };
     this.nodes = dig();
   }
 
   getDepartmentAgents(sno:any, agents: any){
     agents = agents.filter((item: any)=> item.department_id == sno);
-    // console.log(agents);
     this.names = [];
     agents.forEach((element: any, index: any) => {
       this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
@@ -377,6 +371,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     .subscribe(res=>{
       if(res.success){
         this.isDeptVisible = false;
+        this.departments.push(res.department);
+        this.reloadAgents();
       }
     })
   }

@@ -294,7 +294,7 @@ router.post('/department', async(req,res,next)=>{
     const department = req.body.department;
     let deptResponse = await departmentDbo.create(department, new Date, true);
     if(deptResponse){
-      res.status(200).send({ success: true, message: "Department created successfully" });
+      res.status(200).send({ success: true, message: "Department created successfully", department: deptResponse.rows[0]});
     }
     else {
       res.status(200).send({success: false, message: "Failed to create department" });

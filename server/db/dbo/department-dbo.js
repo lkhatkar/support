@@ -2,21 +2,21 @@ class DepartmentDbo {
     constructor(dao) {
       this.dao = dao
     }
-  
+
     createTable() {
       const sql = `
       CREATE TABLE IF NOT EXISTS Department (
-        Sno        BIGSERIAL PRIMARY KEY,        
-        Name TEXT NOT NULL,                  
+        Sno        BIGSERIAL PRIMARY KEY,
+        Name TEXT NOT NULL,
         Create_Date  DATE  NOT NULL,
-        IsActive  BOOLEAN NOT NULL DEFAULT (false)                          
+        IsActive  BOOLEAN NOT NULL DEFAULT (false)
     )`
       return this.dao.run(sql)
     }
 
     getAll() {
       return this.dao.all(`SELECT * FROM Department`)
-    }        
+    }
 
     get(id) {
       return this.dao.get(
@@ -26,7 +26,7 @@ class DepartmentDbo {
 
     create(Name, Create_Date, IsActive) {
         return this.dao.run(
-          'INSERT INTO Department (Name, Create_Date, IsActive) VALUES ($1,$2,$3)',
+          'INSERT INTO Department (Name, Create_Date, IsActive) VALUES ($1,$2,$3) RETURNING *',
           [Name, Create_Date, IsActive])
     }
     update(obj) {
@@ -43,5 +43,5 @@ class DepartmentDbo {
         )
     }
   }
-  
+
   module.exports = DepartmentDbo;
