@@ -272,9 +272,9 @@ document.write(`<!DOCTYPE html>
                     <label for="designation">Department</label>
                     <select id="desig" name="desig">
                         <option value="" selected disabled>Select Department</option>
-                        <option value="Sales">Sales</option>
-                        <option value="Billing">Billing</option>
-                        <option value="Support">Support</option>
+                        <option value="1">Sales</option>
+                        <option value="2">Billing</option>
+                        <option value="3">Support</option>
                     </select><br><br><br>
                     <div class="submitSection">
                         <button type="submit" value="submit">Start
@@ -400,7 +400,8 @@ function validateForm(e) {
 }
 
 function connect(name, email, dept, pid = "1") {
-    client = new WsClient({ url: `wss:support.arieducation.com?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
+    // client = new WsClient({ url: `wss:support.arieducation.com?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
+    client = new WsClient({ url: `ws:localhost?name=${name}&email=${email}&dept=${dept}&pid=${pid}`});
     localStorage.setItem('mail', email);
     localStorage.setItem('name', name);
     localStorage.setItem('dept', dept);
