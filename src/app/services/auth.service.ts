@@ -60,7 +60,9 @@ export class AuthService {
     socketService.closeConnection();
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('currentAgent');
-    this.router.navigate(['/agent-login']);
+    this.router.navigate(['/agent-login']).then(() => {
+      window.location.reload();
+    });
   }
 
   addAgent(agent:any){
