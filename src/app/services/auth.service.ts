@@ -63,6 +63,10 @@ export class AuthService {
     this.router.navigate(['/agent-login']);
   }
 
+  addAgent(agent:any){
+    return this._http.post<any>(`${this.url}/agent`,agent);
+  }
+
   getOnlineAgents(){
     return this._http.get<any>(this.url+"/onlineAgents");
   }

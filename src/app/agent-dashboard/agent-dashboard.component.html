@@ -23,7 +23,7 @@
       <nz-card nzTitle="Departments/Agents" class="row1">
         <nz-tree [nzData]="nodes" nzBlockNode nzVirtualHeight="150px" [nzTreeTemplate]="nzTreeTemplate"></nz-tree>
         <ng-template #nzTreeTemplate let-node let-origin="origin">
-          <span *ngIf="!node.isLeaf" (contextmenu)="contextMenu($event, menu, nodes)" >
+          <span *ngIf="!node.isLeaf" (contextmenu)="contextMenu($event, menu, node.key)" >
             <i nz-icon nzType="team"></i>
             <span class="folder-name">{{node.title}}</span>
           </span>
@@ -42,11 +42,15 @@
         </ul>
       </nz-dropdown-menu>
     </div>
+
+    <!-- Add Agent Modal -->
     <nz-modal [(nzVisible)]="isVisible" [nzFooter]="null" nzTitle="Add agent" (nzOnCancel)="handleCancel()">
       <ng-container *nzModalContent>
-        <app-add-agents (isAgentAddedEvent)="toggleAgentModal($event)"></app-add-agents>
+        <app-add-agents [selectedDepartment]="selectedDepartment" (isAgentAddedEvent)="toggleAgentModal($event)"></app-add-agents>
       </ng-container>
     </nz-modal>
+
+    <!-- Add Department Modal -->
     <nz-modal [(nzVisible)]="isDeptVisible" [nzFooter]="null" nzTitle="Add Department" (nzOnCancel)="handleDeptCancel()">
       <ng-container *nzModalContent>
         <form nz-form>
@@ -64,6 +68,7 @@
         </form>
       </ng-container>
     </nz-modal>
+
     <div nz-col nzSpan="18">
       <nz-card nzTitle="Current Visitors" class="row1">
         <div style="margin-bottom: 16px;">
@@ -73,6 +78,7 @@
               <tr>
                 <th>Client Name</th>
                 <th>Client Request</th>
+                <th>Department</th>
                 <th>Status</th>
                 <!-- <th>Request Time</th>
                 <th>Accepted Time</th> -->
@@ -85,6 +91,7 @@
                    nzTooltipPlacement="leftTop" nz-tooltip> <!-- [nzTooltipTitle]="getAssignedAgent(client.agentName)" -->
                     {{client.isAgentAssigned ? 'Assigned' : 'Accept'}}
                 </button></td>
+                <td>{{getClientDepartment(client.dept)}}</td>
                 <td>{{getAssignedAgent(client.agentName)}}</td>
                 <!-- <td>10:20am</td>
                 <td>10:30am</td> -->

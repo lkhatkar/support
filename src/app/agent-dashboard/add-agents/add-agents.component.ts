@@ -1,6 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { InitializeService } from 'src/app/services/initialize.service';
+import { department } from 'src/app/interface/interface';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-add-agents',
@@ -8,19 +9,26 @@ import { InitializeService } from 'src/app/services/initialize.service';
   styleUrls: ['./add-agents.component.scss']
 })
 export class AddAgentsComponent implements OnInit {
+  @Input() selectedDepartment = "";
   @Output() isAgentAddedEvent = new EventEmitter<any>();
   validateForm!: FormGroup;
+  departments:department[]=[];
 
   constructor(
     private fb: FormBuilder,
-    private initService:InitializeService
+    private authService:AuthService
     ) { }
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
       username: [null, [Validators.required]],
       email: [null, [Validators.required]],
-      password: [null, [Validators.required]]
+      password: [null, [Validators.required]],
+      department_id: [this.selectedDepartment, [Validators.required]]
+    });
+    this.authService.getDepartments()
+    .subscribe(res=>{
+      this.departments = res.departments;
     });
   }
 
@@ -30,10 +38,10 @@ export class AddAgentsComponent implements OnInit {
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if(this.validateForm.invalid) return;
-    this.initService.addAgent(this.validateForm.value)
+    this.authService.addAgent(this.validateForm.value)
     .subscribe(res=>{
       if(res.success){
-        this.isAgentAddedEvent.emit(res.user);
+        this.isAgentAddedEvent.emit(res.agent);
       }
     })
   }

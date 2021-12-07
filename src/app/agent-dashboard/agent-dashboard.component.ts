@@ -48,13 +48,15 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   typingTimer:any;
 
   // Dropdown right click
-  contextMenu($event: any, menu: NzDropdownMenuComponent, nodes: any): void {
+  contextMenu($event: any, menu: NzDropdownMenuComponent, department_id: any): void {
     // console.log($event);
     // let agentName = $event.explicitOriginalTarget.nodeValue;
     // // console.log(this.selectedAgent);
     // if(agentName === 'Agents') {
+      // this.selectedDepartment = $event.explicitOriginalTarget.nodeValue;
     this.nzContextMenuService.create($event, menu);
-    this.selectedDepartment = $event.explicitOriginalTarget.nodeValue;
+    this.selectedDepartment = department_id;
+
     // }
     // console.log($event.explicitOriginalTarget.nodeValue);
     // console.log(nodes[0].children[0].title);
@@ -109,6 +111,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
             }
             case 'ClientConnect': {
               let clients = connectionData.clients;
+              console.log(clients);
               if (clients.length > 0) {
                 // this.requestQueueHandler(data);
                 let index = jsonData.findIndex((client: any) => client.id === clients[0].id);
@@ -211,7 +214,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     departments.forEach((department, index)=> {
         treeList.push({
         title: department.name,
-        key: (index+1)*100,
+        key: department.sno,
         expanded: true,
         icon: 'team',
         children: this.getDepartmentAgents(department.sno, agents)
@@ -304,6 +307,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     if (!agentName) return 'Not Yet Assigned';
     else if (agentName === this.currentAgent.username) return `Assigned to you`;
     else return `Assigned to ${agentName}`;
+  }
+
+  getClientDepartment(clientDept:String){
+    return this.departments.find(dept=>dept.sno == clientDept)?.name;
   }
 
   onAgentTyping(clientId:any):void{

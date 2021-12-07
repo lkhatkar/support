@@ -264,10 +264,26 @@ router.post('/setAdmin', async (req, res, next) => {
     const { username, email, password } = req.body;
     let userCredentials = await UserDbo.create(nanoid(6), username, email, 'qwe', new Date(), true, null, password, true);
     if (userCredentials) {
-      res.status(200).send({ success: true, message: "User created successfully", user:userCredentials.rows[0] });
+      res.status(200).send({ success: true, message: "Admin created successfully", user: userCredentials.rows[0] });
     }
     else {
-      res.status(200).send({success: false, message: "Failed to create user" });
+      res.status(200).send({success: false, message: "Failed to create admin" });
+    }
+  } catch (e) {
+    next(e);
+  }
+})
+
+router.post('/agent', async (req,res,next)=>{
+  try {
+    const UserDbo = new Dbo.User(global.dao);
+    const { username, email, password, department_id } = req.body;
+    let userCredentials = await UserDbo.create(nanoid(6), username, email, 'qwe', new Date(), true, department_id, password, true);
+    if (userCredentials) {
+      res.status(200).send({ success: true, message: "Agent created successfully", agent: userCredentials.rows[0] });
+    }
+    else {
+      res.status(200).send({success: false, message: "Failed to create agent" });
     }
   } catch (e) {
     next(e);

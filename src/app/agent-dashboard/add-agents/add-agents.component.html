@@ -1,23 +1,34 @@
-<form nz-form [nzLayout]="'vertical'" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
   <nz-form-item>
+    <nz-form-label [nzSm]="4">Username</nz-form-label> &nbsp;
     <nz-form-control nzErrorTip="Please input your username!">
-      <nz-input-group nzPrefixIcon="user">
+      <nz-input-group>
         <input formControlName="username" nz-input placeholder="Username" />
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
+    <nz-form-label [nzSm]="4">Email</nz-form-label> &nbsp;
     <nz-form-control nzErrorTip="Please input your email!">
-      <nz-input-group nzPrefixIcon="lock">
+      <nz-input-group>
         <input formControlName="email" nz-input placeholder="Email" />
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-control nzErrorTip="Please input your email!">
-      <nz-input-group nzPrefixIcon="lock">
+    <nz-form-label [nzSm]="4">Password</nz-form-label> &nbsp;
+    <nz-form-control nzErrorTip="Please input your password!">
+      <nz-input-group>
         <input formControlName="password" nz-input type="password" placeholder="password" />
       </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="4">Department</nz-form-label> &nbsp;
+    <nz-form-control nzErrorTip="Please Select Department!">
+      <nz-select formControlName="department_id" nzPlaceHolder="Select Department">
+        <nz-option *ngFor="let department of departments" [nzLabel]="department.name" [nzValue]="department.sno"></nz-option>
+      </nz-select>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>

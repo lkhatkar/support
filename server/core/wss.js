@@ -120,10 +120,10 @@ class Wss {
       const user = await UserDbo.getClientByEmail(client.email);
 
       if(!user) {
-        return await UserDbo.create(client.id, client.name, client.email, 'axy', new Date(), true, null, null, false);
+        return await UserDbo.create(client.id, client.name, client.email, 'axy', new Date(), true, client.dept, null, false);
       }
       else {
-        return await UserDbo.update(user.sno, client.id, client.name, client.email, 'axy', new Date(), true, null, null, false);
+        return await UserDbo.update(user.sno, client.id, client.name, client.email, 'axy', new Date(), true, client.dept, null, false);
       }
     } catch (error) {
       console.error(error);
