@@ -27,8 +27,17 @@ class MessageDbo {
         [id])
     }
     getByFromOrTo(agent) {
+      const query = `
+      WITH MessageData AS(SELECT
+        m.*,
+        u1.id as from_id ,
+        u2.id as to_id
+      FROM Message m
+        JOIN userdata u1 ON m.from = u1.email
+        JOIN userdata u2 ON m.to = u2.email)
+      SELECT * from MessageData WHERE MessageData.from =$1 OR MessageData.to=$1;`
       return this.dao.all(
-        `SELECT * FROM Message WHERE "from" = $1 OR "to" = $1`,
+        query,
         [agent])
     }
 
