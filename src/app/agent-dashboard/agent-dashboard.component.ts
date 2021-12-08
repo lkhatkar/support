@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AgentMessagesService } from '../services/agent-messages.service';
-import { department } from '../interface/interface';
+import { Department, RecipientMessage } from '../interface/interface';
 
 export interface Clients {
   id: string;
@@ -27,7 +27,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   private _subscription$: Subject<void>;
   tabs: { name: string, id: string }[] = [];
   nodes: NzTreeNodeOptions[] = [];
-  departments:department[]=[];
+  departments:Department[]=[];
   selectedDepartment:string='';
   selectedAgent: any;
   selectedVisitor: any;
@@ -43,23 +43,15 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   tempAgents: any = [];
   globalAgents: any = [];
   defaultMessageData: any[] = [];
+  initRecipientMessages: RecipientMessage[] = [];
   isVisible = false;
   isDeptVisible = false;
   typingTimer:any;
 
-  // Dropdown right click
+  // Dropdown menu on right click........
   contextMenu($event: any, menu: NzDropdownMenuComponent, department_id: any): void {
-    // console.log($event);
-    // let agentName = $event.explicitOriginalTarget.nodeValue;
-    // // console.log(this.selectedAgent);
-    // if(agentName === 'Agents') {
-      // this.selectedDepartment = $event.explicitOriginalTarget.nodeValue;
     this.nzContextMenuService.create($event, menu);
     this.selectedDepartment = department_id;
-
-    // }
-    // console.log($event.explicitOriginalTarget.nodeValue);
-    // console.log(nodes[0].children[0].title);
   }
 
   closeMenu(): void {
@@ -82,12 +74,18 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     let calls = [];
     calls.push(this.authService.getDepartments());
     calls.push(this.authService.getAgents());
+    calls.push(this.authService.getRecipientMessages(this.currentAgent.email));
     forkJoin([...calls]).subscribe(resp => {
       const departmentResp = resp[0];
       const agentResp = resp[1];
+      const recipientResp = resp[2];
+
       if (departmentResp.success && agentResp.success) {
         this.globalAgents = agentResp.agents;
         this.departments = departmentResp.departments;
+        this.initRecipientMessages = recipientResp.messages;
+        console.log(this.initRecipientMessages);
+
         this.setNodes(this.departments, this.globalAgents);
       }
       // Selected agent
@@ -102,10 +100,6 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
           console.log('connection data:', connectionData);
           switch (connectionData.type) {
             case 'ReloadAgents': {
-              // this.authService.getOnlineAgents().subscribe(res => {
-              //   this.tempAgents = res.agents;
-              //   this.setNodes(this.globalAgents);
-              // });
               this.reloadAgents();
               break;
             }
@@ -209,7 +203,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.requestQueue = [...this.requestInfo];
   }
 
-  private setNodes(departments:department[], agents: any) {
+  private setNodes(departments:Department[], agents: any) {
     let treeList: any = [];
     departments.forEach((department, index)=> {
         treeList.push({
@@ -278,29 +272,48 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
       })
   }
 
-  newTab(id: string, name: string, accept: any, acceptEvent: any): void {
+  newTab(id: string, name: string, email:string, accept: any, acceptEvent: any): void {
     acceptEvent.target.innerHTML = 'Assigned';
     accept.disabled = true;
-
     this.authService.assignClient(this.selectedAgent.email, id).subscribe(res => {
       if (res.success) {
         if (this.tabs.filter(e => e.id === id).length == 0) {
           this.tabs.push({ name: name, id: id });
-          // this.defaultMessageData.push(`Hello ${name}, how may I assist you ?`);
-          // this.defaultMessageData.reverse();
+          this.getClientMessages(email, id);
+          console.log("chat data: ",this.chatData);
+
           this.index = this.tabs.length - 1;
-          console.log(res);
         }
       }
       else {
-        console.log(res);
         this.hidden = false
         setTimeout(() => {
           this.hidden = true;
         }, 5000);
       }
-
     })
+  }
+
+  getClientMessages(clientEmail:string, clientId:string){
+    let arr = this.initRecipientMessages.filter(recipient=>recipient.from == clientEmail || recipient.to == clientEmail);
+    arr.forEach((element:RecipientMessage)=>{
+      if(element.from == clientEmail){
+        this.chatData.push({
+          message: element.message_body,
+          time: element.create_date,
+          user_type: 'client',
+          id: clientId
+        })
+      }else{
+        this.chatData.push({
+          message: element.message_body,
+          time: element.create_date,
+          user_type: 'agent',
+          id: clientId
+        })
+      }
+    })
+
   }
 
   getAssignedAgent(agentName: string) {

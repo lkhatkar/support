@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { department } from 'src/app/interface/interface';
+import { Department } from 'src/app/interface/interface';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -12,7 +12,7 @@ export class AddAgentsComponent implements OnInit {
   @Input() selectedDepartment = "";
   @Output() isAgentAddedEvent = new EventEmitter<any>();
   validateForm!: FormGroup;
-  departments:department[]=[];
+  departments:Department[]=[];
 
   constructor(
     private fb: FormBuilder,
