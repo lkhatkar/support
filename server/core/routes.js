@@ -272,7 +272,7 @@ router.post('/setAdmin', async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-})
+});
 
 router.post('/agent', async (req,res,next)=>{
   try {
@@ -288,7 +288,7 @@ router.post('/agent', async (req,res,next)=>{
   } catch (e) {
     next(e);
   }
-})
+});
 
 router.get('/department', async(req,res,next)=>{
   try {
@@ -302,7 +302,7 @@ router.get('/department', async(req,res,next)=>{
   } catch (e) {
     next(e);
   }
-})
+});
 
 router.post('/department', async(req,res,next)=>{
   try {
@@ -318,6 +318,24 @@ router.post('/department', async(req,res,next)=>{
   } catch (e) {
     next(e);
   }
-})
+});
+// ---------- Get messages by agent email------------
+router.get('/messages/:recipent/', async (req, res, next)=> {
+  try {
+    const messagesDbo = new Dbo.Messages(global.dao);
+    const recipent = req.params.recipent;
 
+    let messagesRepsonse = await messagesDbo.getByFromOrTo(recipent);
+    if(messagesRepsonse && messagesRepsonse.length !== 0) {
+      res.status(200).send({success: true, messages: messagesRepsonse});
+    }
+    else {
+      res.status(200).send({success: false});
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+// ----------------------------------------------------
 module.exports = router;
+

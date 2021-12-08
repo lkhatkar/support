@@ -26,6 +26,11 @@ class MessageDbo {
         `SELECT * FROM Message WHERE Sno = $1`,
         [id])
     }
+    getByFromOrTo(agent) {
+      return this.dao.all(
+        `SELECT * FROM Message WHERE "from" = $1 OR "to" = $1`,
+        [agent])
+    }
 
     create(From, Message_Body, Create_Date, Parent_Message_Id, To, Attachment, Is_Read, Is_Deleted) {
         return this.dao.run(
