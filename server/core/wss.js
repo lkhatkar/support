@@ -29,7 +29,6 @@ class Wss {
 
       if (query.auth) {
         //validate auth
-        //validate auth
         jwt.verify(query.auth, process.env.API_SECRET, (err, decoded) => {
           if (err) {
             if (ws.readyState == 1)
@@ -55,6 +54,10 @@ class Wss {
 
       } else {
         const client = new Client(nanoid(6), query.name, query.email, query.dept, query.pid, ws);
+        if(this.isClientInGlobal(client.email)) {
+          client.ws.send(JSON.stringify({isClientActive: true}));
+          return;
+        }
         // Check for client in database
         let clientCheck = await this.addOrUpdateClient(client)
         if(!clientCheck) return; // Check for error here
@@ -71,10 +74,6 @@ class Wss {
           client.ws.send(JSON.stringify({ isAgentsAvailable: false }))
         }
       }
-
-      /*if(agents.length > 0 && clients.length > 0){
-          agents[0].onHandleClient(clients[0]);
-      }*/
 
       ws.on('close', () => {
         var closedIndex = global.clients.findIndex(client => client.ws == ws);
@@ -111,9 +110,21 @@ class Wss {
 
     });
   }
+
   addDisconnectedClients(client) {
     // console.log('disconnected: ',client);
   }
+
+  isClientInGlobal(clientEmail){
+    let flag = false;
+    global.clients.forEach(element=>{
+      if(element && element.email == clientEmail) {
+        flag = true;
+      }
+    });
+    return flag;
+  }
+
   async addOrUpdateClient(client) {
     try {
       const UserDbo = new Dbo.User(global.dao);

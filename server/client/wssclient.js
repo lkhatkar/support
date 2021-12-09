@@ -432,6 +432,14 @@ function connect(name, email, dept, pid = "1") {
                     document.getElementById('btn_Attachment').disabled = true;
                 }
             }
+            else if(data.isClientActive){
+              document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
+                Client with this Email is already acitve in another session.</h3>`
+                    client_connected = false;
+                    document.getElementsByClassName('msg')[0].disabled = true;
+                    document.getElementById('btn_sendMessage').disabled = true;
+                    document.getElementById('btn_Attachment').disabled = true;
+            }
         }
         else {
             if (!client_connected) {

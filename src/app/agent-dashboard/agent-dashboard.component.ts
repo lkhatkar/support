@@ -295,19 +295,19 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   getClientMessages(clientEmail:string, clientId:string){
-    let arr = this.initRecipientMessages.filter(recipient=>recipient.from == clientEmail || recipient.to == clientEmail);
-    arr.forEach((element:RecipientMessage)=>{
-      if(element.from == clientEmail){
+    this.initRecipientMessages.filter(recipient=>recipient.from == clientEmail || recipient.to == clientEmail)
+    .forEach((recipient:RecipientMessage)=>{
+      if(recipient.from == clientEmail){
         this.chatData.push({
-          message: element.message_body,
-          time: element.create_date,
+          message: recipient.message_body,
+          time: recipient.create_date,
           user_type: 'client',
           id: clientId
         })
       }else{
         this.chatData.push({
-          message: element.message_body,
-          time: element.create_date,
+          message: recipient.message_body,
+          time: recipient.create_date,
           user_type: 'agent',
           id: clientId
         })
