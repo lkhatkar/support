@@ -248,7 +248,7 @@ document.write(`<!DOCTYPE html>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body>
+<body onload="checkState()">
     <button class="chatBtn" onclick="openChat()" id="openChat"><i class="fa fa-comment"
             style="font-size: 1.5em;"></i></button>
     <button class="chatBtn" onclick="closeChat()" id="closeChat"><i class="fa fa-times"
@@ -372,12 +372,26 @@ function openChat() {
     document.getElementById("chatBox").style.display = "block";
     document.getElementById("closeChat").style.display = "block";
     document.getElementById("openChat").style.display = "none";
+    localStorage.setItem('state', 'OPEN');
 }
 
 function closeChat() {
     document.getElementById("closeChat").style.display = "none";
     document.getElementById("openChat").style.display = "block";
     document.getElementById("chatBox").style.display = "none";
+    localStorage.setItem('state', 'CLOSED');
+
+}
+function checkState() {
+  if('state' in localStorage) {
+    if(localStorage.getItem('state') == 'OPEN') {
+      openChat();
+    }
+  }
+  if('name', 'mail', 'dept' in localStorage) {
+    const {name, mail, dept} = localStorage;
+    connect(name, mail, dept);
+  }
 }
 
 function validateForm(e) {
