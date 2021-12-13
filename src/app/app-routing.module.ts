@@ -10,10 +10,10 @@ import { SupportChatAdminComponent } from './support-chat-admin/support-chat-adm
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/admin-dashboard' },
+  { path: 'admin-dashboard', component: SupportChatAdminComponent, canActivate:[AgentGuard]},
   { path: 'init', component:InitializeComponent, canActivate:[ConfigGuard]},
   { path: 'agent-login', component: AgentLoginComponent, canActivate:[InitializeGuard]},
   { path: 'agent', component: AgentDashboardComponent, canActivate:[AgentGuard]},
-  { path: 'admin-dashboard', component: SupportChatAdminComponent, canActivate:[AgentGuard]}
 ];
 
 @NgModule({

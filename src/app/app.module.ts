@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,7 @@ import { TokenInterceptorService } from './token-interceptor.service';
 import { AddAgentsComponent } from './agent-dashboard/add-agents/add-agents.component';
 import { InitializeComponent } from './initialize/initialize.component';
 import { ClipboardModule } from '@angular/cdk/clipboard'
+import { GlobalErrorHandler } from './errors/GlobalErrorHandler';
 
 
 registerLocaleData(en);
@@ -42,11 +43,21 @@ registerLocaleData(en);
     NgZorroAntdModule,
     ClipboardModule
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US },{
-    provide: HTTP_INTERCEPTORS,
-    useClass: TokenInterceptorService,
-    multi: true
-  }],
+  providers: [
+    {
+      provide: NZ_I18N,
+      useValue: en_US
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
+    }
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

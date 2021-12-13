@@ -153,6 +153,7 @@ router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
     if (clientId && agentEmail) {
       let agentIndex = global.agents.findIndex(agent => agent.email == agentEmail);
       let clientIndex = global.clients.findIndex(client => client.id == clientId);
+
       if (agentIndex != -1 && clientIndex != -1) {
         global.clients[clientIndex]['agentName'] = global.agents[agentIndex]['name'];
         global.clients[clientIndex]['isAgentAssigned'] = true;
@@ -161,10 +162,11 @@ router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
         tempClient = tempClient.map(({ ws, agent, ...rest }) => ({ ...rest }));
         global.agents.forEach(element => {
           if (element.ws.readyState == 1)
-            element.ws.send(JSON.stringify({ type: 'ClientConnect', clients: tempClient }));
-          // element.ws.send(JSON.stringify(tempClient));
+          element.ws.send(JSON.stringify({ type: 'ClientConnect', clients: tempClient }));
         });
+
         global.agents[agentIndex].onHandleClient(global.clients[clientIndex]);
+        // addToActiveSession(global.agents[agentIndex]);
         res.status(200).send({ success: true });
       }
       else {
@@ -260,9 +262,11 @@ router.post('/settings', (req, res, next) => {
 
 router.post('/setAdmin', async (req, res, next) => {
   try {
+    const departmentDbo = new Dbo.Department(global.dao);
     const UserDbo = new Dbo.User(global.dao);
-    const { username, email, password } = req.body;
-    let userCredentials = await UserDbo.create(nanoid(6), username, email, 'qwe', new Date(), true, null, password, true);
+    const { username, email, password, department } = req.body;
+    let departmentCred = await departmentDbo.create(department, new Date(), true);
+    let userCredentials = await UserDbo.create(nanoid(6), username, email, 'qwe', new Date(), true, departmentCred.rows[0].sno, password, true);
     if (userCredentials) {
       res.status(200).send({ success: true, message: "Admin created successfully", user: userCredentials.rows[0] });
     }
@@ -308,7 +312,7 @@ router.post('/department', async(req,res,next)=>{
   try {
     const departmentDbo = new Dbo.Department(global.dao);
     const department = req.body.department;
-    let deptResponse = await departmentDbo.create(department, new Date, true);
+    let deptResponse = await departmentDbo.create(department, new Date(), true);
     if(deptResponse){
       res.status(200).send({ success: true, message: "Department created successfully", department: deptResponse.rows[0]});
     }
@@ -336,6 +340,16 @@ router.get('/messages/:recipent/', async (req, res, next)=> {
     next(e);
   }
 });
+
+function addToActiveSession(agent){
+  let sessionIndex = global.activeSession.findIndex(session=>session.email == agent.email);
+
+  if(sessionIndex != -1)
+    global.activeSession.splice(sessionIndex, 1, agent);
+  else
+    global.activeSession.push(agent);
+  // console.log('session', global.activeSession);
+}
 // ----------------------------------------------------
 module.exports = router;
 
