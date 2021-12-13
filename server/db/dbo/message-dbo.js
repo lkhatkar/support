@@ -8,7 +8,7 @@ class MessageDbo {
       CREATE TABLE IF NOT EXISTS Message (
         Sno        BIGSERIAL PRIMARY KEY,
         "from" TEXT NOT NULL,
-        "to" BIGINT NOT NULL,
+        "to" TEXT NOT NULL,
 	      Message_Body TEXT NOT NULL,
         Create_Date  DATE  NOT NULL,
         Parent_Message_Id BIGINT,
