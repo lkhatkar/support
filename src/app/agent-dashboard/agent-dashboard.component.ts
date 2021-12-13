@@ -249,6 +249,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   addInitMessage(message: any) {
+    if(!message) return;
+
     this.messageService.addMessage({ name: this.currentAgent.username, message: message.value })
       .subscribe(resp => {
         if (resp.success) {
