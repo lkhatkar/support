@@ -44,7 +44,7 @@ export class InitializeComponent implements OnInit {
       username: [null, [Validators.required]],
       email: [null, [Validators.required]],
       password: [null, [Validators.required]],
-      department:['Admin']
+      department:['Default']
     });
   }
   dbCredSubmit(): void {
