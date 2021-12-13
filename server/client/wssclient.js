@@ -1,6 +1,6 @@
 var client, msg_array = [], client_connected = false, saved_chat = '';
 
-document.body.innerHTML += `<!DOCTYPE html>
+document.write(`<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -318,7 +318,7 @@ document.body.innerHTML += `<!DOCTYPE html>
     </script>
 </body>
 
-</html>` ;
+</html>`) ;
 
 
 

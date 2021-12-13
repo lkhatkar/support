@@ -30,8 +30,9 @@
         <nz-input-group class="size-medium">
           <textarea nz-input placeholder="Embed link" nzAutosize [(ngModel)]="embeddedLink" readonly></textarea>
         </nz-input-group><br />
+        <h3> <strong>Note:</strong> It is recommended to place script inside body. </h3>
         <button nz-button [cdkCopyToClipboard]="embeddedLink"> Copy To ClipBoard </button>&nbsp;&nbsp;
-        <button nz-button nzType="primary" nzShape="circle" nzSize="small" nzTooltipTitle="Place the script tag above or under body"
+        <button nz-button nzType="primary" nzShape="circle" nzSize="small" nzTooltipTitle="Recommended: Place script inside body."
           nzTooltipPlacement="rightTop" nz-tooltip><i nz-icon nzType="info"></i></button>
       </div>
     </nz-content>
