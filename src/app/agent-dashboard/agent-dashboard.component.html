@@ -138,8 +138,7 @@
               <br />
               <div nz-row>
                 <div nz-col nzSpan="16">
-                  <div class="ant-card ant-card-bordered chat-box" [id]="tab.id" #scrollToBottom
-                    [scrollTop]="scrollToBottom.scrollHeight">
+                  <div class="ant-card ant-card-bordered chat-box" [id]="tab.id" #scrollToBottom> <!--[scrollTop]="scrollToBottom.scrollHeight"-->
                     <div *ngFor="let data of chatData">
                       <!-- For agent -->
                       <p *ngIf="data.user_type === 'agent' ">

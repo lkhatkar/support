@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { WebSocketService } from '../services/web-socket.service';
@@ -23,12 +23,13 @@ export interface Clients {
   templateUrl: './agent-dashboard.component.html',
   styleUrls: ['./agent-dashboard.component.scss']
 })
-export class AgentDashboardComponent implements OnInit, OnDestroy {
+export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDestroy {
+  @ViewChild('scrollToBottom') private scrollContainer !: ElementRef;
   private _subscription$: Subject<void>;
   tabs: { name: string, id: string }[] = [];
   nodes: NzTreeNodeOptions[] = [];
-  departments:Department[]=[];
-  selectedDepartment:string='';
+  departments: Department[] = [];
+  selectedDepartment: string = '';
   selectedAgent: any;
   selectedVisitor: any;
   index = 0;
@@ -46,7 +47,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   initRecipientMessages: RecipientMessage[] = [];
   isVisible = false;
   isDeptVisible = false;
-  typingTimer:any;
+  typingTimer: any;
 
   // Dropdown menu on right click........
   contextMenu($event: any, menu: NzDropdownMenuComponent, department_id: any): void {
@@ -161,16 +162,25 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
         });
     });
   }
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
 
-  reloadAgents(){
+  scrollToBottom(): void {
+    try {
+      this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+    } catch (err) { }
+  }
+
+  reloadAgents() {
     this.authService.getOnlineAgents().subscribe(res => {
       this.tempAgents = res.agents;
-      this.setNodes(this.departments,this.globalAgents);
+      this.setNodes(this.departments, this.globalAgents);
     });
   }
 
-  organizeDepartment(department:any){
-    let index = department.findIndex((dept:any)=>dept.name == 'Default');
+  organizeDepartment(department: any) {
+    let index = department.findIndex((dept: any) => dept.name == 'Default');
     let temp = department[0];
     department[0] = department[index];
     department[index] = temp;
@@ -211,10 +221,10 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.requestQueue = [...this.requestInfo];
   }
 
-  private setNodes(departments:Department[], agents: any) {
+  private setNodes(departments: Department[], agents: any) {
     let treeList: any = [];
-    departments.forEach((department, index)=> {
-        treeList.push({
+    departments.forEach((department, index) => {
+      treeList.push({
         title: department.name,
         key: department.sno,
         expanded: true,
@@ -228,8 +238,8 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.nodes = dig();
   }
 
-  getDepartmentAgents(sno:any, agents: any){
-    agents = agents.filter((item: any)=> item.department_id == sno);
+  getDepartmentAgents(sno: any, agents: any) {
+    agents = agents.filter((item: any) => item.department_id == sno);
     this.names = [];
     agents.forEach((element: any, index: any) => {
       this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
@@ -257,7 +267,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
   }
 
   addInitMessage(message: any) {
-    if(!message) return;
+    if (!message) return;
 
     this.messageService.addMessage({ name: this.currentAgent.username, message: message.value })
       .subscribe(resp => {
@@ -282,7 +292,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
       })
   }
 
-  newTab(id: string, name: string, email:string, accept: any, acceptEvent: any): void {
+  newTab(id: string, name: string, email: string, accept: any, acceptEvent: any): void {
     acceptEvent.target.innerHTML = 'Assigned';
     accept.disabled = true;
     this.authService.assignClient(this.selectedAgent.email, id).subscribe(res => {
@@ -290,7 +300,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
         if (this.tabs.filter(e => e.id === id).length == 0) {
           this.tabs.push({ name: name, id: id });
           this.getClientMessages(email, id);
-          console.log("chat data: ",this.chatData);
+          console.log("chat data: ", this.chatData);
 
           this.index = this.tabs.length - 1;
         }
@@ -304,25 +314,25 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     })
   }
 
-  getClientMessages(clientEmail:string, clientId:string){
-    this.initRecipientMessages.filter(recipient=>recipient.from == clientEmail || recipient.to == clientEmail)
-    .forEach((recipient:RecipientMessage)=>{
-      if(recipient.from == clientEmail){
-        this.chatData.push({
-          message: recipient.message_body,
-          time: recipient.create_date,
-          user_type: 'client',
-          id: clientId
-        })
-      }else{
-        this.chatData.push({
-          message: recipient.message_body,
-          time: recipient.create_date,
-          user_type: 'agent',
-          id: clientId
-        })
-      }
-    })
+  getClientMessages(clientEmail: string, clientId: string) {
+    this.initRecipientMessages.filter(recipient => recipient.from == clientEmail || recipient.to == clientEmail)
+      .forEach((recipient: RecipientMessage) => {
+        if (recipient.from == clientEmail) {
+          this.chatData.push({
+            message: recipient.message_body,
+            time: recipient.create_date,
+            user_type: 'client',
+            id: clientId
+          })
+        } else {
+          this.chatData.push({
+            message: recipient.message_body,
+            time: recipient.create_date,
+            user_type: 'agent',
+            id: clientId
+          })
+        }
+      })
 
   }
 
@@ -332,21 +342,21 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     else return `Assigned to ${agentName}`;
   }
 
-  getClientDepartment(clientDept:String){
-    return this.departments.find(dept=>dept.sno == clientDept)?.name;
+  getClientDepartment(clientDept: String) {
+    return this.departments.find(dept => dept.sno == clientDept)?.name;
   }
 
-  onAgentTyping(clientId:any):void{
+  onAgentTyping(clientId: any): void {
     this.websocket.send({ clientId: clientId, isAgentTyping: true });
   }
 
-  typingTimerCheck(){
+  typingTimerCheck() {
     this.typingTimer = setTimeout(() => {
 
     }, 10000);
   }
 
-  clearTimer(){
+  clearTimer() {
 
   }
 
@@ -395,19 +405,19 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
     this.isDeptVisible = false;
   }
 
-  DeptSubmit(department:string): void {
-    if(!department) return;
+  DeptSubmit(department: string): void {
+    if (!department) return;
     this.authService.addDepartments(department)
-    .subscribe(res=>{
-      if(res.success){
-        this.isDeptVisible = false;
-        this.departments.push(res.department);
-        this.reloadAgents();
-      }
-    })
+      .subscribe(res => {
+        if (res.success) {
+          this.isDeptVisible = false;
+          this.departments.push(res.department);
+          this.reloadAgents();
+        }
+      })
   }
 
-  toggleAgentModal(agent:boolean){
+  toggleAgentModal(agent: boolean) {
     this.isVisible = false;
     this.globalAgents.push(agent);
     this.reloadAgents();
