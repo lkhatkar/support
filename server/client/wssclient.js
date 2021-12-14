@@ -1,4 +1,5 @@
 var client, msg_array = [], client_connected = false, saved_chat = '';
+const url = `http://localhost/api/department`;
 
 document.write(`<!DOCTYPE html>
 <html lang="en">
@@ -272,9 +273,9 @@ document.write(`<!DOCTYPE html>
                     <label for="designation">Department</label>
                     <select id="desig" name="desig">
                         <option value="" selected disabled>Select Department</option>
-                        <option value="1">Sales</option>
-                        <option value="2">Billing</option>
-                        <option value="3">Support</option>
+                        <!-- <option value="1">Sales</option>
+                         <option value="2">Billing</option>
+                         <option value="3">Support</option> -->
                     </select><br><br><br>
                     <div class="submitSection">
                         <button type="submit" value="submit">Start
@@ -318,7 +319,7 @@ document.write(`<!DOCTYPE html>
     </script>
 </body>
 
-</html>`) ;
+</html>`);
 
 
 
@@ -392,6 +393,19 @@ function checkState() {
     const {name, mail, dept} = localStorage;
     connect(name, mail, dept);
   }
+  //-------- Add data inside department----------
+  getAllDepartments()
+  .then(deptData=> {
+    console.log(deptData);
+    const select = document.querySelector('#desig');
+
+    for (let i = 0; i < deptData.length; i++) {
+      let opt = document.createElement('option');
+      opt.value = deptData[i].sno;
+      opt.innerHTML = deptData[i].name;
+      select.appendChild(opt);
+    }
+  });
 }
 
 function validateForm(e) {
@@ -542,6 +556,13 @@ function blobToDataURL(blob) {
     reader.readAsDataURL(blob);
 }
 
+function getAllDepartments() {
+  return new Promise((resolve, reject)=> {
+    fetch(url)
+    .then(res=> res.json())
+    .then(result=> resolve(result.departments))
+  })
+}
 
 function logout() {
     if (confirm('Your chat history will be cleared, you wish to proceed to logout?')) {
