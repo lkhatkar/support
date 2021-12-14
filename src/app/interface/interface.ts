@@ -1,9 +1,12 @@
+import { NzResultStatusType } from "ng-zorro-antd/result";
+
 export interface Department{
   sno:string,
   name:string,
   create_date:Date,
   isactive:boolean
 }
+
 export interface RecipientMessage{
   sno:string,
   from:string,
@@ -16,4 +19,9 @@ export interface RecipientMessage{
   is_read:number,
   is_deleted:boolean,
   create_date:Date,
+}
+
+export interface Error {
+  status:NzResultStatusType,
+  title:string,
 }

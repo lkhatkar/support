@@ -18,6 +18,8 @@ import { TokenInterceptorService } from './token-interceptor.service';
 import { AddAgentsComponent } from './agent-dashboard/add-agents/add-agents.component';
 import { InitializeComponent } from './initialize/initialize.component';
 import { ClipboardModule } from '@angular/cdk/clipboard'
+import { ErrorHandlerComponent } from './errors/error-handler/error-handler.component';
+import { GlobalErrorHandler } from './errors/GlobalErrorHandler';
 
 
 registerLocaleData(en);
@@ -30,7 +32,7 @@ registerLocaleData(en);
     AgentLoginComponent,
     AddAgentsComponent,
     InitializeComponent,
-
+    ErrorHandlerComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,6 +53,10 @@ registerLocaleData(en);
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,
       multi: true
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
     }
 ],
   bootstrap: [AppComponent]

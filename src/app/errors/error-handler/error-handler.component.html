@@ -1,0 +1,6 @@
+  <nz-modal [nzVisible]="isErrorVisible" [nzFooter]="null" (nzOnCancel)="hideModal()">
+    <ng-container *nzModalContent>
+      <nz-result [nzStatus]="error.status" [nzTitle]="error.status" [nzSubTitle]="error.title">
+      </nz-result>
+    </ng-container>
+  </nz-modal>
