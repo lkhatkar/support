@@ -67,6 +67,12 @@ class UserDbo {
             [Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent, Sno]
         )
     }
+    changeAgentDepartment(Email, Department_Id) {
+      return this.dao.run(
+        `UPDATE userdata SET Department_Id = $1, WHERE Email = $2`,
+        [Email, Department_Id]
+      )
+    }
 
     delete(id) {
         return this.dao.run(
