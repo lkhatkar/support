@@ -260,13 +260,15 @@ router.post('/settings', (req, res, next) => {
   }
 });
 
+// ---------- For adding admin -----------
+
 router.post('/setAdmin', async (req, res, next) => {
   try {
     const departmentDbo = new Dbo.Department(global.dao);
     const UserDbo = new Dbo.User(global.dao);
     const { username, email, password, department } = req.body;
     let departmentCred = await departmentDbo.create(department, new Date(), true);
-    let userCredentials = await UserDbo.create(nanoid(6), username, email, 'qwe', new Date(), true, departmentCred.rows[0].sno, password, true);
+    let userCredentials = await UserDbo.create(nanoid(6), username, email, 'qwe', new Date(), true, departmentCred.rows[0].sno, password, true, true);
     if (userCredentials) {
       res.status(200).send({ success: true, message: "Admin created successfully", user: userCredentials.rows[0] });
     }
@@ -278,11 +280,13 @@ router.post('/setAdmin', async (req, res, next) => {
   }
 });
 
+// ---------- For adding new agent ------------
+
 router.post('/agent', async (req,res,next)=>{
   try {
     const UserDbo = new Dbo.User(global.dao);
     const { username, email, password, department_id } = req.body;
-    let userCredentials = await UserDbo.create(nanoid(6), username, email, 'qwe', new Date(), true, department_id, password, true);
+    let userCredentials = await UserDbo.create(nanoid(6), username, email, 'qwe', new Date(), true, department_id, password, true, false);
     if (userCredentials) {
       res.status(200).send({ success: true, message: "Agent created successfully", agent: userCredentials.rows[0] });
     }
@@ -293,6 +297,8 @@ router.post('/agent', async (req,res,next)=>{
     next(e);
   }
 });
+
+// ---------- For getting all departments ---------
 
 router.get('/department', async(req,res,next)=>{
   try {

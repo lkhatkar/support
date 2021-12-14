@@ -82,7 +82,7 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
 
       if (departmentResp.success && agentResp.success) {
         this.globalAgents = agentResp.agents;
-        this.departments = departmentResp.departments;
+        this.departments = this.organizeDepartment(departmentResp.departments);
         this.initRecipientMessages = recipientResp.messages;
         console.log(this.initRecipientMessages);
 
@@ -167,6 +167,14 @@ export class AgentDashboardComponent implements OnInit, OnDestroy {
       this.tempAgents = res.agents;
       this.setNodes(this.departments,this.globalAgents);
     });
+  }
+
+  organizeDepartment(department:any){
+    let index = department.findIndex((dept:any)=>dept.name == 'Default');
+    let temp = department[0];
+    department[0] = department[index];
+    department[index] = temp;
+    return department;
   }
 
   deleteTypingMessage() {

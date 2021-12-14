@@ -54,10 +54,10 @@ registerLocaleData(en);
       useClass: TokenInterceptorService,
       multi: true
     },
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler
-    }
+    // {
+    //   provide: ErrorHandler,
+    //   useClass: GlobalErrorHandler
+    // }
 ],
   bootstrap: [AppComponent]
 })

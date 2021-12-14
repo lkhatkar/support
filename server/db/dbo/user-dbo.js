@@ -13,6 +13,7 @@ class UserDbo {
         PageId TEXT  NOT NULL,
         Create_Date  DATE  NOT NULL,
         IsActive  BOOLEAN NOT NULL DEFAULT (false),
+        IsAdmin BOOLEAN DEFAULT (false),
         Department_Id BIGINT
                         REFERENCES Department (Sno) ON DELETE NO ACTION
                         ON UPDATE NO ACTION,
@@ -54,17 +55,17 @@ class UserDbo {
       return this.dao.all(`SELECT * FROM userdata WHERE IsAgent = true`);
     }
 
-    create(Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent) {
+    create(Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent, IsAdmin) {
         return this.dao.run(
-          'INSERT INTO userdata (Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *',
-          [Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent])
+          'INSERT INTO userdata (Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent, IsAdmin) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *',
+          [Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent, IsAdmin])
     }
 
-    update(Sno, Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent) {
+    update(Sno, Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent, IsAdmin) {
         // const {Sno, Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent} = obj
         return this.dao.run(
-            `UPDATE userdata SET Id = $1, Name = $2, Email = $3, PageId = $4, Create_Date = $5, IsActive = $6, Department_Id = $7, Password = $8, IsAgent = $9  WHERE Sno = $10`,
-            [Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent, Sno]
+            `UPDATE userdata SET Id = $1, Name = $2, Email = $3, PageId = $4, Create_Date = $5, IsActive = $6, Department_Id = $7, Password = $8, IsAgent = $9, IsAdmin = $10  WHERE Sno = $11`,
+            [Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent, IsAdmin, Sno]
         )
     }
     changeAgentDepartment(Email, Department_Id) {
