@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class AgentLoginComponent implements OnInit {
   isSuccess: boolean = true;
+  passwordVisible: boolean = false;
 
   public formObject: FormGroup;
   constructor(
