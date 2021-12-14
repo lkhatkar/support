@@ -26,7 +26,20 @@ app.use(express.urlencoded({extended: true}));
 //     next();
 //   });
 // app.use('/', express.static(path.join(__dirname, '../client/')))
+
 app.use('/api', routes);
+
+// --------Custom Error Handler---------
+app.use((err, req, res, next)=> {
+  console.error(err);
+
+  res.status(err.status || 500).json({
+    error: {
+      message: err.message
+    }
+  });
+});
+// ------------------------------
 app.use('/agent', express.static(path.join(__dirname, '../agent/')));
 app.use('/client', express.static(path.join(__dirname, '../client/')));
 
