@@ -298,7 +298,7 @@ router.post('/agent', async (req,res,next)=>{
   }
 });
 
-// ---------- For getting all departments ---------
+// ---------- For getting all Departments ------
 
 router.get('/department', async(req,res,next)=>{
   try {
@@ -313,8 +313,8 @@ router.get('/department', async(req,res,next)=>{
     next(e);
   }
 });
-
-router.post('/department', async(req,res,next)=>{
+// -------- For adding Departments ----------------
+router.post('/department', async(req, res, next)=>{
   try {
     const departmentDbo = new Dbo.Department(global.dao);
     const department = req.body.department;
@@ -329,6 +329,42 @@ router.post('/department', async(req,res,next)=>{
     next(e);
   }
 });
+// ---------- For Updating Departments ----------------
+router.put('/department/:id', async(req, res, next)=> {
+  try {
+    const departmentDbo = new Dbo.Department(global.dao);
+    const department = req.body.department;
+    department.Sno = req.params.id;
+
+    let deptResponse = await departmentDbo.update(department);
+    if(deptResponse){
+      res.status(200).send({ success: true, message: "Department updated successfully", department: deptResponse.rows[0]});
+    }
+    else {
+      res.status(200).send({success: false, message: "Failed to update department" });
+    }
+  } catch (e) {
+    next(e);
+  }
+
+});
+// ---------- For Deleting Departments -------------------
+router.delete('/department/:id', async(req, res, next)=> {
+  try {
+    const departmentDbo = new Dbo.Department(global.dao);
+    let deptResponse = await departmentDbo.delete(req.params.id);
+
+    if(deptResponse){
+      res.status(200).send({ success: true, message: "Department deleted successfully", department: deptResponse.rows[0]});
+    }
+    else {
+      res.status(200).send({success: false, message: "Failed to delete department" });
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+
 // ---------- Get messages by agent email------------
 router.get('/messages/:recipent/', async (req, res, next)=> {
   try {
