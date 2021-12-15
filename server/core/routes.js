@@ -333,8 +333,7 @@ router.post('/department', async(req, res, next)=>{
 router.put('/department/:id', async(req, res, next)=> {
   try {
     const departmentDbo = new Dbo.Department(global.dao);
-    const department = req.body.department;
-    department.Sno = req.params.id;
+    const department = req.body;
 
     let deptResponse = await departmentDbo.update(department);
     if(deptResponse){

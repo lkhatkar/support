@@ -29,13 +29,15 @@ class DepartmentDbo {
           'INSERT INTO Department (Name, Create_Date, IsActive) VALUES ($1,$2,$3) RETURNING *',
           [Name, Create_Date, IsActive])
     }
+
     update(obj) {
-        const {Sno, Name, Create_Date, IsActive} = obj
+        const {sno, name, create_date, isactive} = obj
         return this.dao.run(
-            `UPDATE Department SET Name = $1, Create_Date = $2, IsActive = $3 WHERE Sno = $4`,
-            [Name, Create_Date, IsActive, Sno]
+            `UPDATE Department SET Name = $1, Create_Date = $2, IsActive = $3 WHERE Sno = $4 RETURNING *`,
+            [name, create_date, isactive, sno]
         )
     }
+
     delete(id) {
         return this.dao.run(
           `DELETE FROM Department WHERE Sno = $1`,

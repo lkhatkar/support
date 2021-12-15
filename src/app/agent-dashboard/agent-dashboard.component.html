@@ -28,7 +28,7 @@
       <nz-card nzTitle="Departments/Agents" class="row1">
         <nz-tree [nzData]="nodes" nzBlockNode nzVirtualHeight="150px" [nzTreeTemplate]="nzTreeTemplate"></nz-tree>
         <ng-template #nzTreeTemplate let-node let-origin="origin">
-          <span *ngIf="!node.isLeaf" (contextmenu)="contextMenu($event, menu, node.key)">
+          <span *ngIf="!node.isLeaf" (contextmenu)="deptContextMenu($event, deptMenu, node.key)">
             <i nz-icon nzType="team"></i>
             <span class="folder-name">{{node.title}}</span>
           </span>
@@ -37,15 +37,25 @@
               *ngIf="check(node.title)"></i>
             <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#e50000'"
               *ngIf="!(check(node.title))"></i>
-            <span class="file-name">{{ node.title }}</span>
+            <span class="file-name" (contextmenu)="agentContextMenu($event, agentMenu)">{{ node.title }}</span>
           </span>
         </ng-template>
       </nz-card>
-      <!-- DropDown on click -->
-      <nz-dropdown-menu #menu="nzDropdownMenu">
+
+      <!-- Department Menu -->
+      <nz-dropdown-menu #deptMenu="nzDropdownMenu">
         <ul nz-menu>
-          <li nz-menu-item (click)="showModal()">Add Agent</li>
+          <li nz-menu-item (click)="showAgentModal()">Add Agent</li>
           <li nz-menu-item (click)="showDeptModal()">Add Department</li>
+          <li nz-menu-item (click)="renameDepartment()">Rename Department</li>
+          <li nz-menu-item (click)="removeDepartment()">Remove Department</li>
+        </ul>
+      </nz-dropdown-menu>
+      <!-- Agent Menu -->
+      <nz-dropdown-menu #agentMenu="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item (click)="changeDeptModal()">Change Department</li>
+          <li nz-menu-item (click)="removeAgent()">Remove Agent</li>
         </ul>
       </nz-dropdown-menu>
     </div>
@@ -59,19 +69,19 @@
     </nz-modal>
 
     <!-- Add Department Modal -->
-    <nz-modal [(nzVisible)]="isDeptVisible" [nzFooter]="null" nzTitle="Add Department"
+    <nz-modal [(nzVisible)]="isDeptVisible" [nzFooter]="null" nzTitle="{{ isDeptUpdateAvailable ? 'Update Department' : 'Add Department' }}"
       (nzOnCancel)="handleDeptCancel()">
       <ng-container *nzModalContent>
         <form nz-form>
           <nz-form-item>
             <nz-form-label [nzSpan]="6" nzFor="dept">Department</nz-form-label>
             <nz-form-control [nzSpan]="14">
-              <input nz-input type="text" placeholder="Department" id="dept" #dept>
+              <input nz-input type="text" placeholder="Department" id="dept" [value]="departmentValue" #dept>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
             <nz-form-control [nzSpan]="6" style="margin: auto;">
-              <button type="button" nz-button nzType="primary" nzBlock (click)="DeptSubmit(dept.value)">Add</button>
+              <button type="button" nz-button nzType="primary" nzBlock (click)="DeptSubmit(dept.value)">{{ isDeptUpdateAvailable ? 'Update' : 'Add' }}</button>
             </nz-form-control>
           </nz-form-item>
         </form>

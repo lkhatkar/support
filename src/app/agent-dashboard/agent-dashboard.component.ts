@@ -7,6 +7,8 @@ import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AgentMessagesService } from '../services/agent-messages.service';
 import { Department, RecipientMessage } from '../interface/interface';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { DepartmentService } from '../services/department.service';
 
 export interface Clients {
   id: string;
@@ -47,23 +49,18 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
   initRecipientMessages: RecipientMessage[] = [];
   isVisible = false;
   isDeptVisible = false;
+  isDeptUpdateAvailable = false;
+  departmentValue = '';
   typingTimer: any;
 
-  // Dropdown menu on right click........
-  contextMenu($event: any, menu: NzDropdownMenuComponent, department_id: any): void {
-    this.nzContextMenuService.create($event, menu);
-    this.selectedDepartment = department_id;
-  }
-
-  closeMenu(): void {
-    this.nzContextMenuService.close();
-  }
   constructor(
     private nzContextMenuService: NzContextMenuService,
     private websocket: WebSocketService,
     private authService: AuthService,
     private messageService: AgentMessagesService,
-    private changeDetector: ChangeDetectorRef) {
+    private nzModal: NzModalService,
+    private deptService: DepartmentService
+    ) {
     this._subscription$ = new Subject();
   }
 
@@ -162,6 +159,24 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
         });
     });
   }
+
+  //.......Department dropdown menu on right click........
+  deptContextMenu($event: any, menu: NzDropdownMenuComponent, department_id: any): void {
+    if (!this.selectedAgent.isadmin) return;
+    this.nzContextMenuService.create($event, menu);
+    this.selectedDepartment = department_id;
+  }
+
+  //.......Agent dropdown menu on right click........
+  agentContextMenu($event: any, menu: NzDropdownMenuComponent): void {
+    if (!this.selectedAgent.isadmin) return;
+    this.nzContextMenuService.create($event, menu);
+  }
+
+  closeMenu(): void {
+    this.nzContextMenuService.close();
+  }
+
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
@@ -388,11 +403,12 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
     this.authService.agentLogout();
   }
 
-  showModal(): void {
+  showAgentModal(): void {
     this.isVisible = true;
   }
 
   showDeptModal(): void {
+    this.isDeptUpdateAvailable = false;
     this.isDeptVisible = true;
   }
 
@@ -405,9 +421,21 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
     this.isDeptVisible = false;
   }
 
-  DeptSubmit(department: string): void {
+  toggleAgentModal(agent: boolean) {
+    this.isVisible = false;
+    this.globalAgents.push(agent);
+    this.reloadAgents();
+  }
+
+  changeDeptModal(){
+
+  }
+
+  DeptSubmit(department:string): void {
     if (!department) return;
-    this.authService.addDepartments(department)
+
+    if(!this.isDeptUpdateAvailable){
+      this.deptService.addDepartments(department)
       .subscribe(res => {
         if (res.success) {
           this.isDeptVisible = false;
@@ -415,12 +443,44 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
           this.reloadAgents();
         }
       })
+    }else{
+      let updateDept = this.departments.find(dept=>dept.sno == this.selectedDepartment);
+      updateDept!.name = department;
+      this.deptService.updateDepartment(updateDept?.sno || '', updateDept)
+      .subscribe(res => {
+        if (res.success) {
+          this.isDeptVisible = false;
+          let index = this.departments.findIndex(dept=>dept.sno == this.selectedDepartment);
+          this.departments.splice(index, 1, res.department);
+          this.reloadAgents();
+        }
+      })
+    }
+
   }
 
-  toggleAgentModal(agent: boolean) {
-    this.isVisible = false;
-    this.globalAgents.push(agent);
-    this.reloadAgents();
+  renameDepartment(){
+    this.departmentValue = this.departments.find(dept=>dept.sno == this.selectedDepartment)?.name || '';
+    this.isDeptUpdateAvailable = true;
+    this.isDeptVisible = true;
+  }
+
+  removeDepartment(){
+     this.nzModal.confirm({
+      nzTitle: 'Do you Want to delete this Department?',
+      nzOnOk: () => {
+
+      }
+    });
+  }
+
+  removeAgent(){
+    this.nzModal.confirm({
+      nzTitle: 'Do you Want to delete this Agent?',
+      nzOnOk: () => {
+
+      }
+    });
   }
 
   ngOnDestroy() {

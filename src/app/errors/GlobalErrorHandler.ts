@@ -12,8 +12,8 @@ export class GlobalErrorHandler implements ErrorHandler {
           error = error.rejection; // get the error object
         }
         this.modalService.openErrorModal({
-          message: error.message,
-          status: error.status
+          message: error.message || 'Unknown Error!',
+          status: error.status || 0
         });
       }
   }
