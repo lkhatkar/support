@@ -144,7 +144,7 @@ router.put('/agents/:id', middleware.checkToken, async (req, res, next) => {
           updatedAgents = await UserDbo.changeAgentDepartment(Department_Id, Id);
 
     if (updatedAgents) {
-      res.status(200).send({ success: true, message: "Department Change successful", department: updatedAgents.rows[0] });
+      res.status(200).send({ success: true, message: "Department Change successful", user: updatedAgents.rows[0] });
     } else {
       res.status(200).send({ success: false, message: "Unable to Change Department"});
     }
