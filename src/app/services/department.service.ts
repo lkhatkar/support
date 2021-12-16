@@ -22,4 +22,12 @@ export class DepartmentService {
   updateDepartment(id:string, department:any){
     return this._http.put<any>(`${this.url}/department/${id}`, department);
   }
+
+  deleteDepartment(id: string, defaultId: string){
+    return this._http.delete<any>(`${this.url}/department/${id}/${defaultId}`);
+  }
+
+  changeAgentDepartment(agentId: string, departmentId: string){
+    return this._http.put<any>(`${this.url}/agents/${agentId}`,{ departmentId });
+  }
 }

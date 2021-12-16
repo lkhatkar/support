@@ -39,25 +39,26 @@
               *ngIf="!(check(node.title))"></i>
             <span class="file-name" (contextmenu)="agentContextMenu($event, agentMenu)">{{ node.title }}</span>
           </span>
+          <!-- Department/Parent Menu -->
+          <nz-dropdown-menu #deptMenu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="showAgentModal()">Add Agent</li>
+              <li nz-menu-item (click)="showDeptModal()">Add Department</li>
+              <li nz-menu-item (click)="renameDepartment()">Rename Department</li>
+              <li nz-menu-item (click)="removeDepartment(node)">Remove Department</li>
+            </ul>
+          </nz-dropdown-menu>
+          <!-- Agent/child Menu -->
+          <nz-dropdown-menu #agentMenu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="changeDeptModal(node)">Change Department</li>
+              <li nz-menu-item (click)="removeAgent()">Remove Agent</li>
+            </ul>
+          </nz-dropdown-menu>
         </ng-template>
       </nz-card>
 
-      <!-- Department Menu -->
-      <nz-dropdown-menu #deptMenu="nzDropdownMenu">
-        <ul nz-menu>
-          <li nz-menu-item (click)="showAgentModal()">Add Agent</li>
-          <li nz-menu-item (click)="showDeptModal()">Add Department</li>
-          <li nz-menu-item (click)="renameDepartment()">Rename Department</li>
-          <li nz-menu-item (click)="removeDepartment()">Remove Department</li>
-        </ul>
-      </nz-dropdown-menu>
-      <!-- Agent Menu -->
-      <nz-dropdown-menu #agentMenu="nzDropdownMenu">
-        <ul nz-menu>
-          <li nz-menu-item (click)="changeDeptModal()">Change Department</li>
-          <li nz-menu-item (click)="removeAgent()">Remove Agent</li>
-        </ul>
-      </nz-dropdown-menu>
+
     </div>
 
     <!-- Add Agent Modal -->
@@ -69,8 +70,8 @@
     </nz-modal>
 
     <!-- Add Department Modal -->
-    <nz-modal [(nzVisible)]="isDeptVisible" [nzFooter]="null" nzTitle="{{ isDeptUpdateAvailable ? 'Update Department' : 'Add Department' }}"
-      (nzOnCancel)="handleDeptCancel()">
+    <nz-modal [(nzVisible)]="isDeptVisible" [nzFooter]="null"
+      nzTitle="{{ isDeptUpdateAvailable ? 'Update Department' : 'Add Department' }}" (nzOnCancel)="handleDeptCancel()">
       <ng-container *nzModalContent>
         <form nz-form>
           <nz-form-item>
@@ -81,7 +82,37 @@
           </nz-form-item>
           <nz-form-item>
             <nz-form-control [nzSpan]="6" style="margin: auto;">
-              <button type="button" nz-button nzType="primary" nzBlock (click)="DeptSubmit(dept.value)">{{ isDeptUpdateAvailable ? 'Update' : 'Add' }}</button>
+              <button type="button" nz-button nzType="primary" nzBlock (click)="DeptSubmit(dept.value)">{{
+                isDeptUpdateAvailable ? 'Update' : 'Add' }}</button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </ng-container>
+    </nz-modal>
+
+    <!-- Change Agent Department Modal -->
+    <nz-modal [(nzVisible)]="isChangeDeptVisible" [nzFooter]="null" nzTitle="Change Department"
+      (nzOnCancel)="isChangeDeptVisible = false">
+      <ng-container *nzModalContent>
+        <form nz-form>
+          <nz-form-item>
+            <nz-form-label [nzSpan]="4" nzFor="agent">Agent</nz-form-label>
+            <nz-form-control>
+              <input nz-input type="text" name="agent" placeholder="Agent" id="agent" [value]="designatedAgent" disabled>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="4">Department</nz-form-label> &nbsp;
+            <nz-form-control>
+              <nz-select nzPlaceHolder="Select Department" name="department" [(ngModel)]="selectedDepartment">
+                <nz-option *ngFor="let department of departments" [nzLabel]="department.name"
+                  [nzValue]="department.sno"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control [nzSpan]="6" style="margin: auto;">
+              <button type="button" nz-button nzType="primary" nzBlock (click)="changeDepartment()">Change</button>
             </nz-form-control>
           </nz-form-item>
         </form>
@@ -148,7 +179,8 @@
               <br />
               <div nz-row>
                 <div nz-col nzSpan="16">
-                  <div class="ant-card ant-card-bordered chat-box" [id]="tab.id" #scrollToBottom> <!--[scrollTop]="scrollToBottom.scrollHeight"-->
+                  <div class="ant-card ant-card-bordered chat-box" [id]="tab.id" #scrollToBottom>
+                    <!--[scrollTop]="scrollToBottom.scrollHeight"-->
                     <div *ngFor="let data of chatData">
                       <!-- For agent -->
                       <p *ngIf="data.user_type === 'agent' ">

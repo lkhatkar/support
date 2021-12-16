@@ -33,7 +33,6 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
   departments: Department[] = [];
   selectedDepartment: string = '';
   selectedAgent: any;
-  selectedVisitor: any;
   index = 0;
   inputValueTab?: string = "Hello there";
   chatMessage = "";
@@ -49,8 +48,11 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
   initRecipientMessages: RecipientMessage[] = [];
   isVisible = false;
   isDeptVisible = false;
+  isChangeDeptVisible = false;
   isDeptUpdateAvailable = false;
   departmentValue = '';
+  designatedAgent = '';
+  designatedAgentId = '';
   typingTimer: any;
 
   constructor(
@@ -257,7 +259,7 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
     agents = agents.filter((item: any) => item.department_id == sno);
     this.names = [];
     agents.forEach((element: any, index: any) => {
-      this.names.push({ title: element.name, key: index, icon: 'user', isLeaf: true })
+      this.names.push({ title: element.name, key: element.id, icon: 'user', isLeaf: true })
     });
     return this.names;
   }
@@ -413,7 +415,6 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
   }
 
   handleCancel(): void {
-    console.log('Button cancel clicked!');
     this.isVisible = false;
   }
 
@@ -427,8 +428,23 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
     this.reloadAgents();
   }
 
-  changeDeptModal(){
+  changeDeptModal(user:any){
+    this.selectedDepartment = user.parentNode.key;
+    this.designatedAgent = user._title;
+    this.designatedAgentId = user.key;
+    this.isChangeDeptVisible = true;
+  }
 
+  changeDepartment(){
+    this.deptService.changeAgentDepartment(this.designatedAgentId, this.selectedDepartment)
+    .subscribe(res=>{
+      if(res){
+        let index = this.globalAgents.findIndex((agent:any) => agent.id == res.user.id);
+        this.globalAgents.splice(index, 1, res.user);
+        this.reloadAgents();
+        this.isChangeDeptVisible = false;
+      }
+    })
   }
 
   DeptSubmit(department:string): void {
@@ -465,13 +481,33 @@ export class AgentDashboardComponent implements OnInit, AfterViewChecked, OnDest
     this.isDeptVisible = true;
   }
 
-  removeDepartment(){
+  removeDepartment(department:any){
      this.nzModal.confirm({
       nzTitle: 'Do you Want to delete this Department?',
       nzOnOk: () => {
-
+        let defaultId = this.departments.find(dept=>dept.name == 'Default')?.sno || '';
+        this.deptService.deleteDepartment(department.key, defaultId)
+        .subscribe(res=>{
+          if(res){
+            let index = this.departments.findIndex(dept=>dept.sno == department.key);
+            this.departments.splice(index, 1);
+            this.departments = [...this.departments];
+            this.reassignDepartment(res.department);
+          }
+        })
       }
     });
+  }
+
+  reassignDepartment(userList:any){
+    userList.forEach((user:any) => {
+      let index = this.globalAgents.findIndex((agent:any) => agent.id == user.id);
+        if(index != -1){
+          this.globalAgents.splice(index, 1, user);
+          this.globalAgents = [...this.globalAgents];
+        }
+    });
+    this.reloadAgents();
   }
 
   removeAgent(){

@@ -77,7 +77,7 @@ class UserDbo {
     }
     changeAgentDepartment(Department_Id, Id) {
       return this.dao.run(
-        `UPDATE userdata SET Department_Id = $1 WHERE Id = $2`,
+        `UPDATE userdata SET Department_Id = $1 WHERE Id = $2 RETURNING *`,
         [Department_Id, Id]
       )
     }
