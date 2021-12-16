@@ -162,7 +162,7 @@ router.post('/handleclient', middleware.checkToken, async (req, res, next) => {
         tempClient = tempClient.map(({ ws, agent, ...rest }) => ({ ...rest }));
         global.agents.forEach(element => {
           if (element.ws.readyState == 1)
-          element.ws.send(JSON.stringify({ type: 'ClientConnect', clients: tempClient }));
+            element.ws.send(JSON.stringify({ type: 'ClientConnect', clients: tempClient }));
         });
 
         global.agents[agentIndex].onHandleClient(global.clients[clientIndex]);
@@ -273,7 +273,7 @@ router.post('/setAdmin', async (req, res, next) => {
       res.status(200).send({ success: true, message: "Admin created successfully", user: userCredentials.rows[0] });
     }
     else {
-      res.status(200).send({success: false, message: "Failed to create admin" });
+      res.status(200).send({ success: false, message: "Failed to create admin" });
     }
   } catch (e) {
     next(e);
@@ -282,7 +282,7 @@ router.post('/setAdmin', async (req, res, next) => {
 
 // ---------- For adding new agent ------------
 
-router.post('/agent', async (req,res,next)=>{
+router.post('/agent', async (req, res, next) => {
   try {
     const UserDbo = new Dbo.User(global.dao);
     const { username, email, password, department_id } = req.body;
@@ -291,7 +291,7 @@ router.post('/agent', async (req,res,next)=>{
       res.status(200).send({ success: true, message: "Agent created successfully", agent: userCredentials.rows[0] });
     }
     else {
-      res.status(200).send({success: false, message: "Failed to create agent" });
+      res.status(200).send({ success: false, message: "Failed to create agent" });
     }
   } catch (e) {
     next(e);
@@ -300,47 +300,47 @@ router.post('/agent', async (req,res,next)=>{
 
 // ---------- For getting all Departments ------
 
-router.get('/department', async(req,res,next)=>{
+router.get('/department', async (req, res, next) => {
   try {
     const departmentDbo = new Dbo.Department(global.dao);
     const departments = await departmentDbo.getAll();
-    if(departments){
+    if (departments) {
       res.status(200).send({ success: true, departments });
-    }else{
-      res.status(200).send({success: false, message: "Failed to get departments" });
+    } else {
+      res.status(200).send({ success: false, message: "Failed to get departments" });
     }
   } catch (e) {
     next(e);
   }
 });
 // -------- For adding Departments ----------------
-router.post('/department', async(req, res, next)=>{
+router.post('/department', async (req, res, next) => {
   try {
     const departmentDbo = new Dbo.Department(global.dao);
     const department = req.body.department;
     let deptResponse = await departmentDbo.create(department, new Date(), true);
-    if(deptResponse){
-      res.status(200).send({ success: true, message: "Department created successfully", department: deptResponse.rows[0]});
+    if (deptResponse) {
+      res.status(200).send({ success: true, message: "Department created successfully", department: deptResponse.rows[0] });
     }
     else {
-      res.status(200).send({success: false, message: "Failed to create department" });
+      res.status(200).send({ success: false, message: "Failed to create department" });
     }
   } catch (e) {
     next(e);
   }
 });
 // ---------- For Updating Departments ----------------
-router.put('/department/:id', async(req, res, next)=> {
+router.put('/department/:id', async (req, res, next) => {
   try {
     const departmentDbo = new Dbo.Department(global.dao);
     const department = req.body;
 
     let deptResponse = await departmentDbo.update(department);
-    if(deptResponse){
-      res.status(200).send({ success: true, message: "Department updated successfully", department: deptResponse.rows[0]});
+    if (deptResponse) {
+      res.status(200).send({ success: true, message: "Department updated successfully", department: deptResponse.rows[0] });
     }
     else {
-      res.status(200).send({success: false, message: "Failed to update department" });
+      res.status(200).send({ success: false, message: "Failed to update department" });
     }
   } catch (e) {
     next(e);
@@ -348,16 +348,22 @@ router.put('/department/:id', async(req, res, next)=> {
 
 });
 // ---------- For Deleting Departments -------------------
-router.delete('/department/:id', async(req, res, next)=> {
+router.delete('/department/:id/:defaultId', async (req, res, next) => {
   try {
-    const departmentDbo = new Dbo.Department(global.dao);
-    let deptResponse = await departmentDbo.delete(req.params.id);
+    const departmentDbo = new Dbo.Department(global.dao),
+      userDbo = new Dbo.User(global.dao),
+      Department_Id = req.params.id,
+      Default_Id = req.params.defaultId;
 
-    if(deptResponse){
-      res.status(200).send({ success: true, message: "Department deleted successfully", department: deptResponse.rows[0]});
+    //  Update department_id and delete department
+    let updatedUser = await userDbo.updateDepartmentId({ Department_Id, Default_Id }),
+      deleteDepartment = await departmentDbo.delete(Department_Id);
+
+    if (updatedUser && deleteDepartment) {
+      res.status(200).send({ success: true, message: "Department deleted successfully", department: updatedUser.rows });
     }
     else {
-      res.status(200).send({success: false, message: "Failed to delete department" });
+      res.status(200).send({ success: false, message: "Failed to delete department" });
     }
   } catch (e) {
     next(e);
@@ -365,27 +371,27 @@ router.delete('/department/:id', async(req, res, next)=> {
 });
 
 // ---------- Get messages by agent email------------
-router.get('/messages/:recipent/', async (req, res, next)=> {
+router.get('/messages/:recipent/', async (req, res, next) => {
   try {
     const messagesDbo = new Dbo.Messages(global.dao);
     const recipent = req.params.recipent;
 
     let messagesRepsonse = await messagesDbo.getByFromOrTo(recipent);
-    if(messagesRepsonse && messagesRepsonse.length !== 0) {
-      res.status(200).send({success: true, messages: messagesRepsonse});
+    if (messagesRepsonse && messagesRepsonse.length !== 0) {
+      res.status(200).send({ success: true, messages: messagesRepsonse });
     }
     else {
-      res.status(200).send({success: false});
+      res.status(200).send({ success: false });
     }
   } catch (e) {
     next(e);
   }
 });
 
-function addToActiveSession(agent){
-  let sessionIndex = global.activeSession.findIndex(session=>session.email == agent.email);
+function addToActiveSession(agent) {
+  let sessionIndex = global.activeSession.findIndex(session => session.email == agent.email);
 
-  if(sessionIndex != -1)
+  if (sessionIndex != -1)
     global.activeSession.splice(sessionIndex, 1, agent);
   else
     global.activeSession.push(agent);

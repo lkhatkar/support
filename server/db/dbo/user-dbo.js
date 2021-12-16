@@ -68,9 +68,16 @@ class UserDbo {
             [Id, Name, Email, PageId, Create_Date, IsActive, Department_Id, Password, IsAgent, IsAdmin, Sno]
         )
     }
+    updateDepartmentId(obj) {
+      const {Department_Id, Default_Id} = obj;
+      return this.dao.run(
+        'UPDATE userdata SET Department_Id = $1 WHERE Department_Id = $2 RETURNING *',
+        [Default_Id, Department_Id]
+       )
+    }
     changeAgentDepartment(Email, Department_Id) {
       return this.dao.run(
-        `UPDATE userdata SET Department_Id = $1, WHERE Email = $2`,
+        `UPDATE userdata SET Department_Id = $1 WHERE Email = $2`,
         [Email, Department_Id]
       )
     }
