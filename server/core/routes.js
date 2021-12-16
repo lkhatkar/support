@@ -135,7 +135,23 @@ router.get('/agents', middleware.checkToken, async (req, res, next) => {
     next(e);
   }
 })
+// ---------------------Change departments of users-------------------------
+router.put('/agents/:id', middleware.checkToken, async (req, res, next) => {
+  try {
+    const UserDbo = new Dbo.User(global.dao),
+          Department_Id  = req.body.departmentId,
+          Id = req.params.id,
+          updatedAgents = await UserDbo.changeAgentDepartment(Department_Id, Id);
 
+    if (updatedAgents) {
+      res.status(200).send({ success: true, message: "Department Change successful", department: updatedAgents.rows[0] });
+    } else {
+      res.status(200).send({ success: false, message: "Unable to Change Department"});
+    }
+  } catch (e) {
+    next(e);
+  }
+});
 router.get('/onlineAgents', middleware.checkToken, async (req, res, next) => {
   try {
     let globalAgents = global.agents;

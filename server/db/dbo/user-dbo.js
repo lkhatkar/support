@@ -75,13 +75,12 @@ class UserDbo {
         [Default_Id, Department_Id, true]
        )
     }
-    changeAgentDepartment(Email, Department_Id) {
+    changeAgentDepartment(Department_Id, Id) {
       return this.dao.run(
-        `UPDATE userdata SET Department_Id = $1 WHERE Email = $2`,
-        [Email, Department_Id]
+        `UPDATE userdata SET Department_Id = $1 WHERE Id = $2`,
+        [Department_Id, Id]
       )
     }
-
     delete(id) {
         return this.dao.run(
           `DELETE FROM userdata WHERE Sno = $1`,
