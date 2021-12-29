@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 import { InitializeService } from '../services/initialize.service';
 
 @Component({
@@ -28,6 +29,7 @@ export class InitializeComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private initalizeService: InitializeService,
+    private authService:AuthService,
     private router:Router
     ) { }
 
@@ -74,9 +76,30 @@ export class InitializeComponent implements OnInit {
       .subscribe(res=>{
         if(res){
           console.log(res);
-          this.router.navigate(['/agent']);
+          this.login(res.user.name, res.user.password);
+          // this.router.navigate(['/agent']);
         }
       })
     }
+  }
+
+  login(username: string, pass: string){
+    this.authService.agentLogin({userid: username, password: pass})
+    .subscribe(res => {
+        if (res.success) {
+          sessionStorage.setItem('token', res.access_token);
+          this.setCurrentAgent(res.user);
+          this.router.navigate(['/admin-dashboard']);
+        }
+      })
+  }
+
+  private setCurrentAgent(user:any){
+    const agent = {
+      username: user.name,
+      email:user.email,
+      id:user.id
+    }
+    sessionStorage.setItem('currentAgent',JSON.stringify(agent));
   }
 }

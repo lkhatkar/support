@@ -20,8 +20,6 @@ export class AgentLoginComponent implements OnInit {
   ) {
     this.formObject = this._formBuilder.group({
       userid: ['', Validators.required],
-      // email: ['', Validators.required],
-      // pid: ['', Validators.required],
       password: ['', Validators.required],
     })
   }
