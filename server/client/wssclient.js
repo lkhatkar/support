@@ -1,4 +1,8 @@
-var client, msg_array = [], client_connected = false, saved_chat = '';
+var client,
+  msg_array = [],
+  client_connected = false,
+  saved_chat = '',
+  b_isClientTyping = false;
 const url = `http://localhost/api/department`;
 
 document.write(`<!DOCTYPE html>
@@ -245,6 +249,34 @@ document.write(`<!DOCTYPE html>
             justify-content: center;
             align-items: center;
         }
+        #wave {
+          padding :50%  0%;
+          width : 105%
+        }
+        .dot {
+            display:inline-block;
+            width:5px;
+            height:5px;
+            border-radius:50%;
+            margin-right:0.1%;
+            background:#303131;
+            animation: wave 1.3s linear infinite;
+          }
+        .dot:nth-child(2) {
+            animation-delay: -1.1s;
+        }
+        .dot:nth-child(3) {
+            animation-delay: -0.9s;
+        }
+        @keyframes wave {
+          0%, 60%, 100% {
+          transform: initial;
+        }
+        30% {
+          transform: translateY(-15px);
+        }
+      }
+
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -301,13 +333,15 @@ document.write(`<!DOCTYPE html>
 
     <script>
         if (saved_chat != '') {
+            console.log('Inside saved chat');
+            console.log(saved_chat);
             document.getElementsByClassName('info')[0].style.display = 'none';
             document.getElementsByClassName('body')[0].style.display = 'block';
             document.getElementsByClassName('foot')[0].style.display = 'flex';
             document.getElementsByClassName('body')[0].innerHTML = '< br >' + saved_chat;
-            maill = localStorage.getItem('mail');
-            namee = localStorage.getItem('name');
-            deptt = localStorage.getItem('dept');
+            maill = getCookie('mail');
+            namee = getCookie('name');
+            deptt = getCookie('dept');
             connect(namee, maill, deptt);
         }
         document.getElementsByClassName('msg')[0].addEventListener('keypress', function (e) {
@@ -318,51 +352,55 @@ document.write(`<!DOCTYPE html>
         })
     </script>
 </body>
-
 </html>`);
 
 
 
 
 class WsClient {
-    constructor({ url }) {
-        this.webSocket = new WebSocket(url);
-        this.webSocket.onmessage = this._onMessage.bind(this);
-        console.log(`Client Created`);
-    }
+  constructor({ url }) {
+    this.webSocket = new WebSocket(url);
+    this.webSocket.onmessage = this._onMessage.bind(this);
+    console.log(`Client Created`);
+  }
 
-    _onMessage(message) {
-        if (this.onMessage) {
-            this.onMessage(message);
-        }
+  _onMessage(message) {
+    if (this.onMessage) {
+      this.onMessage(message);
     }
-    send(message) {
-        this.webSocket.send(message);
+  }
+  send(message) {
+    this.webSocket.send(message);
+  }
+}
+// Loading messages.
+if (getCookie('messages')) {
+  chat = JSON.parse(getCookie('messages'));
+  msg_array = chat;
+  if (chat) {
+    for (i = 0; i < chat.length; i++) {
+      if (chat[i].obj_isclient) {
+        saved_chat += `<div class="outgoing">
+              <div class="bubble">
+              <p>${chat[i].obj_message}</p>
+              </div>
+              <span class="time_date">${chat[i].obj_date}
+                <i class="fa fa-check" aria-hidden="true" style="float:right;"></i>
+              </span></div>`
+      }
+      else {
+        saved_chat += `<div class="incoming">
+              <div class="bubble">
+              <p>${chat[i].obj_message}</p>
+              </div>
+              <span class="time_date">${chat[i].obj_date}
+                <i class="fa fa-check" aria-hidden="true"></i>
+              </span></div>`
+      }
     }
+  }
 }
 
-if (localStorage.getItem('messages') != null) {
-    chat = JSON.parse(localStorage.getItem('messages'));
-    msg_array = chat;
-    if (chat != null) {
-        for (i = 0; i < chat.length; i++) {
-            if (chat[i].obj_isclient) {
-                saved_chat += `<div class="outgoing">
-            <div class="bubble">
-            <p>${chat[i].obj_message}</p>
-            </div>
-            <span class="time_date">${chat[i].obj_date}</span></div>`
-            }
-            else {
-                saved_chat += `<div class="incoming">
-            <div class="bubble">
-            <p>${chat[i].obj_message}</p>
-            </div>
-            <span class="time_date">${chat[i].obj_date}</span></div>`
-            }
-        }
-    }
-}
 
 
 
@@ -370,207 +408,296 @@ if (localStorage.getItem('messages') != null) {
 /** FUNCTIONS : */
 
 function openChat() {
-    document.getElementById("chatBox").style.display = "block";
-    document.getElementById("closeChat").style.display = "block";
-    document.getElementById("openChat").style.display = "none";
-    localStorage.setItem('state', 'OPEN');
+  document.getElementById("chatBox").style.display = "block";
+  document.getElementById("closeChat").style.display = "block";
+  document.getElementById("openChat").style.display = "none";
+  // localStorage.setItem('state', 'OPEN');
+  setCookie('state', 'OPEN', 1);
 }
 
 function closeChat() {
-    document.getElementById("closeChat").style.display = "none";
-    document.getElementById("openChat").style.display = "block";
-    document.getElementById("chatBox").style.display = "none";
-    localStorage.setItem('state', 'CLOSED');
+  document.getElementById("closeChat").style.display = "none";
+  document.getElementById("openChat").style.display = "block";
+  document.getElementById("chatBox").style.display = "none";
+  // localStorage.setItem('state', 'CLOSED');
+  setCookie('state', 'CLOSED', 1);
 
 }
 function checkState() {
-  if('state' in localStorage) {
-    if(localStorage.getItem('state') == 'OPEN') {
-      openChat();
-    }
+   // if ('state' in localStorage) {
+  //   if (localStorage.getItem('state') == 'OPEN') {
+  //     openChat();
+  //   }
+  // }
+  // if ('name', 'mail', 'dept' in localStorage) {
+  //   const { name, mail, dept } = localStorage;
+  //   connect(name, mail, dept);
+  // }
+  const name = getCookie('name'),
+    mail = getCookie('mail'),
+    dept = getCookie('dept'),
+    state = getCookie('state');
+  if (state == 'OPEN') {
+    openChat();
   }
-  if('name', 'mail', 'dept' in localStorage) {
-    const {name, mail, dept} = localStorage;
+  //------- add messages if exist ------
+  if (saved_chat != '') {
+    document.getElementsByClassName('info')[0].style.display = 'none';
+    document.getElementsByClassName('body')[0].style.display = 'block';
+    document.getElementsByClassName('foot')[0].style.display = 'flex';
+    document.getElementsByClassName('body')[0].innerHTML = '<br/>' + saved_chat;
+    maill = getCookie('mail');
+    namee = getCookie('name');
+    deptt = getCookie('dept');
+  }
+  if (name && mail && dept) {
     connect(name, mail, dept);
   }
   //-------- Add data inside department----------
   getAllDepartments()
-  .then(deptData=> {
-    console.log(deptData);
-    const select = document.querySelector('#desig');
+    .then(deptData => {
+      console.log(deptData);
+      const select = document.querySelector('#desig');
 
-    for (let i = 0; i < deptData.length; i++) {
-      let opt = document.createElement('option');
-      opt.value = deptData[i].sno;
-      opt.innerHTML = deptData[i].name;
-      select.appendChild(opt);
-    }
-  });
+      for (let i = 0; i < deptData.length; i++) {
+        let opt = document.createElement('option');
+        opt.value = deptData[i].sno;
+        opt.innerHTML = deptData[i].name;
+        select.appendChild(opt);
+      }
+    });
 }
 
 function validateForm(e) {
-    e.preventDefault();
-    let x = document.forms["login_form"]["Name"].value;
-    if (x == "") {
-        alert("Name must be filled out");
-        return false;
-    }
-    let y = document.forms["login_form"]["Mail"].value;
-    if (y == "") {
-        alert("Email must be filled out");
-        return false;
-    }
-    if (document.login_form.desig.selectedIndex == "0") {
-        alert("Designation must be selected");
-        return false;
-    }
-    connect(document.getElementById('name').value, document.getElementById('mail').value, document.getElementById('desig').value);
+  e.preventDefault();
+  let x = document.forms["login_form"]["Name"].value;
+  if (x == "") {
+    alert("Name must be filled out");
+    return false;
+  }
+  let y = document.forms["login_form"]["Mail"].value;
+  if (y == "") {
+    alert("Email must be filled out");
+    return false;
+  }
+  if (document.login_form.desig.selectedIndex == "0") {
+    alert("Designation must be selected");
+    return false;
+  }
+  connect(document.getElementById('name').value, document.getElementById('mail').value, document.getElementById('desig').value);
 }
 
 function connect(name, email, dept, pid = "1") {
-    // client = new WsClient({ url: `wss:support.arieducation.com?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
-    client = new WsClient({ url: `ws:localhost?name=${name}&email=${email}&dept=${dept}&pid=${pid}`});
-    localStorage.setItem('mail', email);
-    localStorage.setItem('name', name);
-    localStorage.setItem('dept', dept);
-    if (document.getElementsByClassName('info')[0] != undefined) {
-        document.getElementsByClassName('info')[0].style.display = 'none';
-        document.getElementsByClassName('body')[0].style.display = 'block';
-        document.getElementsByClassName('foot')[0].style.display = 'flex';
-        document.getElementById("logout").style.display = "block";
-    }
-    client.onMessage = function (msg) {
-        var data = JSON.parse(msg.data);
-        console.log(data);
-        if (data.name == undefined) {
-            if (data.isAgentsAvailable != undefined) {
-                if (data.isAgentsAvailable) {
-                    document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
-            Please wait while an agent will be assigned to you.</h3>`
-                    client_connected = false;
-                    document.getElementsByClassName('msg')[0].disabled = true;
-                    document.getElementById('btn_sendMessage').disabled = true;
-                    document.getElementById('btn_Attachment').disabled = true;
-                }
-                else {
-                    document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
-                    No agents are available currently.</h3>`
-                    document.getElementsByClassName('msg')[0].disabled = true;
-                    document.getElementById('btn_sendMessage').disabled = true;
-                    document.getElementById('btn_Attachment').disabled = true;
-                }
-            }
-            else if(data.isClientActive){
-              document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
-                Client with this Email is already acitve in another session.</h3>`
-                    client_connected = false;
-                    document.getElementsByClassName('msg')[0].disabled = true;
-                    document.getElementById('btn_sendMessage').disabled = true;
-                    document.getElementById('btn_Attachment').disabled = true;
-            }
+  // client = new WsClient({ url: `wss:support.arieducation.com?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
+  client = new WsClient({ url: `ws:localhost?name=${name}&email=${email}&dept=${dept}&pid=${pid}` });
+  // localStorage.setItem('mail', email);
+  // localStorage.setItem('name', name);
+  // localStorage.setItem('dept', dept);
+  setCookie('mail', email, 1);
+  setCookie('name', name, 1);
+  setCookie('dept', dept, 1);
+  if (document.getElementsByClassName('info')[0] != undefined) {
+    document.getElementsByClassName('info')[0].style.display = 'none';
+    document.getElementsByClassName('body')[0].style.display = 'block';
+    document.getElementsByClassName('foot')[0].style.display = 'flex';
+    document.getElementById("logout").style.display = "block";
+  }
+  client.onMessage = function (msg) {
+    var data = JSON.parse(msg.data);
+    console.log(data);
+    if (data.name == undefined) {
+      if (data.isAgentsAvailable != undefined) {
+        if (data.isAgentsAvailable) {
+          document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
+            Please wait while an agent will be assigned to you.</h5>`
+          client_connected = false;
+          document.getElementsByClassName('msg')[0].disabled = true;
+          document.getElementById('btn_sendMessage').disabled = true;
+          document.getElementById('btn_Attachment').disabled = true;
         }
         else {
-            if (!client_connected) {
-                document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
-            Hi ${name}, Agent ${data.name} is assigned to you.</h3>`
-            }
-            document.getElementsByClassName('msg')[0].disabled = false;
-            document.getElementById('btn_sendMessage').disabled = false;
-            document.getElementById('btn_Attachment').disabled = false;
-            client_connected = true;
-            date = new Date();
-            if (data.message != '') {
-                msg_obj = {
-                    obj_message: data.message,
-                    obj_isclient: false,
-                    obj_date: date.toLocaleTimeString()
-                }
-                msg_array.push(msg_obj);
-                localStorage.setItem('messages', JSON.stringify(msg_array));
-                document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
-                <div class="bubble">
-                <p>${data.message}</p>
-                </div>
-                <span class="time_date">${date.toLocaleTimeString()}</span>`
-            }
+          document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
+                    No agents are available currently.</h5>`
+          document.getElementsByClassName('msg')[0].disabled = true;
+          document.getElementById('btn_sendMessage').disabled = true;
+          document.getElementById('btn_Attachment').disabled = true;
         }
+      }
+      else if (data.isClientActive) {
+        document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
+                Client with this Email is already acitve in another session.</h3>`
+        client_connected = false;
+        document.getElementsByClassName('msg')[0].disabled = true;
+        document.getElementById('btn_sendMessage').disabled = true;
+        document.getElementById('btn_Attachment').disabled = true;
+      }
     }
+    else {
+      if (!client_connected) {
+        document.getElementsByClassName('body')[0].innerHTML += `<h5 style="text-align : center">
+            Hi ${name}, Agent ${data.name} is assigned to you.</h3>`
+      }
+      document.getElementsByClassName('msg')[0].disabled = false;
+      document.getElementById('btn_sendMessage').disabled = false;
+      document.getElementById('btn_Attachment').disabled = false;
+      client_connected = true;
+      date = new Date();
+      if (data.isAgentTyping) {
+        console.log("entered");
+        if (!b_isClientTyping) {
+          document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
+                <div class="bubble">
+                <div id="wave">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                </div>
+                </div>`
+
+        }
+        b_isClientTyping = true;
+      }
+      else {
+        if (data.message != '') {
+          msg_obj = {
+            obj_message: data.message,
+            obj_isclient: false,
+            obj_date: date.toLocaleTimeString()
+          }
+          msg_array.push(msg_obj);
+          // localStorage.setItem('messages', JSON.stringify(msg_array));
+          b_isClientTyping = false;
+          setCookie('messages', JSON.stringify(msg_array), 1);
+          // Remove typing class;
+          let element = document.querySelector('#wave');
+          if (element)
+            element.parentNode.removeChild(element);
+          // Add message to inner html
+          document.getElementsByClassName('body')[0].innerHTML += `<div class="incoming">
+                  <div class="bubble">
+                  <p>${data.message}</p>
+                  </div>
+                  <span class="time_date">${date.toLocaleTimeString()}
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                  </span></div>`
+        }
+      }
+    }
+  }
 }
 
 function addmessage() {
-    var message = document.getElementsByClassName("msg")[0].value;
-    if (message != '') {
-        client.send(message);
-        date = new Date();
-        msg_obj = {
-            obj_message: message,
-            obj_isclient: true,
-            obj_date: date.toLocaleTimeString()
-        };
-        msg_array.push(msg_obj);
-        localStorage.setItem('messages', JSON.stringify(msg_array));
-        document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
+  var message = document.getElementsByClassName("msg")[0].value;
+  if (message != '') {
+    client.send(message);
+    date = new Date();
+    msg_obj = {
+      obj_message: message,
+      obj_isclient: true,
+      obj_date: date.toLocaleTimeString()
+    };
+    msg_array.push(msg_obj);
+    // localStorage.setItem('messages', JSON.stringify(msg_array));
+    setCookie('messages', JSON.stringify(msg_array), 1);
+    document.getElementsByClassName('body')[0].innerHTML += `<div class="outgoing">
             <div class="bubble">
             <p>${message}</p>
             </div>
-            <span class="time_date">${date.toLocaleTimeString()}</span></div>`
-        document.getElementsByClassName("msg")[0].value = '';
-    }
-    else {
-        alert('type a message');
-    }
+            <span class="time_date">${date.toLocaleTimeString()}
+              <i class="fa fa-check" aria-hidden="true" style="float:right;"></i>
+            </span></div>`
+
+    document.getElementsByClassName("msg")[0].value = '';
+  }
+  else {
+    alert('type a message');
+  }
 }
 
 function attach() {
-    var fileSelector = document.getElementById('attached_file');
-    fileSelector.click();
+  var fileSelector = document.getElementById('attached_file');
+  fileSelector.click();
 }
 
 function getImageData(event) {
-    console.log(event.target.files[0]);
-    let file = event.target.files[0];
-    let formData = new FormData();
-    blobToDataURL(file);
-    formData.append('img', file);
+  console.log(event.target.files[0]);
+  let file = event.target.files[0];
+  let formData = new FormData();
+  blobToDataURL(file);
+  formData.append('img', file);
 }
 
 function blobToDataURL(blob) {
-    let reader = new FileReader();
-    reader.onload = () => {
-        let img = reader.result;
-        date = new Date();
-        msg_obj = {
-            obj_message: img,
-            obj_isclient: true,
-            obj_date: date.toLocaleTimeString()
-        };
-        msg_array.push(msg_obj);
-        localStorage.setItem('messages', JSON.stringify(msg_array));
-        document.getElementsByClassName('body')[0].innerHTML +=
-            `<div class="outgoing">
+  let reader = new FileReader();
+  reader.onload = () => {
+    let img = reader.result;
+    date = new Date();
+    msg_obj = {
+      obj_message: img,
+      obj_isclient: true,
+      obj_date: date.toLocaleTimeString()
+    };
+    msg_array.push(msg_obj);
+    // localStorage.setItem('messages', JSON.stringify(msg_array));
+    setCookie('messages', JSON.stringify(msg_array), 1);
+    document.getElementsByClassName('body')[0].innerHTML +=
+      `<div class="outgoing">
         <div class="bubble">
         <img src=${img}>
         </div>
-        <span class="time_date">${date.toLocaleTimeString()}</span></div>`
-    }
-    reader.readAsDataURL(blob);
+        <span class="time_date">${date.toLocaleTimeString()}
+          <i class="fa fa-check" aria-hidden="true" style="float:right;"></i>
+        </span></div>`
+  }
+  reader.readAsDataURL(blob);
 }
 
 function getAllDepartments() {
-  return new Promise((resolve, reject)=> {
+  return new Promise((resolve, reject) => {
     fetch(url)
-    .then(res=> res.json())
-    .then(result=> resolve(result.departments))
+      .then(res => res.json())
+      .then(result => resolve(result.departments))
   })
 }
 
 function logout() {
-    if (confirm('Your chat history will be cleared, you wish to proceed to logout?')) {
-        localStorage.clear();
-        window.location.reload();
-    }
+  if (confirm('Your chat history will be cleared, you wish to proceed to logout?')) {
+    localStorage.clear();
+    deleteCookie('dept');
+    deleteCookie('name');
+    deleteCookie('state');
+    deleteCookie('messages');
+    deleteCookie('mail');
+
+    window.location.reload();
+  }
 }
 
-function onValueEnter(){
+function onValueEnter() {
   client.send("isClientTyping");
+}
+//========== Curd cookies=====================//
+function setCookie(name, value, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  let expires = "expires=" + d.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/" + ";sameSite=Lax;";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+function deleteCookie(name) {
+  document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
